@@ -128,6 +128,30 @@ export function sortData<T>(data: T[], sortKey: string, sortDirection: 'asc' | '
   if (!col) return data;
   const getSortVal = col.sortValue || (() => '');
 
+  function parseSortValue(val: unknown): { isDate: boolean; numVal: number; strVal: string } {
+    const s = String(val ?? '');
+    if (!s) return { isDate: false, numVal: 0, strVal: '' };
+
+    // Full date string from Google Sheets: "Wed Feb 04 2026 00:00:00 GMT+0800..."
+    if (s.includes(' ') && s.length > 10) {
+      const cleaned = s.replace(/GMT[+-]\d{4}.*/i, '').replace(/\(.*\)/, '').trim();
+      const d = new Date(cleaned);
+      if (!isNaN(d.getTime())) {
+        return { isDate: true, numVal: d.getTime(), strVal: s.toLowerCase() };
+      }
+    }
+
+    // ISO format: "2026-02-04T..."
+    if (s.includes('T')) {
+      const d = new Date(s);
+      if (!isNaN(d.getTime())) {
+        return { isDate: true, numVal: d.getTime(), strVal: s.toLowerCase() };
+      }
+    }
+
+    return { isDate: false, numVal: 0, strVal: s.toLowerCase() };
+  }
+
   return [...data].sort((a, b) => {
     const va = getSortVal(a);
     const vb = getSortVal(b);
@@ -135,11 +159,15 @@ export function sortData<T>(data: T[], sortKey: string, sortDirection: 'asc' | '
     if (va == null) return 1;
     if (vb == null) return -1;
 
-    const strA = String(va).toLowerCase();
-    const strB = String(vb).toLowerCase();
+    const pa = parseSortValue(va);
+    const pb = parseSortValue(vb);
 
-    if (strA < strB) return sortDirection === 'asc' ? -1 : 1;
-    if (strA > strB) return sortDirection === 'asc' ? 1 : -1;
+    if (pa.isDate && pb.isDate) {
+      return sortDirection === 'asc' ? pa.numVal - pb.numVal : pb.numVal - pa.numVal;
+    }
+
+    if (pa.strVal < pb.strVal) return sortDirection === 'asc' ? -1 : 1;
+    if (pa.strVal > pb.strVal) return sortDirection === 'asc' ? 1 : -1;
     return 0;
   });
 }
