@@ -140,7 +140,7 @@ loadStatus: inst.loadStatus || 'Not yet Loaded',
 export function normalizeEloadRow(t: ELoadRow): ELoadTransaction {
 return {
 id: t.id,
-gcashAcct: t.gcashAccount,
+gcashAcct: t.gcashHandler || '',
 dateLoaded: t.dateLoaded,
 gcashReference: t.gcashReference,
 time: t.timeLoaded,
@@ -159,7 +159,7 @@ updatedAt: t.updatedAt,
 export function denormalizeEloadRow(t: Partial<ELoadTransaction>): Partial<ELoadRow> {
 return {
 id: t.id,
-gcashAccount: t.gcashAcct || '',
+gcashHandler: t.gcashAcct || '',
 dateLoaded: t.dateLoaded || '',
 gcashReference: t.gcashReference || '',
 timeLoaded: t.time || '',

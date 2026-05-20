@@ -124,7 +124,7 @@ export interface ELoadTransaction {
 // Raw row format as stored in IndexedDB (camelCase keys)
 export interface ELoadRow {
 id: string;
-gcashAccount: string;
+gcashHandler: string;
 dateLoaded: string;
 gcashReference: string;
 timeLoaded: string;

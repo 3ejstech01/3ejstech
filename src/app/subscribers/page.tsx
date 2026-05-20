@@ -170,10 +170,16 @@ export default function SubscribersPage() {
       }
     });
     return [...filtered].sort((a, b) => {
-      const da = a.dateInstalled || '';
-      const db = b.dateInstalled || '';
-      if (dateSortDir === 'desc') return da < db ? 1 : da > db ? -1 : 0;
-      return da < db ? -1 : da > db ? 1 : 0;
+      const parseDate = (s: string) => {
+        if (!s) return 0;
+        const cleaned = s.replace(/GMT[+-]\d{4}.*/i, '').replace(/\(.*\)/, '').trim();
+        const d = new Date(cleaned);
+        return isNaN(d.getTime()) ? 0 : d.getTime();
+      };
+      const ta = parseDate(a.dateInstalled || '');
+      const tb = parseDate(b.dateInstalled || '');
+      if (dateSortDir === 'desc') return ta - tb;
+      return tb - ta;
     });
   }, [subscribers, searchTerm, dateFilter, dateSortDir]);
 

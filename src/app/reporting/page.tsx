@@ -14,7 +14,7 @@ type ELoadPeriod = 'daily' | 'monthly' | 'yearly';
 
 interface ELoadRow {
 id: string;
-gcashAccount: string;
+gcashHandler: string;
 dateLoaded?: string;
 date_loaded?: string;
 gcashReference: string;
@@ -168,7 +168,7 @@ export default function ReportingPage() {
       }));
       
 const mappedHistorical = historicalDataRaw.map((inst: Record<string, unknown>) => ({
-        id: String(inst.id ?? ''),
+        id: `hist-${String(inst.id ?? '')}`,
         no: String(inst.joNumber ?? ''),
         dateInstalled: (String(inst.dateInstalled ?? '') || '').split('T')[0],
         subscriberName: String(inst.subscriberName ?? ''),
@@ -395,7 +395,7 @@ return { totalLoads, totalAmount, totalIncentive, totalMarkedUp };
 <table><thead><tr><th>Date</th><th>GCash Account</th><th>Account No.</th><th>Amount</th></tr></thead>
 <tbody>${filteredELoadRecords.map(r => `<tr>
 <td>${formatDisplayDate(r.dateLoaded || '')}</td>
-<td>${r.gcashAccount || '-'}</td>
+<td>${r.gcashHandler || '-'}</td>
 <td>${String(r.accountNumber || '').replace(/\.0$/, '')}</td>
 <td>₱${(parseFloat(String(r.amount)) || 0).toLocaleString()}</td>
 </tr>`).join('')}</tbody></table>
@@ -609,7 +609,7 @@ return { totalLoads, totalAmount, totalIncentive, totalMarkedUp };
                       {filteredELoadRecords.slice(0, 100).map((r, i) => (
                         <tr key={r.id || i} className="border-b border-border/50 hover:bg-background transition-colors">
 <td className="px-4 py-3 text-sm text-center text-text/70 whitespace-nowrap">{formatDisplayDate(r.dateLoaded || '')}</td>
-<td className="px-4 py-3 text-sm text-center font-mono text-text">{r.gcashAccount || '-'}</td>
+<td className="px-4 py-3 text-sm text-center font-mono text-text">{r.gcashHandler || '-'}</td>
 <td className="px-4 py-3 text-sm text-center font-mono text-text/70">{String(r.accountNumber || '').replace(/\.0$/, '') || '-'}</td>
                           <td className="px-4 py-3 text-sm text-center font-semibold text-emerald-600">₱{(parseFloat(String(r.amount)) || 0).toLocaleString()}</td>
                         </tr>
