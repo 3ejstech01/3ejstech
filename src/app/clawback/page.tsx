@@ -7,7 +7,6 @@ import { useAuth } from '@/hooks/useAuth';
 import { useSubscribersStore } from '@/stores/subscribersStore';
 import { UserRole, Installation } from '@/lib/types';
 import { motion, AnimatePresence } from 'framer-motion';
-import axios from '@/lib/axios';
 import { formatDateDisplay } from '@/lib/utils';
 
 export default function ClawbackPage() {
@@ -106,7 +105,6 @@ export default function ClawbackPage() {
     setIsUpdating(true);
     try {
       await updateSubscriber(subscriberId, { notifyStatus: newStatus });
-      await axios.patch(`/api/installations/${subscriberId}`, { notifyStatus: newStatus });
       setSelectedSubscriber(prev => prev ? { ...prev, notifyStatus: newStatus } : null);
     } catch (error) {
       console.error('Error updating notify status:', error);
@@ -119,7 +117,6 @@ export default function ClawbackPage() {
     setIsUpdating(true);
     try {
       await updateSubscriber(subscriberId, { loadStatus: newStatus });
-      await axios.patch(`/api/installations/${subscriberId}`, { loadStatus: newStatus });
       setSelectedSubscriber(prev => prev ? { ...prev, loadStatus: newStatus } : null);
     } catch (error) {
       console.error('Error updating load status:', error);

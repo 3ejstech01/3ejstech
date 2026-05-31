@@ -1,133 +1,151 @@
 'use client';
 
-import { useEffect, useState, createContext, useContext, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import { themes, fontOptions, fontSizeOptions, getTheme, getPalette, colorPalettes } from '@/lib/themes';
 
-type Theme = 'light' | 'dark';
-
-interface ThemeContextType {
-  theme: Theme;
-  toggleTheme: () => void;
-  setTheme: (theme: Theme) => void;
-  isSystem: boolean;
-  setSystemPreference: (enabled: boolean) => void;
+interface ThemePrefs {
+  themeName: string;
+  paletteName: string;
+  fontFamily: string;
+  fontSize: number;
 }
 
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+interface ThemeContextType {
+  themeName: string;
+  paletteName: string;
+  fontFamily: string;
+  fontSize: number;
+  setTheme: (name: string) => void;
+  setPalette: (id: string) => void;
+  setFontFamily: (font: string) => void;
+  setFontSize: (size: number) => void;
+}
 
-const THEME_KEY = '3jes-theme';
-const SYSTEM_KEY = '3jes-use-system';
+const STORAGE_KEY = '3jes-theme-prefs';
 
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>(() => {
-    if (typeof window === 'undefined') return 'dark';
-    const stored = localStorage.getItem(THEME_KEY) as Theme | null;
-    return stored || 'dark';
-  });
-  const [isSystem, setIsSystemState] = useState<boolean>(() => {
-    if (typeof window === 'undefined') return true;
-    return localStorage.getItem(SYSTEM_KEY) !== 'false';
-  });
-  const [mounted, setMounted] = useState(false);
+const defaultPrefs: ThemePrefs = {
+  themeName: 'dark-plus',
+  paletteName: 'deep-ocean',
+  fontFamily: 'Inter, sans-serif',
+  fontSize: 14,
+};
 
-  const getSystemTheme = useCallback((): Theme => {
-    if (typeof window === 'undefined') return 'dark';
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  }, []);
-
-  useEffect(() => {
-    const useSystem = localStorage.getItem(SYSTEM_KEY) !== 'false';
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setIsSystemState(useSystem);
-    if (useSystem) {
-      setThemeState(getSystemTheme());
-    }
-    setMounted(true);
-  }, [getSystemTheme]);
-
-  // Listen for system preference changes
-  useEffect(() => {
-    if (!mounted) return;
-
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    
-    const handleChange = (e: MediaQueryListEvent) => {
-      if (isSystem) {
-        setThemeState(e.matches ? 'dark' : 'light');
-      }
+function loadPrefs(): ThemePrefs {
+  if (typeof window === 'undefined') return defaultPrefs;
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (!stored) return defaultPrefs;
+    const parsed = JSON.parse(stored) as Partial<ThemePrefs>;
+    return {
+      themeName: getTheme(parsed.themeName || '').name,
+      paletteName: getPalette(parsed.paletteName || '').id,
+      fontFamily: fontOptions.some(f => f.value === parsed.fontFamily) ? parsed.fontFamily! : defaultPrefs.fontFamily,
+      fontSize: fontSizeOptions.some(f => f.value === parsed.fontSize) ? parsed.fontSize! : defaultPrefs.fontSize,
     };
+  } catch {
+    return defaultPrefs;
+  }
+}
 
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
-  }, [mounted, isSystem]);
+function applyThemeAndPalette(themeName: string, paletteName: string) {
+  const theme = getTheme(themeName);
+  const palette = getPalette(paletteName);
+  const root = document.documentElement;
+  // Apply all theme colors first
+  Object.entries(theme.colors).forEach(([key, value]) => {
+    root.style.setProperty(key, value);
+  });
+  // Override brand colors from palette
+  Object.entries(palette.colors).forEach(([key, value]) => {
+    root.style.setProperty(key, value);
+  });
+}
 
-  // Apply theme to document with smooth transition
+function applyFont(fontFamily: string) {
+  document.documentElement.style.fontFamily = fontFamily;
+}
+
+function applyFontSize(fontSize: number) {
+  document.documentElement.style.fontSize = `${fontSize}px`;
+}
+
+function savePrefs(prefs: ThemePrefs) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
+  } catch { /* ignore */ }
+}
+
+const ThemeContext = createContext<ThemeContextType | null>(null);
+
+export function ThemeProvider({ children }: { children: ReactNode }) {
+  const [prefs, setPrefs] = useState<ThemePrefs>(defaultPrefs);
+  const [ready, setReady] = useState(false);
+
   useEffect(() => {
-    if (!mounted) return;
-
-    // Add transition class before changing theme
-    document.documentElement.classList.add('theme-transition');
-    
-    // Apply theme
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-
-    // Remove transition class after animation
-    const timer = setTimeout(() => {
-      document.documentElement.classList.remove('theme-transition');
-    }, 300);
-
-    return () => clearTimeout(timer);
-  }, [theme, mounted]);
-
-  const setTheme = useCallback((newTheme: Theme) => {
-    setThemeState(newTheme);
-    setIsSystemState(false);
-    localStorage.setItem(THEME_KEY, newTheme);
-    localStorage.setItem(SYSTEM_KEY, 'false');
+    const loaded = loadPrefs();
+    setPrefs(loaded);
+    applyThemeAndPalette(loaded.themeName, loaded.paletteName);
+    applyFont(loaded.fontFamily);
+    applyFontSize(loaded.fontSize);
+    setReady(true);
   }, []);
 
-  const toggleTheme = useCallback(() => {
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(newTheme);
-  }, [theme, setTheme]);
+  const setTheme = useCallback((themeName: string) => {
+    setPrefs(prev => {
+      const next = { ...prev, themeName };
+      applyThemeAndPalette(themeName, prev.paletteName);
+      savePrefs(next);
+      return next;
+    });
+  }, []);
 
-  const setSystemPreference = useCallback((enabled: boolean) => {
-    setIsSystemState(enabled);
-    localStorage.setItem(SYSTEM_KEY, String(enabled));
-    
-    if (enabled) {
-      localStorage.removeItem(THEME_KEY);
-      setThemeState(getSystemTheme());
-    }
-  }, [getSystemTheme]);
+  const setPalette = useCallback((paletteName: string) => {
+    setPrefs(prev => {
+      const next = { ...prev, paletteName };
+      applyThemeAndPalette(prev.themeName, paletteName);
+      savePrefs(next);
+      return next;
+    });
+  }, []);
 
-  // Prevent flash of wrong theme
-  if (!mounted) {
-    return null;
+  const setFontFamily = useCallback((fontFamily: string) => {
+    setPrefs(prev => {
+      const next = { ...prev, fontFamily };
+      applyFont(fontFamily);
+      savePrefs(next);
+      return next;
+    });
+  }, []);
+
+  const setFontSize = useCallback((fontSize: number) => {
+    setPrefs(prev => {
+      const next = { ...prev, fontSize };
+      applyFontSize(fontSize);
+      savePrefs(next);
+      return next;
+    });
+  }, []);
+
+  if (!ready) {
+    return <div style={{ visibility: 'hidden' }}>{children}</div>;
   }
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, setTheme, isSystem, setSystemPreference }}>
+    <ThemeContext.Provider value={{ ...prefs, setTheme, setPalette, setFontFamily, setFontSize }}>
       {children}
     </ThemeContext.Provider>
   );
 }
 
-export function useTheme() {
-  const context = useContext(ThemeContext);
-  if (!context) {
-    throw new Error('useTheme must be used within ThemeProvider');
-  }
-  return context;
+export function useTheme(): ThemeContextType {
+  const ctx = useContext(ThemeContext);
+  if (!ctx) throw new Error('useTheme must be used within ThemeProvider');
+  return ctx;
 }
 
-// Theme-aware background component
-export function ThemeBackground({ children }: { children: React.ReactNode }) {
+export function ThemeBackground({ children, className = '' }: { children: ReactNode; className?: string }) {
   return (
-    <div className="min-h-screen bg-background">
+    <div className={`min-h-screen bg-background text-text transition-colors duration-300 ${className}`}>
       {children}
     </div>
   );

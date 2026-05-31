@@ -10,6 +10,7 @@ import { PageContainer, Card, Button } from '@/components/common/PageContainer';
 import { ThemeCustomizer } from '@/components/theme/ThemeCustomizer';
 import { useUsersStore } from '@/stores/usersStore';
 import { syncFromRemote } from '@/lib/unified-db';
+import { saveRecordSnapshot } from '@/lib/sync-queue';
 
 type TabType = 'themes' | 'data' | 'users';
 
@@ -342,7 +343,7 @@ export default function SettingsPage() {
                           <td className="px-4 py-3 text-sm text-text/50">{new Date(u.createdAt).toLocaleDateString()}</td>
                           <td className="px-4 py-3 text-right">
                             <button
-                              onClick={() => { setEditingUser(u); setShowUserModal(true); }}
+                              onClick={() => { if (u.updatedAt) saveRecordSnapshot('users', u.id, u.updatedAt); setEditingUser(u); setUserForm({ username: u.username, role: u.role }); setShowUserModal(true); }}
                               className="text-blue-400 hover:text-blue-300 mr-3"
                             >
                               Edit

@@ -8,12 +8,15 @@ import { useELoadStore } from '@/stores/eloadStore';
 import { ELoadTransaction } from '@/lib/types';
 import { UserRole } from '@/lib/types';
 import { motion, AnimatePresence } from 'framer-motion';
-import { formatDateDisplay, formatDate, formatTime } from '@/lib/utils';
+import { formatDateDisplay, formatDate, formatTime, toInputDate, toStorageDate, todayStorageDate } from '@/lib/utils';
 import { useTableConfig, sortData, ColumnDef } from '@/hooks/useTableConfig';
 import { ColumnConfigPanel } from '@/components/common/ColumnConfigPanel';
 import { useQuickAction } from '@/hooks/useQuickAction';
 
-type DateFilter = 'all' | 'today' | '7days' | '30days';
+const MONTHS = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
+];
 
 // Amount → computed values lookup (corrected values)
 const AMOUNT_INCENTIVE_MAP: Record<number, { markedUp: number; retailer: number; dealer: number; incentive: number }> = {
@@ -44,8 +47,14 @@ export default function ELoadPage() {
   const hasAccess = user && (user.role === UserRole.ADMIN || user.role === UserRole.E_LOAD);
   
   const { transactions, isLoading, isSubmitting, addTransaction, updateTransaction, deleteTransaction, fetchTransactions: fetchFromStore } = useELoadStore();
-  const [dateFilter, setDateFilter] = useState<DateFilter>('today');
   const [searchTerm, setSearchTerm] = useState('');
+  const [pageSize, setPageSize] = useState(50);
+  const [columnWidths, setColumnWidths] = useState<Record<string, number>>({});
+  const [resizingCol, setResizingCol] = useState<string | null>(null);
+  const [resizeStartX, setResizeStartX] = useState(0);
+  const [resizeStartWidth, setResizeStartWidth] = useState(0);
+  const [monthFilter, setMonthFilter] = useState('');
+  const [yearFilter, setYearFilter] = useState('');
 
   const fetchTransactions = useCallback(async () => {
     const state = useELoadStore.getState();
@@ -71,29 +80,52 @@ export default function ELoadPage() {
     prevOpenNewELoad.current = openNewELoad;
   }, [openNewELoad, setQuickOpenELoad]);
 
-  const today = new Date().toISOString().split('T')[0];
-  const todayDate = new Date(today);
-  const sevenDaysAgo = new Date(todayDate.getTime() - 6 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-  const thirtyDaysAgo = new Date(todayDate.getTime() - 29 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (resizingCol) {
+        const diff = e.clientX - resizeStartX;
+        const newWidth = Math.max(60, resizeStartWidth + diff);
+        setColumnWidths(prev => ({ ...prev, [resizingCol]: newWidth }));
+      }
+    };
+    const handleMouseUp = () => {
+      setResizingCol(null);
+    };
+    if (resizingCol) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+    }
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [resizingCol, resizeStartX, resizeStartWidth]);
 
   const tableConfig = useTableConfig<ELoadTransaction>('eload', eloadColumns);
   const { config, visibleColumns, toggleColumn, moveColumn, toggleSort, resetConfig } = tableConfig;
 
   const dateFilteredTransactions = useMemo(() => {
-    if (dateFilter === 'all') return transactions;
     return transactions.filter(t => {
-      const d = t.dateLoaded || '';
-      if (!d) return false;
-      // Normalize to YYYY-MM-DD for reliable comparison
-      const normalized = d.includes('/') 
-        ? new Date(d).toISOString().split('T')[0] 
-        : d.split('T')[0];
-      if (dateFilter === 'today') return normalized === today;
-      if (dateFilter === '7days') return normalized >= sevenDaysAgo && normalized <= today;
-      if (dateFilter === '30days') return normalized >= thirtyDaysAgo && normalized <= today;
-      return true;
+      if (!t.dateLoaded) return false;
+      try {
+        const d = new Date(t.dateLoaded);
+        if (isNaN(d.getTime())) return false;
+
+        if (monthFilter) {
+          const monthIdx = parseInt(monthFilter);
+          if (d.getMonth() !== monthIdx) return false;
+        }
+
+        if (yearFilter) {
+          if (String(d.getFullYear()) !== yearFilter) return false;
+        }
+
+        return true;
+      } catch {
+        return false;
+      }
     });
-  }, [transactions, dateFilter, today, sevenDaysAgo, thirtyDaysAgo]);
+  }, [transactions, monthFilter, yearFilter]);
 
   const filteredTransactions = useMemo(() => {
     let result = dateFilteredTransactions;
@@ -118,7 +150,7 @@ export default function ELoadPage() {
   const [refDuplicateError, setRefDuplicateError] = useState<string>('');
   const [formData, setFormData] = useState({
     gcashAcct: '',
-    dateLoaded: new Date().toISOString().split('T')[0],
+    dateLoaded: todayStorageDate(),
     gcashReference: '',
     time: new Date().toTimeString().slice(0, 5),
     amount: 700,
@@ -170,7 +202,7 @@ export default function ELoadPage() {
     setRefDuplicateError('');
     setFormData({
       gcashAcct: '',
-      dateLoaded: new Date().toISOString().split('T')[0],
+      dateLoaded: todayStorageDate(),
       gcashReference: '',
       time: new Date().toTimeString().slice(0, 5),
       amount: 700,
@@ -201,18 +233,23 @@ export default function ELoadPage() {
     setViewingTransaction(null);
   };
 
-  const parseNum = (v: unknown): number => {
-    if (typeof v === 'number') return v;
-    if (typeof v === 'string') {
-      const parsed = parseFloat(v);
-      return isNaN(parsed) ? 0 : parsed;
-    }
-    return 0;
+  const handlePrint = () => {
+    const pw = window.open('', '_blank');
+    if (!pw) return;
+    pw.document.write(`<!DOCTYPE html><html><head><title>3EJS E-Load Report</title>
+      <style>body{font-family:sans-serif;padding:24px;color:#1e293b}table{width:100%;border-collapse:collapse;margin-top:12px}
+      th,td{border:1px solid #e2e8f0;padding:8px 12px;text-align:center;font-size:13px}th{background:#f8fafc;font-weight:600}
+      h1{font-size:22px;margin-bottom:4px}.footer{margin-top:24px;font-size:11px;color:#94a3b8}</style>
+      </head><body>
+      <h1>3EJS Tech — E-Load Report</h1>
+      <p style="color:#64748b;font-size:14px;">${filteredTransactions.length} records</p>
+      <table><thead><tr>${visibleColumns.map(col => `<th>${col.label}</th>`).join('')}</tr></thead>
+      <tbody>${filteredTransactions.slice(0, pageSize).map(t => `<tr>${visibleColumns.map(col => `<td>${col.render ? col.render(t) : (t[col.key as keyof typeof t] || '-')}</td>`).join('')}</tr>`).join('')}</tbody></table>
+      <p class="footer">Generated on ${new Date().toLocaleDateString()} | 3EJS Tech Reports</p>
+      </body></html>`);
+    pw.document.close();
+    pw.print();
   };
-
-  const totalAmount = filteredTransactions.reduce((sum, t) => sum + parseNum(t.amount), 0);
-  const uniqueAccounts = new Set(filteredTransactions.map(t => t.accountNo)).size;
-  const totalIncentive = filteredTransactions.reduce((sum, t) => sum + parseNum(t.incentive), 0);
 
   if (!hasAccess) {
     return (
@@ -232,16 +269,36 @@ export default function ELoadPage() {
         <div className="space-y-6">
           {/* Filter + Search + Actions bar */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 flex-wrap">
-            <div className="flex items-center gap-2 flex-wrap">
+<div className="flex items-center gap-2 flex-wrap">
+<button
+                onClick={() => { setMonthFilter(''); setYearFilter(''); }}
+                className={`px-4 py-2 rounded-xl text-sm font-medium border transition-all ${
+                  !monthFilter && !yearFilter
+                    ? 'bg-primary text-white border-primary'
+                    : 'bg-background text-text/60 border-border hover:border-primary/50'
+                }`}
+              >
+                All
+              </button>
               <select
-                value={dateFilter}
-                onChange={(e) => setDateFilter(e.target.value as DateFilter)}
+                value={monthFilter}
+                onChange={(e) => setMonthFilter(e.target.value)}
                 className="px-3 py-2 rounded-xl bg-background border border-border text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary/30"
               >
-                <option value="all">All Time</option>
-                <option value="today">Today</option>
-                <option value="7days">Last 7 Days</option>
-                <option value="30days">Last 30 Days</option>
+                <option value="">Month</option>
+                {MONTHS.map((m, i) => (
+                  <option key={i} value={i}>{m}</option>
+                ))}
+              </select>
+              <select
+                value={yearFilter}
+                onChange={(e) => setYearFilter(e.target.value)}
+                className="px-3 py-2 rounded-xl bg-background border border-border text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary/30"
+              >
+                <option value="">Year</option>
+                {[2026,2025,2024,2023].map(y => (
+                  <option key={y} value={y}>{y}</option>
+                ))}
               </select>
               <div className="relative">
                 <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text/30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -255,6 +312,10 @@ export default function ELoadPage() {
                   className="pl-9 pr-4 py-2 rounded-xl bg-background border border-border text-sm text-text placeholder-text/30 focus:outline-none focus:ring-2 focus:ring-primary/30 w-56"
                 />
               </div>
+              <button onClick={handlePrint} className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 text-white text-sm font-medium flex items-center gap-2 border-0">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
+                  Print
+                </button>
               <ColumnConfigPanel
                 columns={eloadColumns}
                 config={config}
@@ -267,19 +328,14 @@ export default function ELoadPage() {
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 gap-3 max-w-md">
             <Card className="text-center">
-              <p className="text-xs text-text/40 uppercase tracking-wider">Total</p>
-              <p className="text-2xl font-bold text-text mt-1">{filteredTransactions.length}</p>
-              <p className="text-xs text-emerald-500 mt-1">₱{totalAmount.toLocaleString()}</p>
+              <p className="text-xs text-text/40 uppercase tracking-wider">Total number of E-Load Transactions</p>
+              <p className="text-2xl font-bold text-text mt-1">{transactions.length}</p>
             </Card>
             <Card className="text-center">
-              <p className="text-xs text-text/40 uppercase tracking-wider">Accounts</p>
-              <p className="text-2xl font-bold text-text mt-1">{uniqueAccounts}</p>
-            </Card>
-            <Card className="text-center">
-              <p className="text-xs text-text/40 uppercase tracking-wider">Total Incentive</p>
-              <p className="text-2xl font-bold text-purple-600 mt-1">₱{totalIncentive.toLocaleString()}</p>
+              <p className="text-xs text-text/40 uppercase tracking-wider">Transactions</p>
+              <p className="text-2xl font-bold text-blue-500 mt-1">{filteredTransactions.length}</p>
             </Card>
           </div>
 
@@ -300,7 +356,8 @@ export default function ELoadPage() {
                         <th
                           key={col.key}
                           onClick={() => col.sortable && toggleSort(col.key)}
-                          className={`px-4 py-3 text-left text-xs font-semibold text-text/50 uppercase tracking-wider select-none ${col.sortable ? 'cursor-pointer hover:text-text' : ''}`}
+                          style={columnWidths[col.key] ? { width: columnWidths[col.key] } : undefined}
+                          className={`px-4 py-3 text-left text-xs font-semibold text-text/50 uppercase tracking-wider select-none relative group ${col.sortable ? 'cursor-pointer hover:text-text' : ''}`}
                         >
                           <span className="inline-flex items-center gap-1">
                             {col.label}
@@ -315,12 +372,22 @@ export default function ELoadPage() {
                               </svg>
                             )}
                           </span>
+                          <div
+                            className="absolute right-0 top-0 bottom-0 w-4 cursor-col-resize opacity-0 group-hover:opacity-100 hover:bg-primary/20 transition-opacity"
+                            onMouseDown={(e) => {
+                              e.stopPropagation();
+                              e.preventDefault();
+                              setResizingCol(col.key);
+                              setResizeStartX(e.clientX);
+                              setResizeStartWidth(columnWidths[col.key] || 150);
+                            }}
+                          />
                         </th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredTransactions.map((transaction) => (
+                    {filteredTransactions.slice(0, pageSize).map((transaction) => (
                       <tr
                         key={transaction.id}
                         onDoubleClick={() => setViewingTransaction(transaction)}
@@ -343,8 +410,22 @@ export default function ELoadPage() {
               </div>
             )}
             {filteredTransactions.length > 0 && (
-              <div className="px-4 py-3 border-t border-border/50 text-xs text-text/40 text-center">
-                Double-click a row to view full details
+              <div className="flex items-center justify-between px-4 py-3 border-t border-border/50">
+                <span className="text-xs text-text/40">
+                  Showing {Math.min(pageSize, filteredTransactions.length)} of {filteredTransactions.length} records
+                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-text/40">Rows:</span>
+                  <select
+                    value={pageSize}
+                    onChange={(e) => setPageSize(Number(e.target.value))}
+                    className="px-2 py-1 rounded bg-background border border-border text-xs text-text"
+                  >
+                    <option value={50}>50</option>
+                    <option value={100}>100</option>
+                    <option value={500}>500</option>
+                  </select>
+                </div>
               </div>
             )}
           </Card>
@@ -432,7 +513,7 @@ export default function ELoadPage() {
 setFormData({
                         ...formData,
                         gcashAcct: viewingTransaction.gcashAcct || '',
-                        dateLoaded: viewingTransaction.dateLoaded || new Date().toISOString().split('T')[0],
+                        dateLoaded: viewingTransaction.dateLoaded || todayStorageDate(),
                         gcashReference: viewingTransaction.gcashReference || '',
                         time: viewingTransaction.time || '',
                         amount: amt,
@@ -484,7 +565,7 @@ setFormData({
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-text/50 uppercase tracking-wider mb-1">Date</label>
-                    <input type="date" value={formData.dateLoaded} onChange={(e) => setFormData({ ...formData, dateLoaded: e.target.value })} className="w-full px-3 py-2.5 rounded-xl bg-background border border-border text-text focus:outline-none focus:ring-2 focus:ring-primary/30" required />
+                    <input type="date" value={toInputDate(formData.dateLoaded)} onChange={(e) => setFormData({ ...formData, dateLoaded: toStorageDate(e.target.value) })} className="w-full px-3 py-2.5 rounded-xl bg-background border border-border text-text focus:outline-none focus:ring-2 focus:ring-primary/30" required />
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-text/50 uppercase tracking-wider mb-1">Time</label>
@@ -600,12 +681,12 @@ setFormData({
             initial={{ opacity: 0, y: 50, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 50, scale: 0.9 }}
-            className="fixed bottom-8 right-8 bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-6 py-4 rounded-xl shadow-xl flex items-center gap-3 z-50"
+            className="fixed bottom-8 right-8 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-4 rounded-xl shadow-xl flex items-center gap-3"
           >
-            <svg className="w-6 h-6 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <span className="font-semibold">E-Load transaction added!</span>
+            <span className="font-semibold">E-Load transaction added successfully!</span>
           </motion.div>
         )}
       </AnimatePresence>

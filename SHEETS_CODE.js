@@ -15,11 +15,40 @@
 // IMPORTANT: Every time you edit, create a NEW deployment.
 // ============================================================
 
+var SHEET_NAMES = {
+  installations: 'Installations',
+  eload: 'E-Load',
+  users: 'Users',
+  historicaldata: 'HistoricalData'
+};
+
+/**
+ * Gets a sheet by name, trying both the display name and the key.
+ */
+function getSheetByName(name) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  return ss.getSheetByName(SHEET_NAMES[name]) || ss.getSheetByName(name);
+}
+
+/**
+ * Formats a cell value for JSON output.
+ * Converts Date objects to MM/DD/YYYY strings.
+ */
+function formatCellValue(value) {
+  if (Object.prototype.toString.call(value) === '[object Date]' && !isNaN(value.getTime())) {
+    var y = value.getFullYear();
+    var m = String(value.getMonth() + 1).padStart(2, '0');
+    var d = String(value.getDate()).padStart(2, '0');
+    return m + '/' + d + '/' + y;
+  }
+  return value !== undefined && value !== null ? String(value) : '';
+}
+
 /**
  * Finds header row by scanning first 10 rows for known column keywords.
  */
 function findHeaderRow(data) {
-  var headerKeywords = ['id', 'dateInstalled', 'agentName', 'joNumber', 'accountNumber', 'subscriberName', 'username', 'password', 'gcashHandler', 'subsname', 'gcashAcct'];
+  var headerKeywords = ['id', 'dateInstalled', 'agentName', 'joNumber', 'accountNumber', 'subscriberName', 'username', 'password', 'gcashHandler', 'subsname', 'gcashAcct', 'status'];
   for (var i = 0; i < Math.min(10, data.length); i++) {
     var rowText = data[i].join(' ').toUpperCase();
     var matchCount = 0;
@@ -44,7 +73,7 @@ function doGet(e) {
     console.log('Available sheets: ' + allSheetNames.join(', '));
     console.log('Requested sheet: ' + sheetName);
 
-    var sheet = ss.getSheetByName(sheetName);
+    var sheet = getSheetByName(sheetName);
 
     if (!sheet) {
       return ContentService.createTextOutput(
@@ -78,7 +107,7 @@ function doGet(e) {
       for (var c = 0; c < validColumns.length; c++) {
         var col = validColumns[c];
         var value = row[col.index] !== undefined && row[col.index] !== null ? row[col.index] : '';
-        obj[col.name] = String(value);
+        obj[col.name] = formatCellValue(value);
         if (String(value).trim() !== '') hasData = true;
       }
       if (hasData) rows.push(obj);
@@ -115,7 +144,7 @@ function doPost(e) {
     console.log('POST - Requested sheet: ' + sheetName);
     console.log('POST - Action: ' + action);
 
-    var sheet = ss.getSheetByName(sheetName);
+    var sheet = getSheetByName(sheetName);
 
     if (!sheet) {
       return ContentService.createTextOutput(
@@ -153,7 +182,7 @@ function doPost(e) {
           var obj = {};
           for (var c = 0; c < validColumns.length; c++) {
             var col = validColumns[c];
-            obj[col.name] = row[col.index] !== undefined && row[col.index] !== null ? String(row[col.index]) : '';
+            obj[col.name] = formatCellValue(row[col.index]);
           }
           rows.push(obj);
         }

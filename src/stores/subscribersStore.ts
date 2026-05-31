@@ -1,8 +1,7 @@
 import { create } from 'zustand';
 import { Installation, InstallationRow } from '@/lib/types';
-import { apiDelete } from '@/lib/api';
-import { getAllInstallations } from '@/lib/unified-db';
-import { normalizeInstallationRow } from '@/lib/mappers';
+import { getAllInstallations, createInstallation, updateInstallation, deleteInstallation } from '@/lib/unified-db';
+import { normalizeInstallationRow, denormalizeInstallationRow } from '@/lib/mappers';
 
 interface SubscribersState {
   subscribers: Installation[];
@@ -48,12 +47,8 @@ export const useSubscribersStore = create<SubscribersState>((set, get) => ({
   addSubscriber: async (subscriber) => {
     set({ isSubmitting: true });
     try {
-      const response = await fetch('/api/installations', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(subscriber),
-      });
-      if (!response.ok) throw new Error('Failed to create subscriber');
+      const row = denormalizeInstallationRow(subscriber);
+      await createInstallation(row);
       await get().fetchSubscribers();
       window.dispatchEvent(new CustomEvent('records-updated'));
     } catch (error) {
@@ -67,11 +62,7 @@ export const useSubscribersStore = create<SubscribersState>((set, get) => ({
 
   updateSubscriber: async (id, updates) => {
     try {
-      await fetch(`/api/installations/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updates),
-      });
+      await updateInstallation(id, updates as Partial<InstallationRow>);
       await get().fetchSubscribers();
       window.dispatchEvent(new CustomEvent('records-updated'));
     } catch (error) {
@@ -82,7 +73,7 @@ export const useSubscribersStore = create<SubscribersState>((set, get) => ({
   deleteSubscriber: async (id: string, joNumber?: string) => {
     const original = get().subscribers;
     try {
-      await apiDelete(`/api/installations?id=${id}`);
+      await deleteInstallation(id);
       await get().fetchSubscribers();
       window.dispatchEvent(new CustomEvent('records-updated'));
       return true;

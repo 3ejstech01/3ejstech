@@ -8,6 +8,7 @@ import { useTechniciansStore } from '@/stores/techniciansStore';
 import { UserRole } from '@/lib/types';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from '@/lib/axios';
+import { toInputDate, toStorageDate, todayStorageDate } from '@/lib/utils';
 
 interface InstallationFormData {
   dateInstalled: string;
@@ -41,7 +42,7 @@ interface InstallationFormData {
 }
 
 const initialFormData: InstallationFormData = {
-  dateInstalled: new Date().toISOString().split('T')[0],
+  dateInstalled: todayStorageDate(),
   agentName: '3EJS',
   joNumber: '',
   accountNumber: '',
@@ -127,7 +128,7 @@ export default function InstallationsPage() {
       updatedAt: new Date().toISOString(),
       monthInstalled: new Date().toLocaleString('default', { month: 'long' }),
       yearInstalled: new Date().getFullYear().toString(),
-      loadExpire: formData.dateInstalled ? new Date(new Date(formData.dateInstalled).getTime() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] : '',
+      loadExpire: formData.dateInstalled ? (() => { const d = new Date(formData.dateInstalled); d.setDate(d.getDate() + 30); const m = String(d.getMonth() + 1).padStart(2, '0'); const day = String(d.getDate()).padStart(2, '0'); const y = d.getFullYear(); return `${m}/${day}/${y}`; })() : '',
       subsName: formData.subscriberName,
       houseLatitude: formData.houseLatitude || '',
       houseLongitude: formData.houseLongitude || '',
@@ -221,8 +222,8 @@ export default function InstallationsPage() {
                       <label className="block text-sm font-medium text-text mb-1">Date Installed</label>
                       <input
                         type="date"
-                        value={formData.dateInstalled}
-                        onChange={(e) => handleInputChange('dateInstalled', e.target.value)}
+                        value={toInputDate(formData.dateInstalled)}
+                        onChange={(e) => handleInputChange('dateInstalled', toStorageDate(e.target.value))}
                         className="w-full px-3 py-2 rounded-lg bg-background border border-border text-text focus:outline-none focus:ring-2 focus:ring-primary/30"
                         required
                       />
@@ -530,7 +531,15 @@ export default function InstallationsPage() {
 
                   <div className="flex gap-3 pt-4 border-t border-border">
                     <Button type="submit" disabled={isSubmitting} className="flex-1">
-                      {isSubmitting ? 'Saving...' : 'Save Installation'}
+                      {isSubmitting ? (
+                        <span className="flex items-center justify-center gap-2">
+                          <svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                          </svg>
+                          Saving...
+                        </span>
+                      ) : 'Save Installation'}
                     </Button>
                     <Button type="button" variant="secondary" onClick={() => { setShowForm(false); setFormData(initialFormData); }} className="flex-1">
                       Cancel

@@ -1,6 +1,8 @@
 import { sheets } from './sheets';
 import { localDb } from './local-db';
 import { hashPasswordIfNeeded } from './auth-utils';
+import { enqueueOp, saveRecordSnapshot, getRecordSnapshot } from './sync-queue';
+import type { SheetName } from '@/stores/syncQueueStore';
 
 export interface InstallationRow {
   id: string; no?: string; dateInstalled?: string; agentName?: string;
@@ -34,142 +36,82 @@ export interface HistoricalDataRow {
   patchcordApsc?: string; houseBracket?: string; midspan?: string;
   cableClip?: string; ftthTerminalBox?: string; doubleSidedTape?: string;
   cableTieWrap?: string;
+  status?: string;
   gcashHandler?: string; gcashReference?: string; timeLoaded?: string;
   amount?: number; markup?: number; incentive?: number; retailer?: number;
   dealer?: number; remarks?: string; createdAt?: string; updatedAt?: string;
 }
 
 export interface UserRow {
-  id: string; username: string; password: string; role: string; createdAt?: string;
-}
-
-// ── Snake-case to camelCase mapper ──────────────────────
-
-const INSTALLATION_SNAKE_MAP: Record<string, string> = {
-  id: 'id', no: 'no', dateinstalled: 'dateInstalled', agentname: 'agentName',
-  jonumber: 'joNumber', accountnumber: 'accountNumber', subsname: 'subscriberName',
-  contact1: 'contactNumber1', contact2: 'contactNumber2', address: 'address',
-  houselatitude: 'houseLatitude', houselongitude: 'houseLongitude', port: 'port',
-  technician: 'assignedTechnician', modemserial: 'modemSerial',
-  reelnum: 'reelNo', reelstart: 'reelStart', reelend: 'reelEnd',
-  fiberopticcable: 'fiberOpticCable', mechconnector: 'mechanicalConnector',
-  sclam: 'sClamp', patchcordapcsc: 'patchcordApsc', housebracket: 'houseBracket',
-  midspan: 'midspan', cableclip: 'cableClip', ftthterminalbox: 'ftthTerminalBox',
-  doublesidedtape: 'doubleSidedTape', cabletiewrap: 'cableTieWrap',
-  status: 'status', monthinstalled: 'monthInstalled', yearinstalled: 'yearInstalled',
-  loadexpire: 'loadExpire', notifstatus: 'notifyStatus', loadstatus: 'loadStatus',
-  createdat: 'createdAt', updatedat: 'updatedAt',
-};
-
-const ELOAD_SNAKE_MAP: Record<string, string> = {
-  id: 'id', gcashhandler: 'gcashHandler', dateloaded: 'dateLoaded',
-  gcashreference: 'gcashReference', timeloaded: 'timeLoaded', amount: 'amount',
-  accountnumber: 'accountNumber', markup: 'markup', incentive: 'incentive',
-  retailer: 'retailer', dealer: 'dealer', remarks: 'remarks',
-  createdat: 'createdAt', updatedat: 'updatedAt',
-};
-
-const USER_SNAKE_MAP: Record<string, string> = {
-  id: 'id', username: 'username', password: 'password', role: 'role', createdat: 'createdAt',
-};
-
-const HISTORICAL_SNAKE_MAP: Record<string, string> = {
-  id: 'id', dateinstalled: 'dateInstalled', jonumber: 'joNumber',
-  accountnumber: 'accountNumber', subsname: 'subscriberName',
-  address: 'address', contact1: 'contactNumber1', contact2: 'contactNumber2',
-  technician: 'assignedTechnician', modemserial: 'modemSerial', port: 'port',
-  napboxlonglat: 'napBoxLonglat',
-  fiberopticcable: 'fiberOpticCable', mechconnector: 'mechanicalConnector',
-  sclamp: 'sClamp', patchcordapsc: 'patchcordApsc', housebracket: 'houseBracket',
-  midspan: 'midspan', cableclip: 'cableClip', ftthterminalbox: 'ftthTerminalBox',
-  doublesidedtape: 'doubleSidedTape', cabletiewrap: 'cableTieWrap',
-  gcashhandler: 'gcashHandler', gcashreference: 'gcashReference',
-  timeloaded: 'timeLoaded', amount: 'amount', markup: 'markup',
-  incentive: 'incentive', retailer: 'retailer', dealer: 'dealer',
-  remarks: 'remarks', createdat: 'createdAt', updatedat: 'updatedAt',
-};
-
-function mapSnakeToCamel(row: Record<string, unknown>, mapping: Record<string, string>): Record<string, unknown> {
-  const result: Record<string, unknown> = {};
-  for (const [snake, val] of Object.entries(row)) {
-    const camel = mapping[snake.toLowerCase()];
-    if (camel) {
-      result[camel] = val;
-    } else {
-      result[snake] = val;
-    }
-  }
-  return result;
-}
-
-function mapCamelToSnake(row: Record<string, unknown>, mapping: Record<string, string>): Record<string, unknown> {
-  const reverseMap: Record<string, string> = {};
-  for (const [snake, camel] of Object.entries(mapping)) {
-    reverseMap[camel] = snake;
-  }
-  const result: Record<string, unknown> = {};
-  for (const [key, val] of Object.entries(row)) {
-    const snake = reverseMap[key];
-    result[snake || key] = val;
-  }
-  return result;
+  id: string; username: string; password: string; role: string; createdAt?: string; updatedAt?: string;
 }
 
 // ── Installations ──────────────────────────────────────
 
 export async function getAllInstallations(): Promise<InstallationRow[]> {
+  if (typeof window !== 'undefined' && window.indexedDB) {
+    const localData = await localDb.getAll<InstallationRow>('installations');
+    if (localData.length > 0) {
+      return localData;
+    }
+  }
+
   try {
-    const data = await sheets.getAll<Record<string, unknown>>('installations');
+    const data = await sheets.getAll<InstallationRow>('installations');
     if (data.length > 0) {
-      const mapped = data.map(row => mapSnakeToCamel(row, INSTALLATION_SNAKE_MAP) as unknown as InstallationRow);
       if (typeof window !== 'undefined' && window.indexedDB) {
-        await localDb.putBatch('installations', mapped);
+        await localDb.putBatch('installations', data);
       }
-      return mapped;
+      return data;
     }
   } catch (e) {
-    console.warn('[DB] Sheets fetch failed, trying IndexedDB:', e);
-  }
-  if (typeof window !== 'undefined' && window.indexedDB) {
-    return localDb.getAll<InstallationRow>('installations');
+    console.warn('[DB] Sheets fetch failed:', e);
   }
   return [];
 }
 
+function formatLoadExpire(dateInstalled: string): string {
+  const d = new Date(dateInstalled);
+  d.setDate(d.getDate() + 90);
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  const y = d.getFullYear();
+  return `${m}/${day}/${y}`;
+}
+
 export async function createInstallation(data: Partial<InstallationRow>): Promise<InstallationRow> {
+  if (typeof window === 'undefined' || !window.indexedDB) {
+    throw new Error('createInstallation requires IndexedDB - call from client only');
+  }
+
   const now = new Date().toISOString();
   const id = data.id || `INST-${Date.now()}`;
 
   let loadExpire = data.loadExpire;
   if (data.dateInstalled && !loadExpire) {
-    const d = new Date(data.dateInstalled);
-    d.setDate(d.getDate() + 90);
-    loadExpire = d.toISOString().split('T')[0];
+    loadExpire = formatLoadExpire(data.dateInstalled);
   }
 
   const row: InstallationRow = {
     ...data,
     id,
     loadExpire,
+    status: 'completed',
     createdAt: now,
     updatedAt: now,
   } as InstallationRow;
 
-  try {
-    const snakeRow = mapCamelToSnake(row as unknown as Record<string, unknown>, INSTALLATION_SNAKE_MAP);
-    await sheets.appendRow('installations', snakeRow);
-  } catch (e) {
-    console.warn('[DB] Sheets write failed:', e);
-  }
-
-  if (typeof window !== 'undefined' && window.indexedDB) {
-    try { await localDb.put('installations', row); } catch (e) { console.warn('[DB] IndexedDB write failed:', e); }
-  }
+  await localDb.put('installations', row);
+  await enqueueOp('create', 'installations', row.id, row as unknown as Record<string, unknown>);
 
   return row;
 }
 
 export async function updateInstallation(id: string, data: Partial<InstallationRow>): Promise<InstallationRow | undefined> {
+  if (typeof window === 'undefined' || !window.indexedDB) {
+    throw new Error('updateInstallation requires IndexedDB - call from client only');
+  }
+
   let existing: InstallationRow | undefined;
   if (typeof window !== 'undefined' && window.indexedDB) {
     try { existing = await localDb.getById<InstallationRow>('installations', id); } catch (e) { /* ignore */ }
@@ -182,131 +124,123 @@ export async function updateInstallation(id: string, data: Partial<InstallationR
 
   if (!existing) return undefined;
 
+  if (existing.updatedAt) {
+    await saveRecordSnapshot('installations', id, existing.updatedAt);
+  }
+
   let loadExpire = data.loadExpire;
   if (data.dateInstalled && !loadExpire && data.dateInstalled !== existing.dateInstalled) {
-    const d = new Date(data.dateInstalled);
-    d.setDate(d.getDate() + 90);
-    loadExpire = d.toISOString().split('T')[0];
+    loadExpire = formatLoadExpire(data.dateInstalled);
   }
 
   const updated = { ...existing, ...data, loadExpire: loadExpire || existing.loadExpire, updatedAt: new Date().toISOString() };
 
-  try {
-    const snakeRow = mapCamelToSnake(updated as unknown as Record<string, unknown>, INSTALLATION_SNAKE_MAP);
-    await sheets.updateRow('installations', 'id', id, snakeRow);
-  } catch (e) {
-    console.warn('[DB] Sheets update failed:', e);
-  }
-
-  if (typeof window !== 'undefined' && window.indexedDB) {
-    try { await localDb.put('installations', updated); } catch (e) { console.warn('[DB] IndexedDB write failed:', e); }
-  }
+  await localDb.put('installations', updated);
+  await enqueueOp('update', 'installations', id, updated as unknown as Record<string, unknown>, existing.updatedAt);
 
   return updated;
 }
 
 export async function deleteInstallation(id: string): Promise<boolean> {
-  try {
-    await sheets.deleteRow('installations', 'id', id);
-  } catch (e) {
-    console.warn('[DB] Sheets delete failed:', e);
+  if (typeof window === 'undefined' || !window.indexedDB) {
+    throw new Error('deleteInstallation requires IndexedDB - call from client only');
   }
-  if (typeof window !== 'undefined' && window.indexedDB) {
-    try { await localDb.remove('installations', id); } catch (e) { /* ignore */ }
-  }
+
+  await localDb.remove('installations', id);
+  await enqueueOp('delete', 'installations', id, {});
   return true;
 }
 
 // ── E-Load ─────────────────────────────────────────────
 
 export async function getAllEload(): Promise<ELoadRow[]> {
+  if (typeof window !== 'undefined' && window.indexedDB) {
+    const localData = await localDb.getAll<ELoadRow>('eload');
+    if (localData.length > 0) {
+      return localData;
+    }
+  }
+
   try {
-    const data = await sheets.getAll<Record<string, unknown>>('eload');
+    const data = await sheets.getAll<ELoadRow>('eload');
     if (data.length > 0) {
-      const mapped = data.map(row => mapSnakeToCamel(row, ELOAD_SNAKE_MAP) as unknown as ELoadRow);
       if (typeof window !== 'undefined' && window.indexedDB) {
-        await localDb.putBatch('eload', mapped);
+        await localDb.putBatch('eload', data);
       }
-      return mapped;
+      return data;
     }
   } catch (e) {
-    console.warn('[DB] Sheets fetch failed, trying IndexedDB:', e);
-  }
-  if (typeof window !== 'undefined' && window.indexedDB) {
-    return localDb.getAll<ELoadRow>('eload');
+    console.warn('[DB] Sheets fetch failed:', e);
   }
   return [];
 }
 
 export async function createEload(data: Partial<ELoadRow>): Promise<ELoadRow> {
+  if (typeof window === 'undefined' || !window.indexedDB) {
+    throw new Error('createEload requires IndexedDB - call from client only');
+  }
+
   const now = new Date().toISOString();
   const id = data.id || `EL-${Date.now()}`;
   const row: ELoadRow = { ...data, id, createdAt: now, updatedAt: now } as ELoadRow;
 
-  try {
-    const snakeRow = mapCamelToSnake(row as unknown as Record<string, unknown>, ELOAD_SNAKE_MAP);
-    await sheets.appendRow('eload', snakeRow);
-  } catch (e) {
-    console.warn('[DB] Sheets write failed:', e);
-  }
-
-  if (typeof window !== 'undefined' && window.indexedDB) {
-    try { await localDb.put('eload', row); } catch (e) { console.warn('[DB] IndexedDB write failed:', e); }
-  }
+  await localDb.put('eload', row);
+  await enqueueOp('create', 'eload', row.id, row as unknown as Record<string, unknown>);
 
   return row;
 }
 
 export async function updateEload(id: string, data: Partial<ELoadRow>): Promise<ELoadRow | undefined> {
+  if (typeof window === 'undefined' || !window.indexedDB) {
+    throw new Error('updateEload requires IndexedDB - call from client only');
+  }
+
   const all = await getAllEload();
   const existing = all.find(e => e.id === id);
   if (!existing) return undefined;
 
+  if (existing.updatedAt) {
+    await saveRecordSnapshot('eload', id, existing.updatedAt);
+  }
+
   const updated = { ...existing, ...data, updatedAt: new Date().toISOString() };
 
-  try {
-    const snakeRow = mapCamelToSnake(updated as unknown as Record<string, unknown>, ELOAD_SNAKE_MAP);
-    await sheets.updateRow('eload', 'id', id, snakeRow);
-  } catch (e) {
-    console.warn('[DB] Sheets update failed:', e);
-  }
-
-  if (typeof window !== 'undefined' && window.indexedDB) {
-    try { await localDb.put('eload', updated); } catch (e) { console.warn('[DB] IndexedDB write failed:', e); }
-  }
+  await localDb.put('eload', updated);
+  await enqueueOp('update', 'eload', id, updated as unknown as Record<string, unknown>, existing.updatedAt);
 
   return updated;
 }
 
 export async function deleteEload(id: string): Promise<boolean> {
-  try {
-    await sheets.deleteRow('eload', 'id', id);
-  } catch (e) {
-    console.warn('[DB] Sheets delete failed:', e);
+  if (typeof window === 'undefined' || !window.indexedDB) {
+    throw new Error('deleteEload requires IndexedDB - call from client only');
   }
-  if (typeof window !== 'undefined' && window.indexedDB) {
-    try { await localDb.remove('eload', id); } catch (e) { /* ignore */ }
-  }
+
+  await localDb.remove('eload', id);
+  await enqueueOp('delete', 'eload', id, {});
   return true;
 }
 
 // ── Users ──────────────────────────────────────────────
 
 export async function getAllUsers(): Promise<UserRow[]> {
+  if (typeof window !== 'undefined' && window.indexedDB) {
+    const localData = await localDb.getAll<UserRow>('users');
+    if (localData.length > 0) {
+      return localData;
+    }
+  }
+
   try {
-    const data = await sheets.getAll<Record<string, unknown>>('users');
+    const data = await sheets.getAll<UserRow>('users');
     if (data.length > 0) {
-      const mapped = data.map(row => mapSnakeToCamel(row, USER_SNAKE_MAP) as unknown as UserRow);
       if (typeof window !== 'undefined' && window.indexedDB) {
-        await localDb.putBatch('users', mapped);
+        await localDb.putBatch('users', data);
       }
-      return mapped;
+      return data;
     }
   } catch (e) {
-    console.warn('[DB] Sheets fetch failed, trying IndexedDB:', e);
-  }
-  if (typeof window !== 'undefined' && window.indexedDB) {
-    return localDb.getAll<UserRow>('users');
+    console.warn('[DB] Sheets fetch failed:', e);
   }
   return [];
 }
@@ -320,16 +254,11 @@ export async function createUser(data: { username: string; password: string; rol
     password: hashedPassword,
     role: data.role,
     createdAt: now,
+    updatedAt: now,
   };
 
-  try {
-    const snakeRow = mapCamelToSnake(row as unknown as Record<string, unknown>, USER_SNAKE_MAP);
-    await sheets.appendRow('users', snakeRow);
-  } catch (e) {
-    console.warn('[DB] Sheets write failed:', e);
-  }
-
   await localDb.put('users', row);
+  await enqueueOp('create', 'users', row.id, row as unknown as Record<string, unknown>);
   return row;
 }
 
@@ -338,30 +267,25 @@ export async function updateUser(id: string, data: { username?: string; password
   const existing = users.find(u => u.id === id);
   if (!existing) return null;
 
+  if (existing.updatedAt) {
+    await saveRecordSnapshot('users', id, existing.updatedAt);
+  }
+
   const updates: Partial<UserRow> = { ...existing };
   if (data.username !== undefined) updates.username = data.username;
   if (data.password !== undefined) updates.password = await hashPasswordIfNeeded(data.password);
   if (data.role !== undefined) updates.role = data.role;
+  updates.updatedAt = new Date().toISOString();
   const updated = updates as UserRow;
 
-  try {
-    const snakeRow = mapCamelToSnake(updated as unknown as Record<string, unknown>, USER_SNAKE_MAP);
-    await sheets.updateRow('users', 'id', id, snakeRow);
-  } catch (e) {
-    console.warn('[DB] Sheets update failed:', e);
-  }
-
   await localDb.put('users', updated);
+  await enqueueOp('update', 'users', id, updated as unknown as Record<string, unknown>, existing.updatedAt);
   return updated;
 }
 
 export async function deleteUser(id: string): Promise<boolean> {
-  try {
-    await sheets.deleteRow('users', 'id', id);
-  } catch (e) {
-    console.warn('[DB] Sheets delete failed:', e);
-  }
   await localDb.remove('users', id);
+  await enqueueOp('delete', 'users', id, {});
   return true;
 }
 
@@ -374,14 +298,20 @@ export async function authenticateUser(username: string): Promise<UserRow | null
 // ── Historical Data ────────────────────────────────────
 
 export async function getAllHistoricalData(): Promise<HistoricalDataRow[]> {
+  if (typeof window !== 'undefined' && window.indexedDB) {
+    const localData = await localDb.getAll<HistoricalDataRow>('historicaldata');
+    if (localData.length > 0) {
+      return localData;
+    }
+  }
+
   try {
-    const data = await sheets.getAll<Record<string, unknown>>('historicaldata');
+    const data = await sheets.getAll<HistoricalDataRow>('historicaldata');
     if (data.length > 0) {
-      const mapped = data.map(row => mapSnakeToCamel(row, HISTORICAL_SNAKE_MAP) as unknown as HistoricalDataRow);
       if (typeof window !== 'undefined' && window.indexedDB) {
-        await localDb.putBatch('historicaldata', mapped);
+        await localDb.putBatch('historicaldata', data);
       }
-      return mapped;
+      return data;
     }
   } catch (e) {
     console.warn('[DB] Sheets fetch failed:', e);
@@ -454,8 +384,7 @@ export async function archivePreviousYears(currentYear: number): Promise<number>
 
     for (const record of historicalRecords) {
       try {
-        const snakeRow = mapCamelToSnake(record as unknown as Record<string, unknown>, HISTORICAL_SNAKE_MAP);
-        await sheets.appendRow('historicaldata', snakeRow);
+        await sheets.appendRow('historicaldata', record as unknown as Record<string, unknown>);
       } catch (e) { console.warn('[Archive] Sheets append failed:', e); }
       try { await sheets.deleteRow('installations', 'id', record.id); } catch (e) { console.warn('[Archive] Sheets delete failed:', e); }
     }

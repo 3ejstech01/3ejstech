@@ -3,7 +3,6 @@
 import React from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
-import { ThemeToggleIcon } from '@/components/common/ThemeToggle';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export const Header: React.FC<{ title?: string }> = ({ title = '3EJS Tech' }) => {
@@ -57,8 +56,6 @@ export const Header: React.FC<{ title?: string }> = ({ title = '3EJS Tech' }) =>
                 </motion.div>
               )}
             </AnimatePresence>
-
-            <ThemeToggleIcon className="p-2.5 rounded-xl bg-surface border border-border hover:border-primary/50 shadow-sm" />
 
             <AnimatePresence>
               {user && (

@@ -120,6 +120,35 @@ export default function HistoricalDataPage() {
     setShowDetailModal(true);
   };
 
+  const handlePrint = () => {
+    const pw = window.open('', '_blank');
+    if (!pw) return;
+    const getCellValue = (record: HistoricalDataRow, key: string): string => {
+      switch (key) {
+        case 'dateInstalled': return formatDateDisplay(record.dateInstalled || '');
+        case 'accountNumber': return String(record.accountNumber || '').replace(/\.0$/, '') || '-';
+        case 'subscriberName': return record.subscriberName || '-';
+        case 'address': return record.address || '-';
+        case 'contactNumber1': return record.contactNumber1 || '-';
+        case 'contactNumber2': return record.contactNumber2 || '-';
+        default: return String((record as unknown as Record<string, string>)[key]) || '-';
+      }
+    };
+    pw.document.write(`<!DOCTYPE html><html><head><title>3EJS Historical Data Report</title>
+      <style>body{font-family:sans-serif;padding:24px;color:#1e293b}table{width:100%;border-collapse:collapse;margin-top:12px}
+      th,td{border:1px solid #e2e8f0;padding:8px 12px;text-align:center;font-size:13px}th{background:#f8fafc;font-weight:600}
+      h1{font-size:22px;margin-bottom:4px}.footer{margin-top:24px;font-size:11px;color:#94a3b8}</style>
+      </head><body>
+      <h1>3EJS Tech — Historical Data Report</h1>
+      <p style="color:#64748b;font-size:14px;">${filteredRecords.length} records</p>
+      <table><thead><tr>${tableColumns.map(col => `<th>${col.label}</th>`).join('')}</tr></thead>
+      <tbody>${filteredRecords.map(record => `<tr>${tableColumns.map(col => `<td>${getCellValue(record, col.key)}</td>`).join('')}</tr>`).join('')}</tbody></table>
+      <p class="footer">Generated on ${new Date().toLocaleDateString()} | 3EJS Tech Reports</p>
+      </body></html>`);
+    pw.document.close();
+    pw.print();
+  };
+
   // Get e-load transactions for the viewing account
   const accountEloadTransactions = useMemo(() => {
     if (!viewingRecord?.accountNumber) return [];
@@ -180,6 +209,10 @@ export default function HistoricalDataPage() {
               </select>
             </div>
             <div className="flex items-center gap-3">
+              <button onClick={handlePrint} className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 text-white text-sm font-medium flex items-center gap-2 border-0">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
+                Print
+              </button>
               <span className="text-sm text-text/50">{filteredRecords.length} records</span>
               {isLoading && !records.length && <span className="text-sm text-primary/60">Loading...</span>}
               {!isLoading && !records.length && (

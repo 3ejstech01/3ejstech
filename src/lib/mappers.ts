@@ -1,6 +1,6 @@
 import { Installation, InstallationRow, ELoadTransaction, ELoadRow } from './types';
 
-export function parseExcelSerialDate(value: string | number): string {
+export function parseExcelSerialDate(value: string | number | null | undefined): string {
   if (!value && value !== 0) return '';
   const s = String(value).trim();
   if (!s) return '';
@@ -12,8 +12,16 @@ export function parseExcelSerialDate(value: string | number): string {
       const y = date.getFullYear();
       const m = String(date.getMonth() + 1).padStart(2, '0');
       const d = String(date.getDate()).padStart(2, '0');
-      return `${y}-${m}-${d}`;
+      return `${m}/${d}/${y}`;
     }
+  }
+
+  const parsed = new Date(s);
+  if (!isNaN(parsed.getTime())) {
+    const y = parsed.getFullYear();
+    const m = String(parsed.getMonth() + 1).padStart(2, '0');
+    const d = String(parsed.getDate()).padStart(2, '0');
+    return `${m}/${d}/${y}`;
   }
 
   return s;

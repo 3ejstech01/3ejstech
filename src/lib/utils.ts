@@ -122,7 +122,34 @@ export function excelSerialToDate(serial: string | number | undefined): string {
   if (y < 2000 || y > 2100) return s;
   const m = String(date.getMonth() + 1).padStart(2, '0');
   const d = String(date.getDate()).padStart(2, '0');
-  return `${y}-${m}-${d}`;
+  return `${m}/${d}/${y}`;
+}
+
+/** Converts MM/DD/YYYY to YYYY-MM-DD for HTML date inputs */
+export function toInputDate(dateStr: string | undefined | null): string {
+  if (!dateStr) return '';
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;
+  const m = dateStr.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (m) return `${m[3]}-${m[1].padStart(2, '0')}-${m[2].padStart(2, '0')}`;
+  return dateStr;
+}
+
+/** Converts YYYY-MM-DD to MM/DD/YYYY for storage */
+export function toStorageDate(dateStr: string | undefined | null): string {
+  if (!dateStr) return '';
+  if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(dateStr)) return dateStr;
+  const m = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (m) return `${m[2]}/${m[3]}/${m[1]}`;
+  return dateStr;
+}
+
+/** Returns today's date as MM/DD/YYYY */
+export function todayStorageDate(): string {
+  const now = new Date();
+  const m = String(now.getMonth() + 1).padStart(2, '0');
+  const d = String(now.getDate()).padStart(2, '0');
+  const y = now.getFullYear();
+  return `${m}/${d}/${y}`;
 }
 
 export function toExcelSerial(dateStr: string): string {

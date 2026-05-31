@@ -71,6 +71,13 @@ export const InstallationSchema = z.object({
   napBoxLonglat: z.string().optional(),
   napLatitude: z.string().optional(),
   napLongitude: z.string().optional(),
+}).refine(data => {
+  const hasAcc = !!(data.accountNumber || data.accountnumber);
+  const hasSub = !!(data.subscriberName || data.subsname);
+  const hasJo = !!(data.joNumber || data.jonumber);
+  return hasAcc && hasSub && hasJo;
+}, {
+  message: "joNumber, subscriberName, and accountNumber are required"
 });
 
 export const ELoadTransactionSchema = z.object({

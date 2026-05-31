@@ -1,8 +1,7 @@
 import { create } from 'zustand';
-import { ELoadTransaction } from '@/lib/types';
-import axios from '@/lib/axios';
-import { normalizeEloadRow } from '@/lib/mappers';
-import { ELoadRow } from '@/lib/types';
+import { ELoadTransaction, ELoadRow } from '@/lib/types';
+import { normalizeEloadRow, denormalizeEloadRow } from '@/lib/mappers';
+import { getAllEload, createEload, updateEload, deleteEload } from '@/lib/unified-db';
 
 interface ELoadState {
   transactions: ELoadTransaction[];
@@ -41,8 +40,8 @@ export const useELoadStore = create<ELoadState>((set, get) => ({
    fetchTransactions: async () => {
      set({ isLoading: true });
      try {
-       const res = await axios.get<ELoadRow[]>('/api/eload');
-       const transactions = res.data.map(normalizeEloadRow);
+       const rows = await getAllEload();
+       const transactions = (rows as unknown as ELoadRow[]).map(normalizeEloadRow);
        set({ transactions, lastFetched: Date.now(), isLoading: false });
      } catch (error) {
        console.error('Error fetching eload:', error);
@@ -53,7 +52,8 @@ export const useELoadStore = create<ELoadState>((set, get) => ({
   addTransaction: async (transaction) => {
     set({ isSubmitting: true });
     try {
-      await axios.post('/api/eload', transaction);
+      const row = denormalizeEloadRow(transaction);
+      await createEload(row as Parameters<typeof createEload>[0]);
       await get().fetchTransactions();
       window.dispatchEvent(new CustomEvent('records-updated'));
     } catch (error) {
@@ -69,7 +69,7 @@ export const useELoadStore = create<ELoadState>((set, get) => ({
   updateTransaction: async (id, data) => {
     const original = get().transactions;
     try {
-      await axios.patch('/api/eload', { id, ...data });
+      await updateEload(id, data as Parameters<typeof updateEload>[1]);
       await get().fetchTransactions();
     } catch (error) {
       console.error('Error updating transaction:', error);
@@ -80,7 +80,7 @@ export const useELoadStore = create<ELoadState>((set, get) => ({
   deleteTransaction: async (id) => {
     const original = get().transactions;
     try {
-      await axios.delete(`/api/eload?id=${id}`);
+      await deleteEload(id);
       await get().fetchTransactions();
       window.dispatchEvent(new CustomEvent('records-updated'));
     } catch (error) {

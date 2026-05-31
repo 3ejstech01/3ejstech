@@ -10,16 +10,17 @@ import { useTechniciansStore } from '@/stores/techniciansStore';
 import { UserRole, Installation } from '@/lib/types';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from '@/lib/axios';
-import { formatDateDisplay, excelSerialToDate } from '@/lib/utils';
+import { formatDateDisplay, toInputDate, toStorageDate, todayStorageDate } from '@/lib/utils';
 import { useTableConfig, ColumnDef } from '@/hooks/useTableConfig';
 import { ColumnConfigPanel } from '@/components/common/ColumnConfigPanel';
 import { getEloadTransactionsByAccount } from '@/lib/database';
+import { saveRecordSnapshot } from '@/lib/sync-queue';
 
 const PAGE_SIZE_OPTIONS = [20, 50, 100, 200, 500, 0];
 
 const initialFormData = {
   primary: '',
-  dateInstalled: new Date().toISOString().split('T')[0],
+  dateInstalled: todayStorageDate(),
   agentName: '3EJS',
   joNumber: '',
   accountNumber: '',
@@ -33,7 +34,6 @@ const initialFormData = {
   napBoxLongitude: '',
   napBoxLatitude: '',
   assignedTechnician: '',
-  status: 'pending' as const,
   modemSerial: '',
   reelNo: '',
   start: '',
@@ -48,8 +48,6 @@ const initialFormData = {
   ftthTerminalBox: '',
   doubleSidedTape: '',
   cableTieWrap: '',
-  notifyStatus: 'Not Yet Notified' as const,
-  loadStatus: 'Not yet Loaded' as const,
 };
 
 const subscriberColumns: ColumnDef<Installation>[] = [
@@ -191,50 +189,37 @@ export default function SubscribersPage() {
 
   const totalPages = pageSize === 0 ? 1 : Math.ceil(filteredSubscribers.length / pageSize);
 
-  const handleEdit = (subscriber: Installation) => {
-    setEditingSubscriber({ ...subscriber });
+  const handleEdit = (subscriber: Installation | null) => {
+    if (subscriber) {
+      if (subscriber.updatedAt) {
+        saveRecordSnapshot('installations', subscriber.id, subscriber.updatedAt);
+      }
+      setEditingSubscriber(subscriber);
+    }
   };
 
-  const handleSave = async () => {
+  const handlePrint = () => {
+    const pw = window.open('', '_blank');
+    if (!pw) return;
+    pw.document.write(`<!DOCTYPE html><html><head><title>3EJS Subscribers Report</title>
+      <style>body{font-family:sans-serif;padding:24px;color:#1e293b}table{width:100%;border-collapse:collapse;margin-top:12px}
+      th,td{border:1px solid #e2e8f0;padding:8px 12px;text-align:center;font-size:13px}th{background:#f8fafc;font-weight:600}
+      h1{font-size:22px;margin-bottom:4px}.footer{margin-top:24px;font-size:11px;color:#94a3b8}</style>
+      </head><body>
+      <h1>3EJS Tech — Subscribers Report</h1>
+      <p style="color:#64748b;font-size:14px;">${filteredSubscribers.length} records</p>
+      <table><thead><tr>${visibleColumns.map(col => `<th>${col.label}</th>`).join('')}</tr></thead>
+      <tbody>${paginatedSubscribers.map(sub => `<tr>${visibleColumns.map(col => `<td>${col.render ? col.render(sub) : (sub[col.key as keyof Installation] || '-')}</td>`).join('')}</tr>`).join('')}</tbody></table>
+      <p class="footer">Generated on ${new Date().toLocaleDateString()} | 3EJS Tech Reports</p>
+      </body></html>`);
+    pw.document.close();
+    pw.print();
+  };
+
+  const handleSave = () => {
     if (!editingSubscriber) return;
-    try {
-      await axios.patch(`/api/installations/${editingSubscriber.id}`, {
-        accountNumber: editingSubscriber.accountNumber,
-        subscriberName: editingSubscriber.subscriberName,
-        contactNumber1: editingSubscriber.contactNumber1,
-        contactNumber2: editingSubscriber.contactNumber2,
-        assignedTechnician: editingSubscriber.assignedTechnician,
-        status: editingSubscriber.status,
-        dateInstalled: (editingSubscriber.dateInstalled || '').split('T')[0],
-        agentName: editingSubscriber.agentName,
-        joNumber: editingSubscriber.joNumber,
-        address: editingSubscriber.address,
-        port: editingSubscriber.port,
-        houseLatitude: editingSubscriber.houseLatitude,
-        houseLongitude: editingSubscriber.houseLongitude,
-        napBoxLonglat: editingSubscriber.napBoxLonglat,
-        modemSerial: editingSubscriber.modemSerial,
-        reelNo: editingSubscriber.reelNo,
-        start: editingSubscriber.start,
-        end: editingSubscriber.end,
-        fiberOpticCable: editingSubscriber.fiberOpticCable,
-        mechanicalConnector: editingSubscriber.mechanicalConnector,
-        sClamp: editingSubscriber.sClamp,
-        patchcordApsc: editingSubscriber.patchcordApsc,
-        houseBracket: editingSubscriber.houseBracket,
-        midspan: editingSubscriber.midspan,
-        cableClip: editingSubscriber.cableClip,
-        ftthTerminalBox: editingSubscriber.ftthTerminalBox,
-        doubleSidedTape: editingSubscriber.doubleSidedTape,
-        cableTieWrap: editingSubscriber.cableTieWrap,
-        notifyStatus: editingSubscriber.notifyStatus || null,
-        loadStatus: editingSubscriber.loadStatus || null,
-      });
-      updateSubscriber(editingSubscriber.id, editingSubscriber);
-      setEditingSubscriber(null);
-    } catch (error) {
-      console.error('Error updating subscriber:', error);
-    }
+    updateSubscriber(editingSubscriber.id, editingSubscriber);
+    setEditingSubscriber(null);
   };
 
   const handleSearch = useCallback((value: string) => { setSearchTerm(value); setCurrentPage(1); }, []);
@@ -263,7 +248,6 @@ export default function SubscribersPage() {
       napBoxLongitude: '',
       napBoxLatitude: '',
       assignedTechnician: formDataTechs.join(', '),
-      status: formData.status || 'pending',
       modemSerial: formData.modemSerial,
       reelNo: formData.reelNo,
       start: formData.start,
@@ -278,15 +262,13 @@ export default function SubscribersPage() {
       ftthTerminalBox: formData.ftthTerminalBox,
       doubleSidedTape: formData.doubleSidedTape,
       cableTieWrap: formData.cableTieWrap,
-      notifyStatus: formData.notifyStatus || 'Not Yet Notified',
-      loadStatus: formData.loadStatus || 'Not yet Loaded',
       id: `INST-${Date.now()}`,
       no: `${Date.now()}`,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       monthInstalled: new Date().toLocaleString('default', { month: 'long' }),
       yearInstalled: new Date().getFullYear().toString(),
-      loadExpire: formData.dateInstalled ? new Date(new Date(formData.dateInstalled).getTime() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] : '',
+      loadExpire: formData.dateInstalled ? (() => { const d = new Date(formData.dateInstalled); d.setDate(d.getDate() + 90); const m = String(d.getMonth() + 1).padStart(2, '0'); const day = String(d.getDate()).padStart(2, '0'); const y = d.getFullYear(); return `${m}/${day}/${y}`; })() : '',
       subsName: formData.subscriberName,
     };
 
@@ -317,7 +299,6 @@ export default function SubscribersPage() {
     setIsUpdatingStatus(true);
     try {
       await updateSubscriber(subscriberId, { notifyStatus: newStatus });
-      await axios.patch(`/api/installations/${subscriberId}`, { notifyStatus: newStatus });
     } catch (error) {
       console.error('Error updating notify status:', error);
     } finally {
@@ -329,7 +310,6 @@ export default function SubscribersPage() {
     setIsUpdatingStatus(true);
     try {
       await updateSubscriber(subscriberId, { loadStatus: newStatus });
-      await axios.patch(`/api/installations/${subscriberId}`, { loadStatus: newStatus });
     } catch (error) {
       console.error('Error updating load status:', error);
     } finally {
@@ -404,6 +384,10 @@ export default function SubscribersPage() {
                   <option value="asc">Date: Oldest First</option>
                 </select>
                 <Button onClick={() => setShowForm(true)}>+ New Installation</Button>
+                <button onClick={handlePrint} className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-500 to-purple-600 text-white text-sm font-medium flex items-center gap-2 border-0">
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
+                  Print
+                </button>
                 <ColumnConfigPanel
                 columns={subscriberColumns}
                 config={config}
@@ -720,7 +704,7 @@ export default function SubscribersPage() {
 
                 {/* Footer */}
                 <div className="px-5 py-3 border-t border-border flex gap-3">
-                  <Button onClick={() => { setViewingSubscriber(null); setEditingSubscriber(viewingSubscriber); }} className="flex-1 text-sm py-2">
+                  <Button onClick={() => { setViewingSubscriber(null); handleEdit(viewingSubscriber); }} className="flex-1 text-sm py-2">
                     Edit
                   </Button>
                   <Button 
@@ -786,7 +770,7 @@ export default function SubscribersPage() {
                     </div>
                     <div>
                       <label className="block text-xs font-medium text-text/50 mb-1">Date Installed</label>
-                      <input type="date" value={excelSerialToDate(editingSubscriber.dateInstalled) || ''} onChange={(e) => setEditingSubscriber({ ...editingSubscriber, dateInstalled: e.target.value })} className="w-full px-3 py-2.5 rounded-xl bg-background border border-border text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary/30" />
+                      <input type="date" value={toInputDate(editingSubscriber.dateInstalled) || ''} onChange={(e) => setEditingSubscriber({ ...editingSubscriber, dateInstalled: toStorageDate(e.target.value) })} className="w-full px-3 py-2.5 rounded-xl bg-background border border-border text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary/30" />
                     </div>
                     <div>
                       <label className="block text-xs font-medium text-text/50 mb-1">Status</label>
@@ -973,8 +957,8 @@ onClick={() => { setShowForm(false); setFormData(initialFormData);
                           <label className="block text-sm font-medium text-text mb-1">Date Installed</label>
                           <input
                             type="date"
-                            value={formData.dateInstalled}
-                            onChange={(e) => handleInputChange('dateInstalled', e.target.value)}
+                            value={toInputDate(formData.dateInstalled)}
+                            onChange={(e) => handleInputChange('dateInstalled', toStorageDate(e.target.value))}
                             className="w-full px-3 py-2.5 rounded-xl bg-background border border-border text-text focus:outline-none focus:ring-2 focus:ring-primary/30"
                             required
                           />
@@ -1039,28 +1023,6 @@ onClick={() => { setShowForm(false); setFormData(initialFormData);
                             placeholder="Secondary contact"
                             className="w-full px-3 py-2.5 rounded-xl bg-background border border-border text-text focus:outline-none focus:ring-2 focus:ring-primary/30"
                           />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-text mb-1">Notify Status</label>
-                          <select
-                            value={formData.notifyStatus}
-                            onChange={(e) => handleInputChange('notifyStatus', e.target.value)}
-                            className="w-full px-3 py-2.5 rounded-xl bg-background border border-border text-text focus:outline-none focus:ring-2 focus:ring-primary/30"
-                          >
-                            <option value="Not Yet Notified">Not Yet Notified</option>
-                            <option value="Notified">Notified</option>
-                          </select>
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-text mb-1">Load Status</label>
-                          <select
-                            value={formData.loadStatus}
-                            onChange={(e) => handleInputChange('loadStatus', e.target.value)}
-                            className="w-full px-3 py-2.5 rounded-xl bg-background border border-border text-text focus:outline-none focus:ring-2 focus:ring-primary/30"
-                          >
-                            <option value="Not yet Loaded">Not yet Loaded</option>
-                            <option value="Account Loaded">Account Loaded</option>
-                          </select>
                         </div>
                       </div>
                     </div>
@@ -1133,17 +1095,6 @@ onClick={() => { setShowForm(false); setFormData(initialFormData);
                               ))}
                             </div>
                           )}
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-text mb-1">Status</label>
-                          <select
-                            value={formData.status}
-                            onChange={(e) => handleInputChange('status', e.target.value)}
-                            className="w-full px-3 py-2.5 rounded-xl bg-background border border-border text-text focus:outline-none focus:ring-2 focus:ring-primary/30"
-                          >
-                            <option value="pending">Pending</option>
-                            <option value="completed">Completed</option>
-                          </select>
                         </div>
                       </div>
                     </div>

@@ -180,11 +180,12 @@ napBoxLonglat?: string;
 
 // User row format from IndexedDB (camelCase keys)
 export interface UserRow {
-id: string;
-username: string;
-password: string;
-role: string;
-createdAt: string;
+  id: string;
+  username: string;
+  password: string;
+  role: string;
+  createdAt: string;
+  updatedAt?: string;
 }
 
 // Theme Config

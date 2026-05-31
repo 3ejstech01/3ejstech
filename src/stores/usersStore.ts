@@ -8,6 +8,7 @@ export interface User {
   password: string;
   role: UserRole;
   createdAt: string;
+  updatedAt?: string;
 }
 
 interface UsersState {
@@ -32,12 +33,13 @@ export const useUsersStore = create<UsersState>((set, get) => ({
       const res = await apiGet('/api/users');
       if (res.ok) {
         const data = await res.json();
-        const users: User[] = data.map((u: { id: string; username: string; role: string; createdAt?: string }) => ({
+        const users: User[] = data.map((u: { id: string; username: string; role: string; createdAt?: string; updatedAt?: string }) => ({
           id: u.id || u.username,
           username: u.username,
           password: '',
           role: u.role as UserRole,
           createdAt: u.createdAt || '',
+          updatedAt: u.updatedAt,
         }));
         set({ users, isLoading: false });
       } else {

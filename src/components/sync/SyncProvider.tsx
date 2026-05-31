@@ -3,12 +3,16 @@
 import React, { useEffect, useRef } from 'react';
 import { syncFromRemote } from '@/lib/unified-db';
 import { useAuth } from '@/hooks/useAuth';
+import { useAutoFlush } from '@/hooks/useAutoFlush';
+import { SyncConflictModal } from './SyncConflictModal';
 
 const SYNC_SESSION_KEY = 'db_synced_session';
 
 export function SyncProvider({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
   const syncingRef = useRef(false);
+
+  useAutoFlush();
 
   useEffect(() => {
     if (user?.id) {
@@ -42,5 +46,10 @@ export function SyncProvider({ children }: { children: React.ReactNode }) {
     };
   }, [user?.id]);
 
-  return <>{children}</>;
+  return (
+    <>
+      <SyncConflictModal />
+      {children}
+    </>
+  );
 }

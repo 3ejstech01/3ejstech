@@ -6,9 +6,9 @@
  */
 
 const DB_NAME = '3jes_local_db';
-const DB_VERSION = 2;
+const DB_VERSION = 3;
 
-const STORES = ['installations', 'eload', 'modems', 'users', 'historicaldata'] as const;
+const STORES = ['installations', 'eload', 'modems', 'users', 'historicaldata', 'syncQueue', 'recordSnapshots'] as const;
 type StoreName = (typeof STORES)[number];
 
 let dbPromise: Promise<IDBDatabase> | null = null;

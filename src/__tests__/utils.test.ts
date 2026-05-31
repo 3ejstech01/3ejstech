@@ -45,7 +45,7 @@ describe('utils', () => {
     });
 
     it('should handle Excel serial dates', () => {
-      const result = formatDateDisplay(45325);
+      const result = formatDateDisplay(45306);
       expect(result).toMatch(/Jan/);
       expect(result).toMatch(/15/);
       expect(result).toMatch(/2024/);
@@ -53,12 +53,12 @@ describe('utils', () => {
   });
 
   describe('excelSerialToDate', () => {
-    it('should convert Excel serial date to YYYY-MM-DD', () => {
-      expect(excelSerialToDate(45325)).toBe('2024-01-15');
+    it('should convert Excel serial date to MM/DD/YYYY', () => {
+      expect(excelSerialToDate(45306)).toBe('01/15/2024');
     });
 
     it('should handle string serial dates', () => {
-      expect(excelSerialToDate('45325')).toBe('2024-01-15');
+      expect(excelSerialToDate('45306')).toBe('01/15/2024');
     });
 
     it('should return original value for invalid input', () => {
@@ -69,11 +69,11 @@ describe('utils', () => {
 
   describe('toExcelSerial', () => {
     it('should convert date to Excel serial', () => {
-      expect(toExcelSerial('2024-01-15')).toBe('45325');
+      expect(toExcelSerial('2024-01-15')).toBe('45306');
     });
 
     it('should handle MM/DD/YYYY format', () => {
-      expect(toExcelSerial('01/15/2024')).toBe('45325');
+      expect(toExcelSerial('01/15/2024')).toBe('45306');
     });
 
     it('should return original for invalid dates', () => {
