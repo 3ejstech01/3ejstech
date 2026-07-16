@@ -13,6 +13,13 @@
 // 8. Click Deploy and COPY THE WEB APP URL
 //
 // IMPORTANT: Every time you edit, create a NEW deployment.
+//
+// SETUP APP_SECRET (required for authentication):
+// 1. In the Apps Script editor, click Settings (gear icon)
+// 2. Check "Show 'appsscript.json' manifest file in editor"
+// 3. Click Project Settings again, find "Script Properties"
+// 4. Add Property: APP_SECRET, Value: your-secret-key
+// 5. Save and redeploy
 // ============================================================
 
 var SHEET_NAMES = {
@@ -21,6 +28,32 @@ var SHEET_NAMES = {
   users: 'Users',
   historicaldata: 'HistoricalData'
 };
+
+/**
+ * Verifies the request includes a valid APP_SECRET.
+ * Reads APP_SECRET from Script Properties (set by the user in Project Settings).
+ */
+function authorized(e) {
+  var expected = PropertiesService.getScriptProperties().getProperty('APP_SECRET');
+  if (!expected) {
+    console.log('APP_SECRET not configured in Script Properties');
+    return false;
+  }
+  var provided = e.parameter.secret;
+  if (!provided) {
+    var body = e.postData && e.postData.contents;
+    if (body) {
+      try { provided = JSON.parse(body).secret; } catch(ex) {}
+    }
+  }
+  return provided === expected;
+}
+
+function json(data, status) {
+  status = status || 200;
+  return ContentService.createTextOutput(JSON.stringify(data))
+    .setMimeType(ContentService.MimeType.JSON);
+}
 
 /**
  * Gets a sheet by name, trying both the display name and the key.
@@ -62,10 +95,13 @@ function findHeaderRow(data) {
 
 /**
  * GET - Read rows from a sheet.
- * Usage: ?sheet=installations
+ * Usage: ?sheet=installations&secret=YOUR_APP_SECRET
+ * Optional: filterColumn=xxx&filterValue=yyy&limit=10&offset=0
  */
 function doGet(e) {
   try {
+    if (!authorized(e)) return json({ error: 'unauthorized' }, 401);
+
     var sheetName = e.parameter.sheet || 'installations';
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     var allSheetNames = ss.getSheets().map(function(s) { return s.getName(); });
@@ -76,15 +112,12 @@ function doGet(e) {
     var sheet = getSheetByName(sheetName);
 
     if (!sheet) {
-      return ContentService.createTextOutput(
-        JSON.stringify({ error: 'Sheet not found: ' + sheetName + '. Available sheets: ' + allSheetNames.join(', ') })
-      ).setMimeType(ContentService.MimeType.JSON);
+      return json({ error: 'Sheet not found: ' + sheetName + '. Available sheets: ' + allSheetNames.join(', ') }, 404);
     }
 
     var data = sheet.getDataRange().getValues();
     if (!data || data.length < 2) {
-      return ContentService.createTextOutput(JSON.stringify([]))
-        .setMimeType(ContentService.MimeType.JSON);
+      return json([]);
     }
 
     var headerRowIndex = findHeaderRow(data);
@@ -99,6 +132,12 @@ function doGet(e) {
       }
     }
 
+    // Server-side filtering + pagination
+    var filterCol = e.parameter.filterColumn;
+    var filterVal = e.parameter.filterValue;
+    var limit = e.parameter.limit ? Number(e.parameter.limit) : 0;
+    var offset = e.parameter.offset ? Number(e.parameter.offset) : 0;
+
     var rows = [];
     for (var r = headerRowIndex + 1; r < data.length; r++) {
       var row = data[r];
@@ -110,15 +149,25 @@ function doGet(e) {
         obj[col.name] = formatCellValue(value);
         if (String(value).trim() !== '') hasData = true;
       }
-      if (hasData) rows.push(obj);
+      if (!hasData) continue;
+
+      // Apply filter if specified
+      if (filterCol && filterVal !== undefined) {
+        var filterColIndex = headers.indexOf(filterCol);
+        if (filterColIndex !== -1) {
+          var colValue = row[filterColIndex];
+          if (String(colValue) !== String(filterVal)) continue;
+        }
+      }
+      rows.push(obj);
     }
 
-    return ContentService.createTextOutput(JSON.stringify(rows))
-      .setMimeType(ContentService.MimeType.JSON);
+    if (offset > 0) rows = rows.slice(offset);
+    if (limit > 0) rows = rows.slice(0, limit);
+
+    return json(rows);
   } catch (err) {
-    return ContentService.createTextOutput(
-      JSON.stringify({ error: err.toString() })
-    ).setMimeType(ContentService.MimeType.JSON);
+    return json({ error: err.toString() }, 500);
   }
 }
 
@@ -126,16 +175,23 @@ function doGet(e) {
  * POST - Write operations (append / update / delete).
  *
  * Request body (JSON):
- *   { action: 'append', sheet: 'installations', row: { col1: val1, ... } }
- *   { action: 'update', sheet: 'installations', keyColumn: 'id', keyValue: '123', row: { col1: newVal } }
- *   { action: 'delete', sheet: 'installations', keyColumn: 'id', keyValue: '123' }
- *   { action: 'filter', sheet: 'installations', keyColumn: 'accountNumber', keyValue: '123' }
+ *   { action: 'append', sheet: 'installations', secret: 'YOUR_APP_SECRET', row: { col1: val1, ... } }
+ *   { action: 'update', sheet: 'installations', secret: 'YOUR_APP_SECRET', keyColumn: 'id', keyValue: '123', row: { col1: newVal } }
+ *   { action: 'delete', sheet: 'installations', secret: 'YOUR_APP_SECRET', keyColumn: 'id', keyValue: '123' }
+ *   { action: 'filter', sheet: 'installations', secret: 'YOUR_APP_SECRET', keyColumn: 'accountNumber', keyValue: '123' }
  */
 function doPost(e) {
   try {
+    if (!authorized(e)) return json({ error: 'unauthorized' }, 401);
+
     var payload = JSON.parse(e.postData.contents);
     var sheetName = payload.sheet || e.parameter.sheet || 'installations';
     var action = payload.action || 'append';
+
+    var ALLOWED_SHEETS = ['installations', 'eload', 'users', 'historicaldata'];
+    if (ALLOWED_SHEETS.indexOf(sheetName) === -1) {
+      return json({ error: 'sheet not allowed' }, 400);
+    }
 
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     var allSheetNames = ss.getSheets().map(function(s) { return s.getName(); });
@@ -147,9 +203,7 @@ function doPost(e) {
     var sheet = getSheetByName(sheetName);
 
     if (!sheet) {
-      return ContentService.createTextOutput(
-        JSON.stringify({ error: 'Sheet not found: ' + sheetName + '. Available sheets: ' + allSheetNames.join(', ') })
-      ).setMimeType(ContentService.MimeType.JSON);
+      return json({ error: 'Sheet not found: ' + sheetName + '. Available sheets: ' + allSheetNames.join(', ') }, 404);
     }
 
     var data = sheet.getDataRange().getValues();
@@ -165,9 +219,7 @@ function doPost(e) {
       var keyIndex = headers.indexOf(keyColumn);
 
       if (keyIndex === -1) {
-        return ContentService.createTextOutput(
-          JSON.stringify({ error: 'Key column not found: ' + keyColumn })
-        ).setMimeType(ContentService.MimeType.JSON);
+        return json({ error: 'Key column not found: ' + keyColumn }, 400);
       }
 
       var validColumns = [];
@@ -188,8 +240,7 @@ function doPost(e) {
         }
       }
 
-      return ContentService.createTextOutput(JSON.stringify(rows))
-        .setMimeType(ContentService.MimeType.JSON);
+      return json(rows);
     }
 
     // ── APPEND: add a new row ──────────────────────────────────
@@ -198,9 +249,7 @@ function doPost(e) {
         return payload.row[h] !== undefined ? payload.row[h] : '';
       });
       sheet.appendRow(row);
-      return ContentService.createTextOutput(
-        JSON.stringify({ success: true, action: 'append' })
-      ).setMimeType(ContentService.MimeType.JSON);
+      return json({ success: true, action: 'append' });
     }
 
     // ── UPDATE: edit an existing row by matching a key column ──
@@ -210,9 +259,7 @@ function doPost(e) {
       var keyIndex = headers.indexOf(keyColumn);
 
       if (keyIndex === -1) {
-        return ContentService.createTextOutput(
-          JSON.stringify({ error: 'Key column not found: ' + keyColumn })
-        ).setMimeType(ContentService.MimeType.JSON);
+        return json({ error: 'Key column not found: ' + keyColumn }, 400);
       }
 
       var allData = sheet.getDataRange().getValues();
@@ -223,15 +270,11 @@ function doPost(e) {
               sheet.getRange(i + 1, colIdx + 1).setValue(payload.row[h]);
             }
           });
-          return ContentService.createTextOutput(
-            JSON.stringify({ success: true, action: 'update', rowIndex: i + 1 })
-          ).setMimeType(ContentService.MimeType.JSON);
+          return json({ success: true, action: 'update', rowIndex: i + 1 });
         }
       }
 
-      return ContentService.createTextOutput(
-        JSON.stringify({ error: 'Row not found for key: ' + keyValue })
-      ).setMimeType(ContentService.MimeType.JSON);
+      return json({ error: 'Row not found for key: ' + keyValue }, 404);
     }
 
     // ── DELETE: remove a row by matching a key column ──────────
@@ -241,33 +284,23 @@ function doPost(e) {
       var keyIndex = headers.indexOf(keyColumn);
 
       if (keyIndex === -1) {
-        return ContentService.createTextOutput(
-          JSON.stringify({ error: 'Key column not found: ' + keyColumn })
-        ).setMimeType(ContentService.MimeType.JSON);
+        return json({ error: 'Key column not found: ' + keyColumn }, 400);
       }
 
       var allData = sheet.getDataRange().getValues();
       for (var i = headerRowIndex + 1; i < allData.length; i++) {
         if (String(allData[i][keyIndex]) === String(keyValue)) {
           sheet.deleteRow(i + 1);
-          return ContentService.createTextOutput(
-            JSON.stringify({ success: true, action: 'delete', rowIndex: i + 1 })
-          ).setMimeType(ContentService.MimeType.JSON);
+          return json({ success: true, action: 'delete', rowIndex: i + 1 });
         }
       }
 
-      return ContentService.createTextOutput(
-        JSON.stringify({ error: 'Row not found for key: ' + keyValue })
-      ).setMimeType(ContentService.MimeType.JSON);
+      return json({ error: 'Row not found for key: ' + keyValue }, 404);
     }
 
-    return ContentService.createTextOutput(
-      JSON.stringify({ error: 'Unknown action: ' + action })
-    ).setMimeType(ContentService.MimeType.JSON);
+    return json({ error: 'Unknown action: ' + action }, 400);
 
   } catch (err) {
-    return ContentService.createTextOutput(
-      JSON.stringify({ error: err.toString() })
-    ).setMimeType(ContentService.MimeType.JSON);
+    return json({ error: err.toString() }, 500);
   }
 }
