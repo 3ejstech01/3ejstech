@@ -254,8 +254,8 @@ Smooth color transitions between themes
  */
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes slideInUp {
@@ -278,6 +278,7 @@ Smooth color transitions between themes
   50% { box-shadow: 0 0 40px var(--color-primary); }
 }
 
+.animate-fadeIn { animation: fadeIn 0.3s ease-out; }
 .animate-fade-in { animation: fadeIn 0.3s ease-out; }
 .animate-slide-in-up { animation: slideInUp 0.4s ease-out; }
 .animate-slide-in-down { animation: slideInDown 0.3s ease-out; }
@@ -511,5 +512,36 @@ Additional theme-aware utilities
     radial-gradient(at 80% 50%, hsla(240,100%,99%,1) 0, transparent 50%),
     radial-gradient(at 0% 100%, hsla(0,0%,100%,1) 0, transparent 50%),
     radial-gradient(at 80% 100%, hsla(0,0%,100%,1) 0, transparent 50%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.page-shell {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, color-mix(in srgb, var(--color-primary) 14%, transparent), transparent 34rem),
+    radial-gradient(circle at 80% 10%, color-mix(in srgb, var(--color-secondary) 12%, transparent), transparent 30rem),
+    var(--color-background);
+}
+
+.table-compact th,
+.table-compact td {
+  padding: 0.65rem 0.85rem;
+}
+
+.modal-surface {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
 }
 
