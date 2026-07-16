@@ -26,36 +26,23 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: validation.error }, { status: 400 });
     }
 
-    const payload = validation.data as Record<string, unknown>;
-
-    const eloadData: Record<string, unknown> = {
-      ...payload,
-      gcashHandler: payload.gcashAcct,
-      accountNumber: payload.accountNo,
-      timeLoaded: payload.time || payload.timeLoaded,
-      markup: payload.markedUp,
+    const { gcashAcct, accountNo, time, timeLoaded, markedUp, createdAt, ...rest } = data;
+    const eloadData = {
+      gcashHandler: gcashAcct,
+      accountNumber: accountNo,
+      timeLoaded: time || timeLoaded,
+      markup: markedUp,
+      createdAt,
+      ...rest,
     };
-    delete eloadData.gcashAcct;
-    delete eloadData.accountNo;
-    delete eloadData.time;
-    delete eloadData.timeLoaded;
-    delete eloadData.markedUp;
 
-    const existing = await getAllEload();
-    if (payload.gcashReference) {
-      const duplicate = existing.find(row => row.gcashReference === payload.gcashReference);
-      if (duplicate) {
-        return NextResponse.json({ error: 'GCash reference already exists' }, { status: 409 });
-      }
+    const eload = await createEload(eloadData);
+    
+    if (accountNo) {
+      const loadCreatedAt = createdAt || new Date().toISOString();
+      await checkAndUpdateInstallationForLoad(accountNo, loadCreatedAt);
     }
-
-    const eload = await createEload(eloadData as Parameters<typeof createEload>[0]);
-
-    if (payload.accountNo) {
-      const loadCreatedAt = (payload.createdAt as string | undefined) || new Date().toISOString();
-      await checkAndUpdateInstallationForLoad(String(payload.accountNo), loadCreatedAt);
-    }
-
+    
     return NextResponse.json(eload, { status: 201 });
   } catch (error) {
     console.error('Error creating E-Load transaction:', error);

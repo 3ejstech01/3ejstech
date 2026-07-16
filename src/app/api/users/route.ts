@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAllUsers, createUser, updateUser, deleteUser } from '@/lib/unified-db';
 import { toPublicUser } from '@/lib/auth-server';
-import { validateUser } from '@/lib/validation';
 import { requireRole } from '@/lib/auth-guard';
 import { UserRole } from '@/lib/types';
 
@@ -10,7 +9,12 @@ export async function GET(request: NextRequest) {
     const auth = requireRole(request, [UserRole.ADMIN]);
     if ('response' in auth) return auth.response;
     const users = await getAllUsers();
-    return NextResponse.json(users.map(toPublicUser));
+    return NextResponse.json(users.map(u => ({
+      id: u.id || u.username,
+      username: u.username,
+      role: u.role,
+      createdAt: u.createdAt,
+    })));
   } catch (error) {
     console.error('Error fetching users:', error);
     return NextResponse.json({ error: 'Failed to fetch users' }, { status: 500 });
@@ -22,15 +26,17 @@ export async function POST(request: NextRequest) {
     const auth = requireRole(request, [UserRole.ADMIN]);
     if ('response' in auth) return auth.response;
     const data = await request.json();
-    const result = validateUser(data);
-    if (!result.success) {
-      return NextResponse.json({ error: result.error }, { status: 400 });
+    if (!data.username || !data.role) {
+      return NextResponse.json({ error: 'Username and role are required' }, { status: 400 });
+    }
+    if (data.username.length < 3) {
+      return NextResponse.json({ error: 'Username must be at least 3 characters' }, { status: 400 });
     }
 
     const user = await createUser({
-      username: result.data.username,
-      password: result.data.password,
-      role: result.data.role,
+      username: data.username,
+      password: data.password || 'default',
+      role: data.role,
     });
 
     return NextResponse.json(toPublicUser(user), { status: 201 });
@@ -47,20 +53,6 @@ export async function PATCH(request: NextRequest) {
     const { id, ...data } = await request.json();
     if (!id) return NextResponse.json({ error: 'User ID required' }, { status: 400 });
 
-    const existing = (await getAllUsers()).find(u => u.id === id);
-    if (!existing) return NextResponse.json({ error: 'User not found' }, { status: 404 });
-
-    const merged = {
-      id,
-      username: data.username ?? existing.username,
-      password: data.password ?? 'placeholder-password-123',
-      role: data.role ?? existing.role,
-    };
-    const result = validateUser(merged);
-    if (!result.success) {
-      return NextResponse.json({ error: result.error }, { status: 400 });
-    }
-
     const updated = await updateUser(id, {
       username: data.username,
       password: data.password,
@@ -68,7 +60,7 @@ export async function PATCH(request: NextRequest) {
     });
 
     if (!updated) return NextResponse.json({ error: 'User not found' }, { status: 404 });
-    return NextResponse.json(toPublicUser(updated));
+    return NextResponse.json({ id, username: updated.username, role: updated.role });
   } catch (error) {
     console.error('Error updating user:', error);
     return NextResponse.json({ error: 'Failed to update user' }, { status: 500 });

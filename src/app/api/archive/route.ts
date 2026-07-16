@@ -14,14 +14,6 @@ export async function POST(request: NextRequest) {
       ? now.getFullYear()
       : Number(rawYear);
 
-    if (!Number.isFinite(yearToArchive) || yearToArchive <= 2000) {
-      return NextResponse.json({ error: 'Invalid archive year' }, { status: 400 });
-    }
-
-    if (yearToArchive > now.getFullYear()) {
-      return NextResponse.json({ error: 'Archive year cannot be in the future' }, { status: 400 });
-    }
-
     const archivedCount = await archivePreviousYears(yearToArchive);
 
     return NextResponse.json({

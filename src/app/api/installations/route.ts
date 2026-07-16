@@ -46,11 +46,12 @@ export async function POST(request: NextRequest) {
     const auth = requireRole(request, [UserRole.ADMIN, UserRole.TECHNICIAN, UserRole.VIEW_ONLY]);
     if ('response' in auth) return auth.response;
     const data = await request.json();
-    const camelCaseData = toCamelCaseInstallation(data);
-    const validation = validateInstallation(camelCaseData);
+    const validation = validateInstallation(data);
     if (!validation.success) {
       return NextResponse.json({ error: validation.error }, { status: 400 });
     }
+
+    const camelCaseData = toCamelCaseInstallation(data);
     const installation = await createInstallation(camelCaseData);
     return NextResponse.json(installation, { status: 201 });
   } catch (error) {
