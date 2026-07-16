@@ -53,10 +53,21 @@ export async function PATCH(request: NextRequest) {
     const { id, ...data } = await request.json();
     if (!id) return NextResponse.json({ error: 'User ID required' }, { status: 400 });
 
+    const users = await getAllUsers();
+    const existing = users.find(u => u.id === id);
+    if (!existing) return NextResponse.json({ error: 'User not found' }, { status: 404 });
+
+    const merged = {
+      id,
+      username: data.username ?? existing.username,
+      password: data.password ? data.password : existing.password,
+      role: data.role ?? existing.role,
+    };
+
     const updated = await updateUser(id, {
-      username: data.username,
-      password: data.password,
-      role: data.role,
+      username: merged.username,
+      password: merged.password,
+      role: merged.role,
     });
 
     if (!updated) return NextResponse.json({ error: 'User not found' }, { status: 404 });
