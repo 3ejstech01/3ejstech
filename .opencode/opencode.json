@@ -6,5 +6,10 @@
       "~/.config/opencode/node_modules/superpowers/skills",
       ".opencode/skills"
     ]
+  },
+  "agent": {
+    "plan": {
+      "model": "zhipu/glm-5.1"
+    }
   }
 }

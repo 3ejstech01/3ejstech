@@ -1,0 +1,3859 @@
+{
+  "nodes": [
+    {
+      "id": "file::3ejs_sheets_api",
+      "label": "3EJS_Sheets_API.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API.ts:1"
+    },
+    {
+      "id": "3ejs_sheets_api::dooptions",
+      "label": "doOptions",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API.ts:50"
+    },
+    {
+      "id": "3ejs_sheets_api::doget",
+      "label": "doGet",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API.ts:63"
+    },
+    {
+      "id": "3ejs_sheets_api::dopost",
+      "label": "doPost",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API.ts:86"
+    },
+    {
+      "id": "3ejs_sheets_api::getallrows",
+      "label": "getAllRows",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API.ts:130"
+    },
+    {
+      "id": "3ejs_sheets_api::appendrow",
+      "label": "appendRow",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API.ts:153"
+    },
+    {
+      "id": "3ejs_sheets_api::updaterow",
+      "label": "updateRow",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API.ts:182"
+    },
+    {
+      "id": "3ejs_sheets_api::deleterow",
+      "label": "deleteRow",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API.ts:217"
+    },
+    {
+      "id": "3ejs_sheets_api::filterrows",
+      "label": "filterRows",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API.ts:235"
+    },
+    {
+      "id": "3ejs_sheets_api::getcolumns",
+      "label": "getColumns",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API.ts:243"
+    },
+    {
+      "id": "3ejs_sheets_api::getsheet",
+      "label": "getSheet",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API.ts:261"
+    },
+    {
+      "id": "3ejs_sheets_api::jsonresponse",
+      "label": "JsonResponse",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API.ts:269"
+    },
+    {
+      "id": "3ejs_sheets_api::setupsheets",
+      "label": "setupSheets",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API.ts:283"
+    },
+    {
+      "id": "3ejs_sheets_api::testapi",
+      "label": "testApi",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API.ts:320"
+    },
+    {
+      "id": "file::3ejs_sheets_api_final",
+      "label": "3EJS_Sheets_API_final.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts:1"
+    },
+    {
+      "id": "3ejs_sheets_api_final::getspreadsheet",
+      "label": "getSpreadsheet",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts:38"
+    },
+    {
+      "id": "3ejs_sheets_api_final::doget",
+      "label": "doGet",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts:42"
+    },
+    {
+      "id": "3ejs_sheets_api_final::dopost",
+      "label": "doPost",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts:56"
+    },
+    {
+      "id": "3ejs_sheets_api_final::getallrows",
+      "label": "getAllRows",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts:79"
+    },
+    {
+      "id": "3ejs_sheets_api_final::appendrow",
+      "label": "appendRow",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts:91"
+    },
+    {
+      "id": "3ejs_sheets_api_final::updaterow",
+      "label": "updateRow",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts:104"
+    },
+    {
+      "id": "3ejs_sheets_api_final::deleterow",
+      "label": "deleteRow",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts:122"
+    },
+    {
+      "id": "3ejs_sheets_api_final::filterrows",
+      "label": "filterRows",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts:130"
+    },
+    {
+      "id": "3ejs_sheets_api_final::getcolumns",
+      "label": "getColumns",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts:134"
+    },
+    {
+      "id": "3ejs_sheets_api_final::jsonresponse",
+      "label": "jsonResponse",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts:141"
+    },
+    {
+      "id": "3ejs_sheets_api_final::setupsheets",
+      "label": "setupSheets",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts:145"
+    },
+    {
+      "id": "file::3ejs_sheets_api_standalone",
+      "label": "3EJS_Sheets_API_standalone.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts:1"
+    },
+    {
+      "id": "3ejs_sheets_api_standalone::getspreadsheet",
+      "label": "getSpreadsheet",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts:42"
+    },
+    {
+      "id": "3ejs_sheets_api_standalone::doget",
+      "label": "doGet",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts:46"
+    },
+    {
+      "id": "3ejs_sheets_api_standalone::dopost",
+      "label": "doPost",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts:60"
+    },
+    {
+      "id": "3ejs_sheets_api_standalone::getallrows",
+      "label": "getAllRows",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts:83"
+    },
+    {
+      "id": "3ejs_sheets_api_standalone::appendrow",
+      "label": "appendRow",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts:95"
+    },
+    {
+      "id": "3ejs_sheets_api_standalone::updaterow",
+      "label": "updateRow",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts:108"
+    },
+    {
+      "id": "3ejs_sheets_api_standalone::deleterow",
+      "label": "deleteRow",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts:126"
+    },
+    {
+      "id": "3ejs_sheets_api_standalone::filterrows",
+      "label": "filterRows",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts:134"
+    },
+    {
+      "id": "3ejs_sheets_api_standalone::getcolumns",
+      "label": "getColumns",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts:138"
+    },
+    {
+      "id": "3ejs_sheets_api_standalone::jsonresponse",
+      "label": "jsonResponse",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts:145"
+    },
+    {
+      "id": "3ejs_sheets_api_standalone::setupsheets",
+      "label": "setupSheets",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts:149"
+    },
+    {
+      "id": "file::3ejs_sheets_api_v2",
+      "label": "3EJS_Sheets_API_v2.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts:1"
+    },
+    {
+      "id": "3ejs_sheets_api_v2::dooptions",
+      "label": "doOptions",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts:34"
+    },
+    {
+      "id": "3ejs_sheets_api_v2::doget",
+      "label": "doGet",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts:42"
+    },
+    {
+      "id": "3ejs_sheets_api_v2::dopost",
+      "label": "doPost",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts:56"
+    },
+    {
+      "id": "3ejs_sheets_api_v2::getsheet",
+      "label": "getSheet",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts:78"
+    },
+    {
+      "id": "3ejs_sheets_api_v2::getallrows",
+      "label": "getAllRows",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts:83"
+    },
+    {
+      "id": "3ejs_sheets_api_v2::appendrow",
+      "label": "appendRow",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts:95"
+    },
+    {
+      "id": "3ejs_sheets_api_v2::updaterow",
+      "label": "updateRow",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts:108"
+    },
+    {
+      "id": "3ejs_sheets_api_v2::deleterow",
+      "label": "deleteRow",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts:126"
+    },
+    {
+      "id": "3ejs_sheets_api_v2::filterrows",
+      "label": "filterRows",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts:134"
+    },
+    {
+      "id": "3ejs_sheets_api_v2::getcolumns",
+      "label": "getColumns",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts:138"
+    },
+    {
+      "id": "3ejs_sheets_api_v2::jsonresponse",
+      "label": "jsonResponse",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts:145"
+    },
+    {
+      "id": "3ejs_sheets_api_v2::setupsheets",
+      "label": "setupSheets",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts:152"
+    },
+    {
+      "id": "file::3ejs_sheets_api_v3",
+      "label": "3EJS_Sheets_API_v3.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts:1"
+    },
+    {
+      "id": "3ejs_sheets_api_v3::doget",
+      "label": "doGet",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts:34"
+    },
+    {
+      "id": "3ejs_sheets_api_v3::dopost",
+      "label": "doPost",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts:49"
+    },
+    {
+      "id": "3ejs_sheets_api_v3::getsheet",
+      "label": "getSheet",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts:71"
+    },
+    {
+      "id": "3ejs_sheets_api_v3::getallrows",
+      "label": "getAllRows",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts:76"
+    },
+    {
+      "id": "3ejs_sheets_api_v3::appendrow",
+      "label": "appendRow",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts:88"
+    },
+    {
+      "id": "3ejs_sheets_api_v3::updaterow",
+      "label": "updateRow",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts:101"
+    },
+    {
+      "id": "3ejs_sheets_api_v3::deleterow",
+      "label": "deleteRow",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts:119"
+    },
+    {
+      "id": "3ejs_sheets_api_v3::filterrows",
+      "label": "filterRows",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts:127"
+    },
+    {
+      "id": "3ejs_sheets_api_v3::getcolumns",
+      "label": "getColumns",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts:131"
+    },
+    {
+      "id": "3ejs_sheets_api_v3::setupsheets",
+      "label": "setupSheets",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts:138"
+    },
+    {
+      "id": "file::create_test_user",
+      "label": "create-test-user.js",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\create-test-user.js",
+      "sourceLocation": "E:\\3EJS-main\\create-test-user.js:1"
+    },
+    {
+      "id": "create_test_user::createtestuser",
+      "label": "createTestUser",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\create-test-user.js",
+      "sourceLocation": "E:\\3EJS-main\\create-test-user.js:4"
+    },
+    {
+      "id": "file::jest_config",
+      "label": "jest.config.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\jest.config.ts",
+      "sourceLocation": "E:\\3EJS-main\\jest.config.ts:1"
+    },
+    {
+      "id": "file::jest_setup",
+      "label": "jest.setup.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\jest.setup.ts",
+      "sourceLocation": "E:\\3EJS-main\\jest.setup.ts:1"
+    },
+    {
+      "id": "file::next_env_d",
+      "label": "next-env.d.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\next-env.d.ts",
+      "sourceLocation": "E:\\3EJS-main\\next-env.d.ts:1"
+    },
+    {
+      "id": "file::next_config",
+      "label": "next.config.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\next.config.ts",
+      "sourceLocation": "E:\\3EJS-main\\next.config.ts:1"
+    },
+    {
+      "id": "file::sheets_code",
+      "label": "SHEETS_CODE.js",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\SHEETS_CODE.js",
+      "sourceLocation": "E:\\3EJS-main\\SHEETS_CODE.js:1"
+    },
+    {
+      "id": "sheets_code::getsheetbyname",
+      "label": "getSheetByName",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\SHEETS_CODE.js",
+      "sourceLocation": "E:\\3EJS-main\\SHEETS_CODE.js:28"
+    },
+    {
+      "id": "sheets_code::formatcellvalue",
+      "label": "formatCellValue",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\SHEETS_CODE.js",
+      "sourceLocation": "E:\\3EJS-main\\SHEETS_CODE.js:37"
+    },
+    {
+      "id": "sheets_code::findheaderrow",
+      "label": "findHeaderRow",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\SHEETS_CODE.js",
+      "sourceLocation": "E:\\3EJS-main\\SHEETS_CODE.js:50"
+    },
+    {
+      "id": "sheets_code::doget",
+      "label": "doGet",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\SHEETS_CODE.js",
+      "sourceLocation": "E:\\3EJS-main\\SHEETS_CODE.js:67"
+    },
+    {
+      "id": "sheets_code::dopost",
+      "label": "doPost",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\SHEETS_CODE.js",
+      "sourceLocation": "E:\\3EJS-main\\SHEETS_CODE.js:134"
+    },
+    {
+      "id": "file::route",
+      "label": "route.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\api\\users\\route.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\api\\users\\route.ts:1"
+    },
+    {
+      "id": "route::post",
+      "label": "POST",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\api\\users\\route.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\api\\users\\route.ts:19"
+    },
+    {
+      "id": "route::get",
+      "label": "GET",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\api\\users\\route.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\api\\users\\route.ts:4"
+    },
+    {
+      "id": "route::patch",
+      "label": "PATCH",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\api\\users\\route.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\api\\users\\route.ts:42"
+    },
+    {
+      "id": "route::delete",
+      "label": "DELETE",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\api\\users\\route.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\api\\users\\route.ts:61"
+    },
+    {
+      "id": "route::tocamelcaseinstallation",
+      "label": "toCamelCaseInstallation",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\api\\installations\\route.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\api\\installations\\route.ts:5"
+    },
+    {
+      "id": "file::page",
+      "label": "page.tsx",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\technicians\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\technicians\\page.tsx:1"
+    },
+    {
+      "id": "page::handlesync",
+      "label": "handleSync",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\settings\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\settings\\page.tsx:51"
+    },
+    {
+      "id": "page::handlenotifystatuschange",
+      "label": "handleNotifyStatusChange",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\subscribers\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\subscribers\\page.tsx:298"
+    },
+    {
+      "id": "page::handleloadstatuschange",
+      "label": "handleLoadStatusChange",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\subscribers\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\subscribers\\page.tsx:309"
+    },
+    {
+      "id": "page::parsenum",
+      "label": "parseNum",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\dashboard\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\dashboard\\page.tsx:143"
+    },
+    {
+      "id": "page::formatcurrency",
+      "label": "formatCurrency",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\dashboard\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\dashboard\\page.tsx:152"
+    },
+    {
+      "id": "page::handlemousemove",
+      "label": "handleMouseMove",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\eload\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\eload\\page.tsx:84"
+    },
+    {
+      "id": "page::handlemouseup",
+      "label": "handleMouseUp",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\eload\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\eload\\page.tsx:91"
+    },
+    {
+      "id": "page::handleamountchange",
+      "label": "handleAmountChange",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\eload\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\eload\\page.tsx:166"
+    },
+    {
+      "id": "page::handlesubmit",
+      "label": "handleSubmit",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\subscribers\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\subscribers\\page.tsx:231"
+    },
+    {
+      "id": "page::handledeleteconfirm",
+      "label": "handleDeleteConfirm",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\subscribers\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\subscribers\\page.tsx:289"
+    },
+    {
+      "id": "page::handleprint",
+      "label": "handlePrint",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\subscribers\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\subscribers\\page.tsx:201"
+    },
+    {
+      "id": "page::handleviewdetail",
+      "label": "handleViewDetail",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\historical\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\historical\\page.tsx:118"
+    },
+    {
+      "id": "page::handleinputchange",
+      "label": "handleInputChange",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\subscribers\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\subscribers\\page.tsx:227"
+    },
+    {
+      "id": "page::handletechniciantoggle",
+      "label": "handleTechnicianToggle",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\subscribers\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\subscribers\\page.tsx:92"
+    },
+    {
+      "id": "page::handleaddtechnician",
+      "label": "handleAddTechnician",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\installations\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\installations\\page.tsx:108"
+    },
+    {
+      "id": "file::layout",
+      "label": "layout.tsx",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\layout.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\layout.tsx:1"
+    },
+    {
+      "id": "layout::rootlayout",
+      "label": "RootLayout",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\layout.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\layout.tsx:32"
+    },
+    {
+      "id": "page::homepage",
+      "label": "HomePage",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\page.tsx:7"
+    },
+    {
+      "id": "page::handlesaveuser",
+      "label": "handleSaveUser",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\settings\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\settings\\page.tsx:36"
+    },
+    {
+      "id": "page::handleclearlocaldb",
+      "label": "handleClearLocalDB",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\settings\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\settings\\page.tsx:64"
+    },
+    {
+      "id": "page::handlearchivepreviousyears",
+      "label": "handleArchivePreviousYears",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\settings\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\settings\\page.tsx:92"
+    },
+    {
+      "id": "page::parsedate",
+      "label": "parseDate",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\subscribers\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\subscribers\\page.tsx:171"
+    },
+    {
+      "id": "page::handleedit",
+      "label": "handleEdit",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\subscribers\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\subscribers\\page.tsx:192"
+    },
+    {
+      "id": "page::handlesave",
+      "label": "handleSave",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\subscribers\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\subscribers\\page.tsx:219"
+    },
+    {
+      "id": "page::handleclickoutside",
+      "label": "handleClickOutside",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\technicians\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\technicians\\page.tsx:27"
+    },
+    {
+      "id": "page::toggleselect",
+      "label": "toggleSelect",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\technicians\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\technicians\\page.tsx:40"
+    },
+    {
+      "id": "page::removeselected",
+      "label": "removeSelected",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\technicians\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\technicians\\page.tsx:44"
+    },
+    {
+      "id": "page::handleupdateprofile",
+      "label": "handleUpdateProfile",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\technicians\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\technicians\\page.tsx:310"
+    },
+    {
+      "id": "page::handlemerge",
+      "label": "handleMerge",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\technicians\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\technicians\\page.tsx:324"
+    },
+    {
+      "id": "file::clientripple",
+      "label": "ClientRipple.tsx",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\common\\ClientRipple.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\common\\ClientRipple.tsx:1"
+    },
+    {
+      "id": "ClientRipple::handleclick",
+      "label": "handleClick",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\common\\ClientRipple.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\common\\ClientRipple.tsx:12"
+    },
+    {
+      "id": "file::columnconfigpanel",
+      "label": "ColumnConfigPanel.tsx",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\common\\ColumnConfigPanel.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\common\\ColumnConfigPanel.tsx:1"
+    },
+    {
+      "id": "columnconfigpanel::handleclickoutside",
+      "label": "handleClickOutside",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\common\\ColumnConfigPanel.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\common\\ColumnConfigPanel.tsx:25"
+    },
+    {
+      "id": "file::dataloader",
+      "label": "DataLoader.tsx",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\common\\DataLoader.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\common\\DataLoader.tsx:1"
+    },
+    {
+      "id": "file::errorboundary",
+      "label": "ErrorBoundary.tsx",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\common\\ErrorBoundary.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\common\\ErrorBoundary.tsx:1"
+    },
+    {
+      "id": "errorboundary::constructor",
+      "label": "constructor",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\common\\ErrorBoundary.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\common\\ErrorBoundary.tsx:18"
+    },
+    {
+      "id": "errorboundary::getderivedstatefromerror",
+      "label": "getDerivedStateFromError",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\common\\ErrorBoundary.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\common\\ErrorBoundary.tsx:23"
+    },
+    {
+      "id": "errorboundary::componentdidcatch",
+      "label": "componentDidCatch",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\common\\ErrorBoundary.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\common\\ErrorBoundary.tsx:27"
+    },
+    {
+      "id": "file::header",
+      "label": "Header.tsx",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\common\\Header.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\common\\Header.tsx:1"
+    },
+    {
+      "id": "file::layoutwrapper",
+      "label": "LayoutWrapper.tsx",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\common\\LayoutWrapper.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\common\\LayoutWrapper.tsx:1"
+    },
+    {
+      "id": "file::mobilenav",
+      "label": "MobileNav.tsx",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\common\\MobileNav.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\common\\MobileNav.tsx:1"
+    },
+    {
+      "id": "file::pagecontainer",
+      "label": "PageContainer.tsx",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\common\\PageContainer.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\common\\PageContainer.tsx:1"
+    },
+    {
+      "id": "PageContainer::button",
+      "label": "Button",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\common\\PageContainer.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\common\\PageContainer.tsx:37"
+    },
+    {
+      "id": "PageContainer::statusdot",
+      "label": "StatusDot",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\common\\PageContainer.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\common\\PageContainer.tsx:121"
+    },
+    {
+      "id": "file::rechartslazy",
+      "label": "RechartsLazy.tsx",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\common\\RechartsLazy.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\common\\RechartsLazy.tsx:1"
+    },
+    {
+      "id": "file::settingsbutton",
+      "label": "SettingsButton.tsx",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\common\\SettingsButton.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\common\\SettingsButton.tsx:1"
+    },
+    {
+      "id": "SettingsButton::settingsbutton",
+      "label": "SettingsButton",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\common\\SettingsButton.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\common\\SettingsButton.tsx:11"
+    },
+    {
+      "id": "file::sidebar",
+      "label": "Sidebar.tsx",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\common\\Sidebar.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\common\\Sidebar.tsx:1"
+    },
+    {
+      "id": "sidebar::navicon",
+      "label": "NavIcon",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\common\\Sidebar.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\common\\Sidebar.tsx:30"
+    },
+    {
+      "id": "Sidebar::handlenewinstallation",
+      "label": "handleNewInstallation",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\common\\Sidebar.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\common\\Sidebar.tsx:62"
+    },
+    {
+      "id": "Sidebar::handleneweload",
+      "label": "handleNewELoad",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\common\\Sidebar.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\common\\Sidebar.tsx:69"
+    },
+    {
+      "id": "file::syncbutton",
+      "label": "SyncButton.tsx",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\common\\SyncButton.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\common\\SyncButton.tsx:1"
+    },
+    {
+      "id": "file::syncconflictmodal",
+      "label": "SyncConflictModal.tsx",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\sync\\SyncConflictModal.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\sync\\SyncConflictModal.tsx:1"
+    },
+    {
+      "id": "SyncConflictModal::handleresolve",
+      "label": "handleResolve",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\sync\\SyncConflictModal.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\sync\\SyncConflictModal.tsx:29"
+    },
+    {
+      "id": "file::syncprovider",
+      "label": "SyncProvider.tsx",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\sync\\SyncProvider.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\sync\\SyncProvider.tsx:1"
+    },
+    {
+      "id": "syncprovider::syncprovider",
+      "label": "SyncProvider",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\sync\\SyncProvider.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\sync\\SyncProvider.tsx:11"
+    },
+    {
+      "id": "file::syncstatus",
+      "label": "SyncStatus.tsx",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\sync\\SyncStatus.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\sync\\SyncStatus.tsx:1"
+    },
+    {
+      "id": "syncstatus::syncstatus",
+      "label": "SyncStatus",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\sync\\SyncStatus.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\sync\\SyncStatus.tsx:8"
+    },
+    {
+      "id": "file::themecustomizer",
+      "label": "ThemeCustomizer.tsx",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\theme\\ThemeCustomizer.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\theme\\ThemeCustomizer.tsx:1"
+    },
+    {
+      "id": "file::authcontext",
+      "label": "AuthContext.tsx",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\context\\AuthContext.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\context\\AuthContext.tsx:1"
+    },
+    {
+      "id": "AuthContext::authprovider",
+      "label": "AuthProvider",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\context\\AuthContext.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\context\\AuthContext.tsx:16"
+    },
+    {
+      "id": "AuthContext::useauth",
+      "label": "useAuth",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\context\\AuthContext.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\context\\AuthContext.tsx:101"
+    },
+    {
+      "id": "file::dataprovider",
+      "label": "DataProvider.tsx",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\context\\DataProvider.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\context\\DataProvider.tsx:1"
+    },
+    {
+      "id": "dataprovider::usedataloading",
+      "label": "useDataLoading",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\context\\DataProvider.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\context\\DataProvider.tsx:18"
+    },
+    {
+      "id": "dataprovider::dataprovider",
+      "label": "DataProvider",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\context\\DataProvider.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\context\\DataProvider.tsx:22"
+    },
+    {
+      "id": "file::useauth",
+      "label": "useAuth.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useAuth.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useAuth.ts:1"
+    },
+    {
+      "id": "useAuth::useauth",
+      "label": "useAuth",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useAuth.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useAuth.ts:4"
+    },
+    {
+      "id": "useAuth::userequirerole",
+      "label": "useRequireRole",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useAuth.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useAuth.ts:8"
+    },
+    {
+      "id": "file::useautoflush",
+      "label": "useAutoFlush.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useAutoFlush.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useAutoFlush.ts:1"
+    },
+    {
+      "id": "useautoflush::useautoflush",
+      "label": "useAutoFlush",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useAutoFlush.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useAutoFlush.ts:8"
+    },
+    {
+      "id": "file::useeventlistener",
+      "label": "useEventListener.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useEventListener.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useEventListener.ts:1"
+    },
+    {
+      "id": "useeventlistener::emitevent",
+      "label": "emitEvent",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useEventListener.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useEventListener.ts:9"
+    },
+    {
+      "id": "useeventlistener::getlistenerset",
+      "label": "getListenerSet",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useEventListener.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useEventListener.ts:15"
+    },
+    {
+      "id": "useeventlistener::useeventlistener",
+      "label": "useEventListener",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useEventListener.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useEventListener.ts:22"
+    },
+    {
+      "id": "useeventlistener::usedbsync",
+      "label": "useDbSync",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useEventListener.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useEventListener.ts:46"
+    },
+    {
+      "id": "useeventlistener::userecordsupdate",
+      "label": "useRecordsUpdate",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useEventListener.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useEventListener.ts:50"
+    },
+    {
+      "id": "file::usequickaction",
+      "label": "useQuickAction.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useQuickAction.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useQuickAction.ts:1"
+    },
+    {
+      "id": "file::usetableconfig",
+      "label": "useTableConfig.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useTableConfig.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useTableConfig.ts:1"
+    },
+    {
+      "id": "usetableconfig::usetableconfig",
+      "label": "useTableConfig",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useTableConfig.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useTableConfig.ts:21"
+    },
+    {
+      "id": "usetableconfig::sortdata",
+      "label": "sortData",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useTableConfig.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useTableConfig.ts:125"
+    },
+    {
+      "id": "file::usetheme",
+      "label": "useTheme.tsx",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useTheme.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useTheme.tsx:1"
+    },
+    {
+      "id": "usetheme::loadprefs",
+      "label": "loadPrefs",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useTheme.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useTheme.tsx:33"
+    },
+    {
+      "id": "usetheme::applythemeandpalette",
+      "label": "applyThemeAndPalette",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useTheme.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useTheme.tsx:50"
+    },
+    {
+      "id": "usetheme::applyfont",
+      "label": "applyFont",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useTheme.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useTheme.tsx:64"
+    },
+    {
+      "id": "usetheme::applyfontsize",
+      "label": "applyFontSize",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useTheme.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useTheme.tsx:68"
+    },
+    {
+      "id": "usetheme::saveprefs",
+      "label": "savePrefs",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useTheme.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useTheme.tsx:72"
+    },
+    {
+      "id": "file::api",
+      "label": "api.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\api.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\api.ts:1"
+    },
+    {
+      "id": "api::getheaders",
+      "label": "getHeaders",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\api.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\api.ts:7"
+    },
+    {
+      "id": "api::apiget",
+      "label": "apiGet",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\api.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\api.ts:21"
+    },
+    {
+      "id": "api::apipost",
+      "label": "apiPost",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\api.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\api.ts:25"
+    },
+    {
+      "id": "api::apipatch",
+      "label": "apiPatch",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\api.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\api.ts:33"
+    },
+    {
+      "id": "api::apidelete",
+      "label": "apiDelete",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\api.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\api.ts:41"
+    },
+    {
+      "id": "file::auth_utils",
+      "label": "auth-utils.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\auth-utils.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\auth-utils.ts:1"
+    },
+    {
+      "id": "auth_utils::hashpassword",
+      "label": "hashPassword",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\auth-utils.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\auth-utils.ts:6"
+    },
+    {
+      "id": "auth_utils::verifypassword",
+      "label": "verifyPassword",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\auth-utils.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\auth-utils.ts:10"
+    },
+    {
+      "id": "auth_utils::hashpasswordifneeded",
+      "label": "hashPasswordIfNeeded",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\auth-utils.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\auth-utils.ts:32"
+    },
+    {
+      "id": "auth_utils::checkpermission",
+      "label": "checkPermission",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\auth-utils.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\auth-utils.ts:39"
+    },
+    {
+      "id": "file::axios",
+      "label": "axios.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\axios.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\axios.ts:1"
+    },
+    {
+      "id": "file::database",
+      "label": "database.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\database.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\database.ts:1"
+    },
+    {
+      "id": "database::geteloadtransactionsbyaccount",
+      "label": "getEloadTransactionsByAccount",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\database.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\database.ts:4"
+    },
+    {
+      "id": "file::local_db",
+      "label": "local-db.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\local-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\local-db.ts:1"
+    },
+    {
+      "id": "local_db::isindexeddbavailable",
+      "label": "isIndexedDBAvailable",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\local-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\local-db.ts:16"
+    },
+    {
+      "id": "local_db::opendb",
+      "label": "openDB",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\local-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\local-db.ts:20"
+    },
+    {
+      "id": "local_db::getall",
+      "label": "getAll",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\local-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\local-db.ts:46"
+    },
+    {
+      "id": "local_db::getbyid",
+      "label": "getById",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\local-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\local-db.ts:56"
+    },
+    {
+      "id": "local_db::put",
+      "label": "put",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\local-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\local-db.ts:66"
+    },
+    {
+      "id": "local_db::remove",
+      "label": "remove",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\local-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\local-db.ts:76"
+    },
+    {
+      "id": "local_db::clearstore",
+      "label": "clearStore",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\local-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\local-db.ts:86"
+    },
+    {
+      "id": "local_db::putbatch",
+      "label": "putBatch",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\local-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\local-db.ts:96"
+    },
+    {
+      "id": "local_db::exportall",
+      "label": "exportAll",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\local-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\local-db.ts:107"
+    },
+    {
+      "id": "local_db::importall",
+      "label": "importAll",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\local-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\local-db.ts:115"
+    },
+    {
+      "id": "local_db::clearall",
+      "label": "clearAll",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\local-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\local-db.ts:124"
+    },
+    {
+      "id": "file::mappers",
+      "label": "mappers.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\mappers.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\mappers.ts:1"
+    },
+    {
+      "id": "mappers::parseexcelserialdate",
+      "label": "parseExcelSerialDate",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\mappers.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\mappers.ts:3"
+    },
+    {
+      "id": "mappers::parsedate",
+      "label": "parseDate",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\mappers.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\mappers.ts:30"
+    },
+    {
+      "id": "mappers::normalizeaccountnumber",
+      "label": "normalizeAccountNumber",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\mappers.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\mappers.ts:57"
+    },
+    {
+      "id": "mappers::normalizeinstallationrow",
+      "label": "normalizeInstallationRow",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\mappers.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\mappers.ts:61"
+    },
+    {
+      "id": "mappers::denormalizeinstallationrow",
+      "label": "denormalizeInstallationRow",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\mappers.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\mappers.ts:107"
+    },
+    {
+      "id": "mappers::normalizeeloadrow",
+      "label": "normalizeEloadRow",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\mappers.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\mappers.ts:148"
+    },
+    {
+      "id": "mappers::denormalizeeloadrow",
+      "label": "denormalizeEloadRow",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\mappers.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\mappers.ts:167"
+    },
+    {
+      "id": "file::sheets_mapper",
+      "label": "sheets-mapper.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sheets-mapper.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sheets-mapper.ts:1"
+    },
+    {
+      "id": "sheets_mapper::getmappingforsheet",
+      "label": "getMappingForSheet",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sheets-mapper.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sheets-mapper.ts:45"
+    },
+    {
+      "id": "sheets_mapper::mapsnaketocamel",
+      "label": "mapSnakeToCamel",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sheets-mapper.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sheets-mapper.ts:54"
+    },
+    {
+      "id": "sheets_mapper::mapcameltosnake",
+      "label": "mapCamelToSnake",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sheets-mapper.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sheets-mapper.ts:67"
+    },
+    {
+      "id": "file::sheets",
+      "label": "sheets.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sheets.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sheets.ts:1"
+    },
+    {
+      "id": "sheets::sheetsfetch",
+      "label": "sheetsFetch",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sheets.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sheets.ts:11"
+    },
+    {
+      "id": "sheets::getall",
+      "label": "getAll",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sheets.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sheets.ts:91"
+    },
+    {
+      "id": "sheets::appendrow",
+      "label": "appendRow",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sheets.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sheets.ts:99"
+    },
+    {
+      "id": "sheets::updaterow",
+      "label": "updateRow",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sheets.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sheets.ts:107"
+    },
+    {
+      "id": "sheets::deleterow",
+      "label": "deleteRow",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sheets.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sheets.ts:115"
+    },
+    {
+      "id": "sheets::getbykey",
+      "label": "getByKey",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sheets.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sheets.ts:123"
+    },
+    {
+      "id": "sheets::filterrows",
+      "label": "filterRows",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sheets.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sheets.ts:128"
+    },
+    {
+      "id": "file::sync_queue",
+      "label": "sync-queue.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sync-queue.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sync-queue.ts:1"
+    },
+    {
+      "id": "sync_queue::generateopid",
+      "label": "generateOpId",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sync-queue.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sync-queue.ts:7"
+    },
+    {
+      "id": "sync_queue::getsyncqueuestore",
+      "label": "getSyncQueueStore",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sync-queue.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sync-queue.ts:11"
+    },
+    {
+      "id": "sync_queue::enqueueop",
+      "label": "enqueueOp",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sync-queue.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sync-queue.ts:15"
+    },
+    {
+      "id": "sync_queue::saverecordsnapshot",
+      "label": "saveRecordSnapshot",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sync-queue.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sync-queue.ts:42"
+    },
+    {
+      "id": "sync_queue::getrecordsnapshot",
+      "label": "getRecordSnapshot",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sync-queue.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sync-queue.ts:58"
+    },
+    {
+      "id": "sync_queue::fetchsheetsrow",
+      "label": "fetchSheetsRow",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sync-queue.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sync-queue.ts:71"
+    },
+    {
+      "id": "sync_queue::updateopstatus",
+      "label": "updateOpStatus",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sync-queue.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sync-queue.ts:79"
+    },
+    {
+      "id": "sync_queue::removeop",
+      "label": "removeOp",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sync-queue.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sync-queue.ts:90"
+    },
+    {
+      "id": "sync_queue::resolveconflict",
+      "label": "resolveConflict",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sync-queue.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sync-queue.ts:96"
+    },
+    {
+      "id": "sync_queue::flushqueue",
+      "label": "flushQueue",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sync-queue.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sync-queue.ts:121"
+    },
+    {
+      "id": "file::themes",
+      "label": "themes.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\themes.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\themes.ts:1"
+    },
+    {
+      "id": "themes::gettheme",
+      "label": "getTheme",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\themes.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\themes.ts:128"
+    },
+    {
+      "id": "themes::getpalette",
+      "label": "getPalette",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\themes.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\themes.ts:132"
+    },
+    {
+      "id": "file::types",
+      "label": "types.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\types.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\types.ts:1"
+    },
+    {
+      "id": "file::unified_db",
+      "label": "unified-db.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:1"
+    },
+    {
+      "id": "unified_db::getallinstallations",
+      "label": "getAllInstallations",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:51"
+    },
+    {
+      "id": "unified_db::formatloadexpire",
+      "label": "formatLoadExpire",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:73"
+    },
+    {
+      "id": "unified_db::createinstallation",
+      "label": "createInstallation",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:82"
+    },
+    {
+      "id": "unified_db::updateinstallation",
+      "label": "updateInstallation",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:110"
+    },
+    {
+      "id": "unified_db::deleteinstallation",
+      "label": "deleteInstallation",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:144"
+    },
+    {
+      "id": "unified_db::getalleload",
+      "label": "getAllEload",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:156"
+    },
+    {
+      "id": "unified_db::createeload",
+      "label": "createEload",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:178"
+    },
+    {
+      "id": "unified_db::updateeload",
+      "label": "updateEload",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:193"
+    },
+    {
+      "id": "unified_db::deleteeload",
+      "label": "deleteEload",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:214"
+    },
+    {
+      "id": "unified_db::getallusers",
+      "label": "getAllUsers",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:226"
+    },
+    {
+      "id": "unified_db::createuser",
+      "label": "createUser",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:248"
+    },
+    {
+      "id": "unified_db::updateuser",
+      "label": "updateUser",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:265"
+    },
+    {
+      "id": "unified_db::deleteuser",
+      "label": "deleteUser",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:286"
+    },
+    {
+      "id": "unified_db::authenticateuser",
+      "label": "authenticateUser",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:292"
+    },
+    {
+      "id": "unified_db::getallhistoricaldata",
+      "label": "getAllHistoricalData",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:300"
+    },
+    {
+      "id": "unified_db::syncfromremote",
+      "label": "syncFromRemote",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:324"
+    },
+    {
+      "id": "unified_db::checkandupdateinstallationforload",
+      "label": "checkAndUpdateInstallationForLoad",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:345"
+    },
+    {
+      "id": "unified_db::archivepreviousyears",
+      "label": "archivePreviousYears",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:361"
+    },
+    {
+      "id": "file::utils",
+      "label": "utils.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\utils.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\utils.ts:1"
+    },
+    {
+      "id": "utils::formatdate",
+      "label": "formatDate",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\utils.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\utils.ts:8"
+    },
+    {
+      "id": "utils::formatdatedisplay",
+      "label": "formatDateDisplay",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\utils.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\utils.ts:47"
+    },
+    {
+      "id": "utils::formatdateshort",
+      "label": "formatDateShort",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\utils.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\utils.ts:99"
+    },
+    {
+      "id": "utils::excelserialtodate",
+      "label": "excelSerialToDate",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\utils.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\utils.ts:108"
+    },
+    {
+      "id": "utils::toinputdate",
+      "label": "toInputDate",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\utils.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\utils.ts:129"
+    },
+    {
+      "id": "utils::tostoragedate",
+      "label": "toStorageDate",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\utils.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\utils.ts:138"
+    },
+    {
+      "id": "utils::todaystoragedate",
+      "label": "todayStorageDate",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\utils.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\utils.ts:147"
+    },
+    {
+      "id": "utils::toexcelserial",
+      "label": "toExcelSerial",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\utils.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\utils.ts:155"
+    },
+    {
+      "id": "utils::formattime",
+      "label": "formatTime",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\utils.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\utils.ts:178"
+    },
+    {
+      "id": "file::validation",
+      "label": "validation.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\validation.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\validation.ts:1"
+    },
+    {
+      "id": "validation::validateinstallation",
+      "label": "validateInstallation",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\validation.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\validation.ts:110"
+    },
+    {
+      "id": "validation::validateeloadtransaction",
+      "label": "validateELoadTransaction",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\validation.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\validation.ts:118"
+    },
+    {
+      "id": "validation::validateuser",
+      "label": "validateUser",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\validation.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\validation.ts:126"
+    },
+    {
+      "id": "file::eloadstore",
+      "label": "eloadStore.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\stores\\eloadStore.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\stores\\eloadStore.ts:1"
+    },
+    {
+      "id": "file::historicaldatastore",
+      "label": "historicalDataStore.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\stores\\historicalDataStore.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\stores\\historicalDataStore.ts:1"
+    },
+    {
+      "id": "historicaldatastore::normalizehistoricalrow",
+      "label": "normalizeHistoricalRow",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\stores\\historicalDataStore.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\stores\\historicalDataStore.ts:15"
+    },
+    {
+      "id": "file::subscribersstore",
+      "label": "subscribersStore.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\stores\\subscribersStore.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\stores\\subscribersStore.ts:1"
+    },
+    {
+      "id": "file::syncqueuestore",
+      "label": "syncQueueStore.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\stores\\syncQueueStore.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\stores\\syncQueueStore.ts:1"
+    },
+    {
+      "id": "file::technicianprofilesstore",
+      "label": "technicianProfilesStore.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\stores\\technicianProfilesStore.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\stores\\technicianProfilesStore.ts:1"
+    },
+    {
+      "id": "file::techniciansstore",
+      "label": "techniciansStore.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\stores\\techniciansStore.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\stores\\techniciansStore.ts:1"
+    },
+    {
+      "id": "techniciansStore::gettechniciandisplayname",
+      "label": "getTechnicianDisplayName",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\stores\\techniciansStore.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\stores\\techniciansStore.ts:55"
+    },
+    {
+      "id": "file::usersstore",
+      "label": "usersStore.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\stores\\usersStore.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\stores\\usersStore.ts:1"
+    },
+    {
+      "id": "file::auth_utils_test",
+      "label": "auth-utils.test.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\__tests__\\auth-utils.test.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\__tests__\\auth-utils.test.ts:1"
+    },
+    {
+      "id": "file::mappers_test",
+      "label": "mappers.test.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\__tests__\\mappers.test.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\__tests__\\mappers.test.ts:1"
+    },
+    {
+      "id": "file::sync_queue_test",
+      "label": "sync-queue.test.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\__tests__\\sync-queue.test.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\__tests__\\sync-queue.test.ts:1"
+    },
+    {
+      "id": "file::utils_test",
+      "label": "utils.test.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\__tests__\\utils.test.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\__tests__\\utils.test.ts:1"
+    },
+    {
+      "id": "file::validation_test",
+      "label": "validation.test.ts",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\src\\__tests__\\validation.test.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\__tests__\\validation.test.ts:1"
+    },
+    {
+      "id": "file::verify_user",
+      "label": "verify-user.js",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\verify-user.js",
+      "sourceLocation": "E:\\3EJS-main\\verify-user.js:1"
+    },
+    {
+      "id": "verify_user::verifyuser",
+      "label": "verifyUser",
+      "fileType": "code",
+      "sourceFile": "E:\\3EJS-main\\verify-user.js",
+      "sourceLocation": "E:\\3EJS-main\\verify-user.js:6"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file::3ejs_sheets_api",
+      "target": "3ejs_sheets_api::dooptions",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API.ts:50",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api",
+      "target": "3ejs_sheets_api::doget",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API.ts:63",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api",
+      "target": "3ejs_sheets_api::dopost",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API.ts:86",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api",
+      "target": "3ejs_sheets_api::getallrows",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API.ts:130",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api",
+      "target": "3ejs_sheets_api::appendrow",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API.ts:153",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api",
+      "target": "3ejs_sheets_api::updaterow",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API.ts:182",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api",
+      "target": "3ejs_sheets_api::deleterow",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API.ts:217",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api",
+      "target": "3ejs_sheets_api::filterrows",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API.ts:235",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api",
+      "target": "3ejs_sheets_api::getcolumns",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API.ts:243",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api",
+      "target": "3ejs_sheets_api::getsheet",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API.ts:261",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api",
+      "target": "3ejs_sheets_api::jsonresponse",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API.ts:269",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api",
+      "target": "3ejs_sheets_api::setupsheets",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API.ts:283",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api",
+      "target": "3ejs_sheets_api::testapi",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API.ts:320",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_final",
+      "target": "3ejs_sheets_api_final::getspreadsheet",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts:38",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_final",
+      "target": "3ejs_sheets_api_final::doget",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts:42",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_final",
+      "target": "3ejs_sheets_api_final::dopost",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts:56",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_final",
+      "target": "3ejs_sheets_api_final::getallrows",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts:79",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_final",
+      "target": "3ejs_sheets_api_final::appendrow",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts:91",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_final",
+      "target": "3ejs_sheets_api_final::updaterow",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts:104",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_final",
+      "target": "3ejs_sheets_api_final::deleterow",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts:122",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_final",
+      "target": "3ejs_sheets_api_final::filterrows",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts:130",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_final",
+      "target": "3ejs_sheets_api_final::getcolumns",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts:134",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_final",
+      "target": "3ejs_sheets_api_final::jsonresponse",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts:141",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_final",
+      "target": "3ejs_sheets_api_final::setupsheets",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_final.ts:145",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_standalone",
+      "target": "3ejs_sheets_api_standalone::getspreadsheet",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts:42",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_standalone",
+      "target": "3ejs_sheets_api_standalone::doget",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts:46",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_standalone",
+      "target": "3ejs_sheets_api_standalone::dopost",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts:60",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_standalone",
+      "target": "3ejs_sheets_api_standalone::getallrows",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts:83",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_standalone",
+      "target": "3ejs_sheets_api_standalone::appendrow",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts:95",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_standalone",
+      "target": "3ejs_sheets_api_standalone::updaterow",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts:108",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_standalone",
+      "target": "3ejs_sheets_api_standalone::deleterow",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts:126",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_standalone",
+      "target": "3ejs_sheets_api_standalone::filterrows",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts:134",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_standalone",
+      "target": "3ejs_sheets_api_standalone::getcolumns",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts:138",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_standalone",
+      "target": "3ejs_sheets_api_standalone::jsonresponse",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts:145",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_standalone",
+      "target": "3ejs_sheets_api_standalone::setupsheets",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_standalone.ts:149",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_v2",
+      "target": "3ejs_sheets_api_v2::dooptions",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts:34",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_v2",
+      "target": "3ejs_sheets_api_v2::doget",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts:42",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_v2",
+      "target": "3ejs_sheets_api_v2::dopost",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts:56",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_v2",
+      "target": "3ejs_sheets_api_v2::getsheet",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts:78",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_v2",
+      "target": "3ejs_sheets_api_v2::getallrows",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts:83",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_v2",
+      "target": "3ejs_sheets_api_v2::appendrow",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts:95",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_v2",
+      "target": "3ejs_sheets_api_v2::updaterow",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts:108",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_v2",
+      "target": "3ejs_sheets_api_v2::deleterow",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts:126",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_v2",
+      "target": "3ejs_sheets_api_v2::filterrows",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts:134",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_v2",
+      "target": "3ejs_sheets_api_v2::getcolumns",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts:138",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_v2",
+      "target": "3ejs_sheets_api_v2::jsonresponse",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts:145",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_v2",
+      "target": "3ejs_sheets_api_v2::setupsheets",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v2.ts:152",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_v3",
+      "target": "3ejs_sheets_api_v3::doget",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts:34",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_v3",
+      "target": "3ejs_sheets_api_v3::dopost",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts:49",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_v3",
+      "target": "3ejs_sheets_api_v3::getsheet",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts:71",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_v3",
+      "target": "3ejs_sheets_api_v3::getallrows",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts:76",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_v3",
+      "target": "3ejs_sheets_api_v3::appendrow",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts:88",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_v3",
+      "target": "3ejs_sheets_api_v3::updaterow",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts:101",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_v3",
+      "target": "3ejs_sheets_api_v3::deleterow",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts:119",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_v3",
+      "target": "3ejs_sheets_api_v3::filterrows",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts:127",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_v3",
+      "target": "3ejs_sheets_api_v3::getcolumns",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts:131",
+      "weight": 1
+    },
+    {
+      "source": "file::3ejs_sheets_api_v3",
+      "target": "3ejs_sheets_api_v3::setupsheets",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts",
+      "sourceLocation": "E:\\3EJS-main\\3EJS_Sheets_API_v3.ts:138",
+      "weight": 1
+    },
+    {
+      "source": "file::create_test_user",
+      "target": "create_test_user::createtestuser",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\create-test-user.js",
+      "sourceLocation": "E:\\3EJS-main\\create-test-user.js:4",
+      "weight": 1
+    },
+    {
+      "source": "file::sheets_code",
+      "target": "sheets_code::getsheetbyname",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\SHEETS_CODE.js",
+      "sourceLocation": "E:\\3EJS-main\\SHEETS_CODE.js:28",
+      "weight": 1
+    },
+    {
+      "source": "file::sheets_code",
+      "target": "sheets_code::formatcellvalue",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\SHEETS_CODE.js",
+      "sourceLocation": "E:\\3EJS-main\\SHEETS_CODE.js:37",
+      "weight": 1
+    },
+    {
+      "source": "file::sheets_code",
+      "target": "sheets_code::findheaderrow",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\SHEETS_CODE.js",
+      "sourceLocation": "E:\\3EJS-main\\SHEETS_CODE.js:50",
+      "weight": 1
+    },
+    {
+      "source": "file::sheets_code",
+      "target": "sheets_code::doget",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\SHEETS_CODE.js",
+      "sourceLocation": "E:\\3EJS-main\\SHEETS_CODE.js:67",
+      "weight": 1
+    },
+    {
+      "source": "file::sheets_code",
+      "target": "sheets_code::dopost",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\SHEETS_CODE.js",
+      "sourceLocation": "E:\\3EJS-main\\SHEETS_CODE.js:134",
+      "weight": 1
+    },
+    {
+      "source": "file::route",
+      "target": "route::post",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\api\\archive\\route.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\api\\archive\\route.ts:4",
+      "weight": 1
+    },
+    {
+      "source": "file::route",
+      "target": "route::get",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\api\\eload\\route.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\api\\eload\\route.ts:5",
+      "weight": 1
+    },
+    {
+      "source": "file::route",
+      "target": "route::patch",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\api\\eload\\route.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\api\\eload\\route.ts:47",
+      "weight": 1
+    },
+    {
+      "source": "file::route",
+      "target": "route::delete",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\api\\eload\\route.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\api\\eload\\route.ts:70",
+      "weight": 1
+    },
+    {
+      "source": "file::route",
+      "target": "route::tocamelcaseinstallation",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\api\\installations\\route.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\api\\installations\\route.ts:5",
+      "weight": 1
+    },
+    {
+      "source": "file::page",
+      "target": "page::handlesync",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\clawback\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\clawback\\page.tsx:37",
+      "weight": 1
+    },
+    {
+      "source": "file::page",
+      "target": "page::handlenotifystatuschange",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\clawback\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\clawback\\page.tsx:104",
+      "weight": 1
+    },
+    {
+      "source": "file::page",
+      "target": "page::handleloadstatuschange",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\clawback\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\clawback\\page.tsx:116",
+      "weight": 1
+    },
+    {
+      "source": "file::page",
+      "target": "page::parsenum",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\dashboard\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\dashboard\\page.tsx:143",
+      "weight": 1
+    },
+    {
+      "source": "file::page",
+      "target": "page::formatcurrency",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\dashboard\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\dashboard\\page.tsx:152",
+      "weight": 1
+    },
+    {
+      "source": "file::page",
+      "target": "page::handlemousemove",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\eload\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\eload\\page.tsx:84",
+      "weight": 1
+    },
+    {
+      "source": "file::page",
+      "target": "page::handlemouseup",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\eload\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\eload\\page.tsx:91",
+      "weight": 1
+    },
+    {
+      "source": "file::page",
+      "target": "page::handleamountchange",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\eload\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\eload\\page.tsx:166",
+      "weight": 1
+    },
+    {
+      "source": "file::page",
+      "target": "page::handlesubmit",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\eload\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\eload\\page.tsx:171",
+      "weight": 1
+    },
+    {
+      "source": "file::page",
+      "target": "page::handledeleteconfirm",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\eload\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\eload\\page.tsx:227",
+      "weight": 1
+    },
+    {
+      "source": "file::page",
+      "target": "page::handleprint",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\eload\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\eload\\page.tsx:236",
+      "weight": 1
+    },
+    {
+      "source": "file::page",
+      "target": "page::handleviewdetail",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\historical\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\historical\\page.tsx:118",
+      "weight": 1
+    },
+    {
+      "source": "file::page",
+      "target": "page::handleinputchange",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\installations\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\installations\\page.tsx:93",
+      "weight": 1
+    },
+    {
+      "source": "file::page",
+      "target": "page::handletechniciantoggle",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\installations\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\installations\\page.tsx:97",
+      "weight": 1
+    },
+    {
+      "source": "file::page",
+      "target": "page::handleaddtechnician",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\installations\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\installations\\page.tsx:108",
+      "weight": 1
+    },
+    {
+      "source": "file::layout",
+      "target": "layout::rootlayout",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\layout.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\layout.tsx:32",
+      "weight": 1
+    },
+    {
+      "source": "file::page",
+      "target": "page::homepage",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\page.tsx:7",
+      "weight": 1
+    },
+    {
+      "source": "file::page",
+      "target": "page::handlesaveuser",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\settings\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\settings\\page.tsx:36",
+      "weight": 1
+    },
+    {
+      "source": "file::page",
+      "target": "page::handleclearlocaldb",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\settings\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\settings\\page.tsx:64",
+      "weight": 1
+    },
+    {
+      "source": "file::page",
+      "target": "page::handlearchivepreviousyears",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\settings\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\settings\\page.tsx:92",
+      "weight": 1
+    },
+    {
+      "source": "file::page",
+      "target": "page::parsedate",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\subscribers\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\subscribers\\page.tsx:171",
+      "weight": 1
+    },
+    {
+      "source": "file::page",
+      "target": "page::handleedit",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\subscribers\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\subscribers\\page.tsx:192",
+      "weight": 1
+    },
+    {
+      "source": "file::page",
+      "target": "page::handlesave",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\subscribers\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\subscribers\\page.tsx:219",
+      "weight": 1
+    },
+    {
+      "source": "file::page",
+      "target": "page::handleclickoutside",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\technicians\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\technicians\\page.tsx:27",
+      "weight": 1
+    },
+    {
+      "source": "file::page",
+      "target": "page::toggleselect",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\technicians\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\technicians\\page.tsx:40",
+      "weight": 1
+    },
+    {
+      "source": "file::page",
+      "target": "page::removeselected",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\technicians\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\technicians\\page.tsx:44",
+      "weight": 1
+    },
+    {
+      "source": "file::page",
+      "target": "page::handleupdateprofile",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\technicians\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\technicians\\page.tsx:310",
+      "weight": 1
+    },
+    {
+      "source": "file::page",
+      "target": "page::handlemerge",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\app\\technicians\\page.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\app\\technicians\\page.tsx:324",
+      "weight": 1
+    },
+    {
+      "source": "file::clientripple",
+      "target": "ClientRipple::handleclick",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\common\\ClientRipple.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\common\\ClientRipple.tsx:12",
+      "weight": 1
+    },
+    {
+      "source": "file::columnconfigpanel",
+      "target": "columnconfigpanel::handleclickoutside",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\common\\ColumnConfigPanel.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\common\\ColumnConfigPanel.tsx:25",
+      "weight": 1
+    },
+    {
+      "source": "file::errorboundary",
+      "target": "errorboundary::constructor",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\common\\ErrorBoundary.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\common\\ErrorBoundary.tsx:18",
+      "weight": 1
+    },
+    {
+      "source": "file::errorboundary",
+      "target": "errorboundary::getderivedstatefromerror",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\common\\ErrorBoundary.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\common\\ErrorBoundary.tsx:23",
+      "weight": 1
+    },
+    {
+      "source": "file::errorboundary",
+      "target": "errorboundary::componentdidcatch",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\common\\ErrorBoundary.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\common\\ErrorBoundary.tsx:27",
+      "weight": 1
+    },
+    {
+      "source": "file::pagecontainer",
+      "target": "PageContainer::button",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\common\\PageContainer.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\common\\PageContainer.tsx:37",
+      "weight": 1
+    },
+    {
+      "source": "file::pagecontainer",
+      "target": "PageContainer::statusdot",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\common\\PageContainer.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\common\\PageContainer.tsx:121",
+      "weight": 1
+    },
+    {
+      "source": "file::settingsbutton",
+      "target": "SettingsButton::settingsbutton",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\common\\SettingsButton.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\common\\SettingsButton.tsx:11",
+      "weight": 1
+    },
+    {
+      "source": "file::sidebar",
+      "target": "sidebar::navicon",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\common\\Sidebar.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\common\\Sidebar.tsx:30",
+      "weight": 1
+    },
+    {
+      "source": "file::sidebar",
+      "target": "Sidebar::handlenewinstallation",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\common\\Sidebar.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\common\\Sidebar.tsx:62",
+      "weight": 1
+    },
+    {
+      "source": "file::sidebar",
+      "target": "Sidebar::handleneweload",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\common\\Sidebar.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\common\\Sidebar.tsx:69",
+      "weight": 1
+    },
+    {
+      "source": "file::syncconflictmodal",
+      "target": "SyncConflictModal::handleresolve",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\sync\\SyncConflictModal.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\sync\\SyncConflictModal.tsx:29",
+      "weight": 1
+    },
+    {
+      "source": "file::syncprovider",
+      "target": "syncprovider::syncprovider",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\sync\\SyncProvider.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\sync\\SyncProvider.tsx:11",
+      "weight": 1
+    },
+    {
+      "source": "file::syncstatus",
+      "target": "syncstatus::syncstatus",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\components\\sync\\SyncStatus.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\components\\sync\\SyncStatus.tsx:8",
+      "weight": 1
+    },
+    {
+      "source": "file::authcontext",
+      "target": "AuthContext::authprovider",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\context\\AuthContext.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\context\\AuthContext.tsx:16",
+      "weight": 1
+    },
+    {
+      "source": "file::authcontext",
+      "target": "AuthContext::useauth",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\context\\AuthContext.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\context\\AuthContext.tsx:101",
+      "weight": 1
+    },
+    {
+      "source": "file::dataprovider",
+      "target": "dataprovider::usedataloading",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\context\\DataProvider.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\context\\DataProvider.tsx:18",
+      "weight": 1
+    },
+    {
+      "source": "file::dataprovider",
+      "target": "dataprovider::dataprovider",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\context\\DataProvider.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\context\\DataProvider.tsx:22",
+      "weight": 1
+    },
+    {
+      "source": "file::useauth",
+      "target": "useAuth::useauth",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useAuth.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useAuth.ts:4",
+      "weight": 1
+    },
+    {
+      "source": "file::useauth",
+      "target": "useAuth::userequirerole",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useAuth.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useAuth.ts:8",
+      "weight": 1
+    },
+    {
+      "source": "file::useautoflush",
+      "target": "useautoflush::useautoflush",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useAutoFlush.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useAutoFlush.ts:8",
+      "weight": 1
+    },
+    {
+      "source": "file::useeventlistener",
+      "target": "useeventlistener::emitevent",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useEventListener.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useEventListener.ts:9",
+      "weight": 1
+    },
+    {
+      "source": "file::useeventlistener",
+      "target": "useeventlistener::getlistenerset",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useEventListener.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useEventListener.ts:15",
+      "weight": 1
+    },
+    {
+      "source": "file::useeventlistener",
+      "target": "useeventlistener::useeventlistener",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useEventListener.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useEventListener.ts:22",
+      "weight": 1
+    },
+    {
+      "source": "file::useeventlistener",
+      "target": "useeventlistener::usedbsync",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useEventListener.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useEventListener.ts:46",
+      "weight": 1
+    },
+    {
+      "source": "file::useeventlistener",
+      "target": "useeventlistener::userecordsupdate",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useEventListener.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useEventListener.ts:50",
+      "weight": 1
+    },
+    {
+      "source": "file::usetableconfig",
+      "target": "usetableconfig::usetableconfig",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useTableConfig.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useTableConfig.ts:21",
+      "weight": 1
+    },
+    {
+      "source": "file::usetableconfig",
+      "target": "usetableconfig::sortdata",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useTableConfig.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useTableConfig.ts:125",
+      "weight": 1
+    },
+    {
+      "source": "file::usetheme",
+      "target": "usetheme::loadprefs",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useTheme.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useTheme.tsx:33",
+      "weight": 1
+    },
+    {
+      "source": "file::usetheme",
+      "target": "usetheme::applythemeandpalette",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useTheme.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useTheme.tsx:50",
+      "weight": 1
+    },
+    {
+      "source": "file::usetheme",
+      "target": "usetheme::applyfont",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useTheme.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useTheme.tsx:64",
+      "weight": 1
+    },
+    {
+      "source": "file::usetheme",
+      "target": "usetheme::applyfontsize",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useTheme.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useTheme.tsx:68",
+      "weight": 1
+    },
+    {
+      "source": "file::usetheme",
+      "target": "usetheme::saveprefs",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\hooks\\useTheme.tsx",
+      "sourceLocation": "E:\\3EJS-main\\src\\hooks\\useTheme.tsx:72",
+      "weight": 1
+    },
+    {
+      "source": "file::api",
+      "target": "api::getheaders",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\api.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\api.ts:7",
+      "weight": 1
+    },
+    {
+      "source": "file::api",
+      "target": "api::apiget",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\api.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\api.ts:21",
+      "weight": 1
+    },
+    {
+      "source": "file::api",
+      "target": "api::apipost",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\api.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\api.ts:25",
+      "weight": 1
+    },
+    {
+      "source": "file::api",
+      "target": "api::apipatch",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\api.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\api.ts:33",
+      "weight": 1
+    },
+    {
+      "source": "file::api",
+      "target": "api::apidelete",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\api.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\api.ts:41",
+      "weight": 1
+    },
+    {
+      "source": "file::auth_utils",
+      "target": "auth_utils::hashpassword",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\auth-utils.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\auth-utils.ts:6",
+      "weight": 1
+    },
+    {
+      "source": "file::auth_utils",
+      "target": "auth_utils::verifypassword",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\auth-utils.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\auth-utils.ts:10",
+      "weight": 1
+    },
+    {
+      "source": "file::auth_utils",
+      "target": "auth_utils::hashpasswordifneeded",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\auth-utils.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\auth-utils.ts:32",
+      "weight": 1
+    },
+    {
+      "source": "file::auth_utils",
+      "target": "auth_utils::checkpermission",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\auth-utils.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\auth-utils.ts:39",
+      "weight": 1
+    },
+    {
+      "source": "file::database",
+      "target": "database::geteloadtransactionsbyaccount",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\database.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\database.ts:4",
+      "weight": 1
+    },
+    {
+      "source": "file::local_db",
+      "target": "local_db::isindexeddbavailable",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\local-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\local-db.ts:16",
+      "weight": 1
+    },
+    {
+      "source": "file::local_db",
+      "target": "local_db::opendb",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\local-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\local-db.ts:20",
+      "weight": 1
+    },
+    {
+      "source": "file::local_db",
+      "target": "local_db::getall",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\local-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\local-db.ts:46",
+      "weight": 1
+    },
+    {
+      "source": "file::local_db",
+      "target": "local_db::getbyid",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\local-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\local-db.ts:56",
+      "weight": 1
+    },
+    {
+      "source": "file::local_db",
+      "target": "local_db::put",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\local-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\local-db.ts:66",
+      "weight": 1
+    },
+    {
+      "source": "file::local_db",
+      "target": "local_db::remove",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\local-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\local-db.ts:76",
+      "weight": 1
+    },
+    {
+      "source": "file::local_db",
+      "target": "local_db::clearstore",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\local-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\local-db.ts:86",
+      "weight": 1
+    },
+    {
+      "source": "file::local_db",
+      "target": "local_db::putbatch",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\local-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\local-db.ts:96",
+      "weight": 1
+    },
+    {
+      "source": "file::local_db",
+      "target": "local_db::exportall",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\local-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\local-db.ts:107",
+      "weight": 1
+    },
+    {
+      "source": "file::local_db",
+      "target": "local_db::importall",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\local-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\local-db.ts:115",
+      "weight": 1
+    },
+    {
+      "source": "file::local_db",
+      "target": "local_db::clearall",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\local-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\local-db.ts:124",
+      "weight": 1
+    },
+    {
+      "source": "file::mappers",
+      "target": "mappers::parseexcelserialdate",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\mappers.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\mappers.ts:3",
+      "weight": 1
+    },
+    {
+      "source": "file::mappers",
+      "target": "mappers::parsedate",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\mappers.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\mappers.ts:30",
+      "weight": 1
+    },
+    {
+      "source": "file::mappers",
+      "target": "mappers::normalizeaccountnumber",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\mappers.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\mappers.ts:57",
+      "weight": 1
+    },
+    {
+      "source": "file::mappers",
+      "target": "mappers::normalizeinstallationrow",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\mappers.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\mappers.ts:61",
+      "weight": 1
+    },
+    {
+      "source": "file::mappers",
+      "target": "mappers::denormalizeinstallationrow",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\mappers.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\mappers.ts:107",
+      "weight": 1
+    },
+    {
+      "source": "file::mappers",
+      "target": "mappers::normalizeeloadrow",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\mappers.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\mappers.ts:148",
+      "weight": 1
+    },
+    {
+      "source": "file::mappers",
+      "target": "mappers::denormalizeeloadrow",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\mappers.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\mappers.ts:167",
+      "weight": 1
+    },
+    {
+      "source": "file::sheets_mapper",
+      "target": "sheets_mapper::getmappingforsheet",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sheets-mapper.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sheets-mapper.ts:45",
+      "weight": 1
+    },
+    {
+      "source": "file::sheets_mapper",
+      "target": "sheets_mapper::mapsnaketocamel",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sheets-mapper.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sheets-mapper.ts:54",
+      "weight": 1
+    },
+    {
+      "source": "file::sheets_mapper",
+      "target": "sheets_mapper::mapcameltosnake",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sheets-mapper.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sheets-mapper.ts:67",
+      "weight": 1
+    },
+    {
+      "source": "file::sheets",
+      "target": "sheets::sheetsfetch",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sheets.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sheets.ts:11",
+      "weight": 1
+    },
+    {
+      "source": "file::sheets",
+      "target": "sheets::getall",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sheets.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sheets.ts:91",
+      "weight": 1
+    },
+    {
+      "source": "file::sheets",
+      "target": "sheets::appendrow",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sheets.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sheets.ts:99",
+      "weight": 1
+    },
+    {
+      "source": "file::sheets",
+      "target": "sheets::updaterow",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sheets.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sheets.ts:107",
+      "weight": 1
+    },
+    {
+      "source": "file::sheets",
+      "target": "sheets::deleterow",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sheets.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sheets.ts:115",
+      "weight": 1
+    },
+    {
+      "source": "file::sheets",
+      "target": "sheets::getbykey",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sheets.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sheets.ts:123",
+      "weight": 1
+    },
+    {
+      "source": "file::sheets",
+      "target": "sheets::filterrows",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sheets.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sheets.ts:128",
+      "weight": 1
+    },
+    {
+      "source": "file::sync_queue",
+      "target": "sync_queue::generateopid",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sync-queue.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sync-queue.ts:7",
+      "weight": 1
+    },
+    {
+      "source": "file::sync_queue",
+      "target": "sync_queue::getsyncqueuestore",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sync-queue.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sync-queue.ts:11",
+      "weight": 1
+    },
+    {
+      "source": "file::sync_queue",
+      "target": "sync_queue::enqueueop",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sync-queue.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sync-queue.ts:15",
+      "weight": 1
+    },
+    {
+      "source": "file::sync_queue",
+      "target": "sync_queue::saverecordsnapshot",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sync-queue.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sync-queue.ts:42",
+      "weight": 1
+    },
+    {
+      "source": "file::sync_queue",
+      "target": "sync_queue::getrecordsnapshot",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sync-queue.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sync-queue.ts:58",
+      "weight": 1
+    },
+    {
+      "source": "file::sync_queue",
+      "target": "sync_queue::fetchsheetsrow",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sync-queue.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sync-queue.ts:71",
+      "weight": 1
+    },
+    {
+      "source": "file::sync_queue",
+      "target": "sync_queue::updateopstatus",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sync-queue.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sync-queue.ts:79",
+      "weight": 1
+    },
+    {
+      "source": "file::sync_queue",
+      "target": "sync_queue::removeop",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sync-queue.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sync-queue.ts:90",
+      "weight": 1
+    },
+    {
+      "source": "file::sync_queue",
+      "target": "sync_queue::resolveconflict",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sync-queue.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sync-queue.ts:96",
+      "weight": 1
+    },
+    {
+      "source": "file::sync_queue",
+      "target": "sync_queue::flushqueue",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\sync-queue.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\sync-queue.ts:121",
+      "weight": 1
+    },
+    {
+      "source": "file::themes",
+      "target": "themes::gettheme",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\themes.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\themes.ts:128",
+      "weight": 1
+    },
+    {
+      "source": "file::themes",
+      "target": "themes::getpalette",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\themes.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\themes.ts:132",
+      "weight": 1
+    },
+    {
+      "source": "file::unified_db",
+      "target": "unified_db::getallinstallations",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:51",
+      "weight": 1
+    },
+    {
+      "source": "file::unified_db",
+      "target": "unified_db::formatloadexpire",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:73",
+      "weight": 1
+    },
+    {
+      "source": "file::unified_db",
+      "target": "unified_db::createinstallation",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:82",
+      "weight": 1
+    },
+    {
+      "source": "file::unified_db",
+      "target": "unified_db::updateinstallation",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:110",
+      "weight": 1
+    },
+    {
+      "source": "file::unified_db",
+      "target": "unified_db::deleteinstallation",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:144",
+      "weight": 1
+    },
+    {
+      "source": "file::unified_db",
+      "target": "unified_db::getalleload",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:156",
+      "weight": 1
+    },
+    {
+      "source": "file::unified_db",
+      "target": "unified_db::createeload",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:178",
+      "weight": 1
+    },
+    {
+      "source": "file::unified_db",
+      "target": "unified_db::updateeload",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:193",
+      "weight": 1
+    },
+    {
+      "source": "file::unified_db",
+      "target": "unified_db::deleteeload",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:214",
+      "weight": 1
+    },
+    {
+      "source": "file::unified_db",
+      "target": "unified_db::getallusers",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:226",
+      "weight": 1
+    },
+    {
+      "source": "file::unified_db",
+      "target": "unified_db::createuser",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:248",
+      "weight": 1
+    },
+    {
+      "source": "file::unified_db",
+      "target": "unified_db::updateuser",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:265",
+      "weight": 1
+    },
+    {
+      "source": "file::unified_db",
+      "target": "unified_db::deleteuser",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:286",
+      "weight": 1
+    },
+    {
+      "source": "file::unified_db",
+      "target": "unified_db::authenticateuser",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:292",
+      "weight": 1
+    },
+    {
+      "source": "file::unified_db",
+      "target": "unified_db::getallhistoricaldata",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:300",
+      "weight": 1
+    },
+    {
+      "source": "file::unified_db",
+      "target": "unified_db::syncfromremote",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:324",
+      "weight": 1
+    },
+    {
+      "source": "file::unified_db",
+      "target": "unified_db::checkandupdateinstallationforload",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:345",
+      "weight": 1
+    },
+    {
+      "source": "file::unified_db",
+      "target": "unified_db::archivepreviousyears",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\unified-db.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\unified-db.ts:361",
+      "weight": 1
+    },
+    {
+      "source": "file::utils",
+      "target": "utils::formatdate",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\utils.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\utils.ts:8",
+      "weight": 1
+    },
+    {
+      "source": "file::utils",
+      "target": "utils::formatdatedisplay",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\utils.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\utils.ts:47",
+      "weight": 1
+    },
+    {
+      "source": "file::utils",
+      "target": "utils::formatdateshort",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\utils.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\utils.ts:99",
+      "weight": 1
+    },
+    {
+      "source": "file::utils",
+      "target": "utils::excelserialtodate",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\utils.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\utils.ts:108",
+      "weight": 1
+    },
+    {
+      "source": "file::utils",
+      "target": "utils::toinputdate",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\utils.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\utils.ts:129",
+      "weight": 1
+    },
+    {
+      "source": "file::utils",
+      "target": "utils::tostoragedate",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\utils.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\utils.ts:138",
+      "weight": 1
+    },
+    {
+      "source": "file::utils",
+      "target": "utils::todaystoragedate",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\utils.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\utils.ts:147",
+      "weight": 1
+    },
+    {
+      "source": "file::utils",
+      "target": "utils::toexcelserial",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\utils.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\utils.ts:155",
+      "weight": 1
+    },
+    {
+      "source": "file::utils",
+      "target": "utils::formattime",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\utils.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\utils.ts:178",
+      "weight": 1
+    },
+    {
+      "source": "file::validation",
+      "target": "validation::validateinstallation",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\validation.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\validation.ts:110",
+      "weight": 1
+    },
+    {
+      "source": "file::validation",
+      "target": "validation::validateeloadtransaction",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\validation.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\validation.ts:118",
+      "weight": 1
+    },
+    {
+      "source": "file::validation",
+      "target": "validation::validateuser",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\lib\\validation.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\lib\\validation.ts:126",
+      "weight": 1
+    },
+    {
+      "source": "file::historicaldatastore",
+      "target": "historicaldatastore::normalizehistoricalrow",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\stores\\historicalDataStore.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\stores\\historicalDataStore.ts:15",
+      "weight": 1
+    },
+    {
+      "source": "file::techniciansstore",
+      "target": "techniciansStore::gettechniciandisplayname",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\src\\stores\\techniciansStore.ts",
+      "sourceLocation": "E:\\3EJS-main\\src\\stores\\techniciansStore.ts:55",
+      "weight": 1
+    },
+    {
+      "source": "file::verify_user",
+      "target": "verify_user::verifyuser",
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "sourceFile": "E:\\3EJS-main\\verify-user.js",
+      "sourceLocation": "E:\\3EJS-main\\verify-user.js:6",
+      "weight": 1
+    }
+  ],
+  "metadata": {
+    "files": 95,
+    "nodes": 277,
+    "edges": 212,
+    "builtAt": "2026-06-01T13:22:23.831Z"
+  }
+}
