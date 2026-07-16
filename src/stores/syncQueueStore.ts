@@ -32,6 +32,7 @@ interface SyncQueueState {
   queue: QueuedOperation[];
   isFlushing: boolean;
   lastFlushAt: number | null;
+  lastSyncAt: number | null;
   hasConflicts: boolean;
   hasCorsError: boolean;
   notifications: SyncNotification[];
@@ -41,6 +42,7 @@ interface SyncQueueState {
   lastError: string | null;
 
   loadQueue: () => Promise<void>;
+  loadSyncMeta: () => Promise<void>;
   _setQueue: (queue: QueuedOperation[]) => void;
   addNotification: (message: string, type: SyncNotification['type']) => void;
   removeNotification: (id: string) => void;
@@ -57,6 +59,7 @@ export const useSyncQueueStore = create<SyncQueueState>((set, get) => ({
   queue: [],
   isFlushing: false,
   lastFlushAt: null,
+  lastSyncAt: null,
   hasConflicts: false,
   hasCorsError: false,
   notifications: [],
@@ -76,6 +79,19 @@ export const useSyncQueueStore = create<SyncQueueState>((set, get) => ({
       set({ hasConflicts, deadLetterCount });
     } catch (e) {
       console.warn('[SyncQueue] Failed to load queue:', e);
+    }
+  },
+
+  loadSyncMeta: async () => {
+    if (typeof window === 'undefined' || !window.indexedDB) return;
+    try {
+      const { localDb } = await import('@/lib/local-db');
+      const stored = await localDb.getById<{ value: number }>('recordSnapshots', 'lastSuccessfulSync');
+      if (stored?.value) {
+        set({ lastSyncAt: stored.value });
+      }
+    } catch (e) {
+      console.warn('[SyncQueue] Failed to load sync meta:', e);
     }
   },
 

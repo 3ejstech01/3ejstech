@@ -5,18 +5,36 @@ import { useSyncQueueStore } from '@/stores/syncQueueStore';
 
 type BadgeState = 'idle' | 'syncing' | 'pending' | 'conflict' | 'error';
 
+function formatRelativeTime(ts: number): string {
+  const diff = Date.now() - ts;
+  if (diff < 60_000) return 'just now';
+  if (diff < 3_600_000) return `${Math.floor(diff / 60_000)}m ago`;
+  if (diff < 86_400_000) return `${Math.floor(diff / 3_600_000)}h ago`;
+  return new Date(ts).toLocaleDateString();
+}
+
 export function SyncStatus() {
-  const { queue, isFlushing, notifications, removeNotification, setShowConflictModal } = useSyncQueueStore();
+  const { queue, isFlushing, notifications, removeNotification, setShowConflictModal, getDeadLetterCount, lastError: lastSyncError, lastSyncAt, loadSyncMeta } = useSyncQueueStore();
   const [showSuccess, setShowSuccess] = useState(false);
   const [fadingOut, setFadingOut] = useState(false);
 
+  useEffect(() => {
+    loadSyncMeta();
+  }, []);
+
   const pending = queue.filter(op => op.status === 'pending' || op.status === 'syncing').length;
   const conflictCount = queue.filter(op => op.status === 'conflict').length;
+  const deadLetterCount = getDeadLetterCount();
 
   const lastSuccess = notifications.find(n => n.type === 'success');
   const lastError = notifications.find(n => n.type === 'error');
 
+  const syncLabel = pending > 0
+    ? `${pending} pending${lastSyncAt ? ` · last synced ${formatRelativeTime(lastSyncAt)}` : ''}`
+    : (lastSyncAt ? `Synced ${formatRelativeTime(lastSyncAt)}` : 'Synced');
+
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect */
     if (lastSuccess) {
       setShowSuccess(true);
       setFadingOut(false);
@@ -26,6 +44,7 @@ export function SyncStatus() {
       }, 3000);
       return () => clearTimeout(t);
     }
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, [lastSuccess?.id]);
 
   useEffect(() => {
@@ -49,7 +68,7 @@ export function SyncStatus() {
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
           </svg>
-          Syncing...
+          {syncLabel}
         </span>
       )}
 
@@ -64,6 +83,20 @@ export function SyncStatus() {
           {conflictCount} conflict{conflictCount > 1 ? 's' : ''}
         </button>
       )}
+
+      {deadLetterCount > 0 && (
+        <button
+          onClick={() => setShowConflictModal(true)}
+          className="flex items-center gap-1.5 text-xs text-red-600 hover:text-red-700"
+        >
+          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+          {deadLetterCount} sync issue{deadLetterCount > 1 ? 's' : ''}
+        </button>
+      )}
+
+      {lastSyncError && <span className="text-xs text-red-500">{lastSyncError}</span>}
 
       {showSuccess && badgeState === 'pending' && (
         <span className={`flex items-center gap-1.5 text-xs text-green-600 dark:text-green-400 transition-opacity duration-500 ${fadingOut ? 'opacity-0' : 'opacity-100'}`}>

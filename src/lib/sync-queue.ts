@@ -225,6 +225,7 @@ export async function flushQueue(): Promise<FlushResult> {
   await store.loadQueue();
 
   if (success > 0) {
+    await localDb.put('recordSnapshots', { id: 'lastSuccessfulSync', value: Date.now() });
     store.addNotification(`${success} change${success > 1 ? 's' : ''} saved`, 'success');
   }
 
