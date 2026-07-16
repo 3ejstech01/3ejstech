@@ -1,6 +1,11 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
+
+const reducedMotion = typeof window !== 'undefined'
+  ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  : false;
 
 const LineChart = dynamic(
   () => import('recharts').then(mod => mod.LineChart),
@@ -39,6 +44,28 @@ const Brush = dynamic(
   { ssr: false }
 );
 
+interface LazyWrapperProps {
+  children: React.ReactNode;
+}
+
+export function LazyChartWrapper({ children }: LazyWrapperProps) {
+  const [reduced, setReduced] = useState(reducedMotion);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setReduced(mq.matches);
+    const handler = () => setReduced(mq.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+
+  if (reduced) {
+    return <div className="text-sm text-text/60" aria-label="Chart hidden due to reduced motion preference" />;
+  }
+
+  return <>{children}</>;
+}
+
 export {
   LineChart,
   Line,
@@ -50,3 +77,5 @@ export {
   ResponsiveContainer,
   Brush,
 };
+
+export const isAnimationActive = !reducedMotion;

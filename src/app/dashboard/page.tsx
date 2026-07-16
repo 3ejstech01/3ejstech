@@ -9,7 +9,7 @@ import { Card } from '@/components/common/PageContainer';
 import { AnimatePresence } from 'framer-motion';
 import { Installation } from '@/lib/types';
 import { formatDateDisplay } from '@/lib/utils';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Brush } from '@/components/common/RechartsLazy';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from '@/components/common/RechartsLazy';
 import { useHistoricalDataStore } from '@/stores/historicalDataStore';
 import { formatDateKey, monthLabel, parseDateInput } from '@/lib/date-utils';
 import { formatCurrency as formatCurrencyUtil, parseNumberInput } from '@/lib/number-utils';
@@ -204,7 +204,7 @@ export default function DashboardPage() {
                     formatter={(value) => [value, 'New Installs']}
                   />
                   <Line type="monotone" dataKey="count" stroke="#6366f1" strokeWidth={2} dot={{ r: 3, fill: '#6366f1' }} activeDot={{ r: 5 }} name="count" />
-                  <Brush dataKey="label" height={20} stroke="var(--color-border)" fill="var(--color-background)" travellerWidth={8} />
+                  <Line type="monotone" dataKey="count" stroke="#6366f1" strokeWidth={2} dot={{ r: 3, fill: '#6366f1' }} activeDot={{ r: 5 }} name="count" />
                 </LineChart>
               </ResponsiveContainer>
             )}
