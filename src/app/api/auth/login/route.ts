@@ -1,30 +1,38 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getAllUsers } from '@/lib/unified-db';
+import { NextResponse } from 'next/server';
+import { authenticateCredentials, toPublicUser } from '@/lib/auth-server';
+import { checkRateLimit } from '@/lib/rate-limit';
+import { setSessionCookie } from '@/lib/auth-guard';
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   try {
-    const { username } = await request.json();
+    const { username, password } = await request.json();
     if (!username) {
-      return NextResponse.json({ error: 'Username is required' }, { status: 400 });
+      return NextResponse.json(
+        { error: 'Username is required' },
+        { status: 400 }
+      );
     }
 
-    const users = await getAllUsers();
-    const user = users.find(u => u.username?.toLowerCase() === username.toLowerCase());
+    const clientKey = (request.headers.get('x-forwarded-for') || username).toLowerCase();
+    const limit = await checkRateLimit(`login:${clientKey}`, 5, 60_000);
+    if (!limit.allowed) {
+      return NextResponse.json(
+        { error: 'Too many login attempts. Try again later.' },
+        { status: 429, headers: { 'Retry-After': String(Math.ceil(limit.resetMs / 1000)) } }
+      );
+    }
 
+    const user = await authenticateCredentials(username, password);
     if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 401 });
+      return NextResponse.json({ error: 'Invalid username or password' }, { status: 401 });
     }
 
-    return NextResponse.json({
-      user: {
-        id: user.id || user.username,
-        username: user.username,
-        name: user.username,
-        email: `${user.username}@3jes.local`,
-        role: user.role || 'view_only',
-        createdAt: user.createdAt || new Date().toISOString(),
-        updatedAt: user.createdAt || new Date().toISOString(),
-      },
+    const publicUser = toPublicUser(user);
+    const response = NextResponse.json({ user: publicUser });
+    return setSessionCookie(response, {
+      sub: publicUser.id || publicUser.username,
+      username: publicUser.username,
+      role: publicUser.role,
     });
   } catch (error) {
     console.error('Login error:', error);
