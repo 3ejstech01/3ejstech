@@ -3,6 +3,44 @@ import { localDb } from './local-db';
 import { hashPasswordIfNeeded } from './auth-utils';
 import { enqueueOp, saveRecordSnapshot, getRecordSnapshot } from './sync-queue';
 import type { SheetName } from '@/stores/syncQueueStore';
+import { parseDateInput } from '@/lib/date-utils';
+import { parseNumberInput } from '@/lib/number-utils';
+
+const CACHE_TTL_MS = 60_000;
+const lastFetched: Record<string, number> = {};
+
+async function getWithCache<T>(
+  store: string,
+  sheet: string,
+  fetcher: () => Promise<T[]>,
+): Promise<T[]> {
+  if (typeof window !== 'undefined' && window.indexedDB) {
+    const local = await localDb.getAll<T>(store as any);
+    const now = Date.now();
+    const isFresh = local.length > 0 && (now - (lastFetched[store] || 0)) < CACHE_TTL_MS;
+
+    if (isFresh) {
+      return local;
+    }
+
+    if (local.length > 0) {
+      fetcher().then(async (data) => {
+        if (data.length > 0) {
+          lastFetched[store] = Date.now();
+          await localDb.putBatch(store as any, data);
+        }
+      }).catch(() => {});
+      return local;
+    }
+  }
+
+  const data = await fetcher();
+  if (data.length > 0) {
+    lastFetched[store] = Date.now();
+    await localDb.putBatch(store as any, data);
+  }
+  return data;
+}
 
 export interface InstallationRow {
   id: string; no?: string; dateInstalled?: string; agentName?: string;
@@ -49,29 +87,15 @@ export interface UserRow {
 // ── Installations ──────────────────────────────────────
 
 export async function getAllInstallations(): Promise<InstallationRow[]> {
-  if (typeof window !== 'undefined' && window.indexedDB) {
-    const localData = await localDb.getAll<InstallationRow>('installations');
-    if (localData.length > 0) {
-      return localData;
-    }
-  }
-
-  try {
-    const data = await sheets.getAll<InstallationRow>('installations');
-    if (data.length > 0) {
-      if (typeof window !== 'undefined' && window.indexedDB) {
-        await localDb.putBatch('installations', data);
-      }
-      return data;
-    }
-  } catch (e) {
-    console.warn('[DB] Sheets fetch failed:', e);
-  }
-  return [];
+  return getWithCache<InstallationRow>('installations', 'installations', () =>
+    sheets.getAll<InstallationRow>('installations')
+  );
 }
 
 function formatLoadExpire(dateInstalled: string): string {
-  const d = new Date(dateInstalled);
+  const date = parseDateInput(dateInstalled);
+  if (!date) return '';
+  const d = new Date(date);
   d.setDate(d.getDate() + 90);
   const m = String(d.getMonth() + 1).padStart(2, '0');
   const day = String(d.getDate()).padStart(2, '0');
@@ -154,25 +178,9 @@ export async function deleteInstallation(id: string): Promise<boolean> {
 // ── E-Load ─────────────────────────────────────────────
 
 export async function getAllEload(): Promise<ELoadRow[]> {
-  if (typeof window !== 'undefined' && window.indexedDB) {
-    const localData = await localDb.getAll<ELoadRow>('eload');
-    if (localData.length > 0) {
-      return localData;
-    }
-  }
-
-  try {
-    const data = await sheets.getAll<ELoadRow>('eload');
-    if (data.length > 0) {
-      if (typeof window !== 'undefined' && window.indexedDB) {
-        await localDb.putBatch('eload', data);
-      }
-      return data;
-    }
-  } catch (e) {
-    console.warn('[DB] Sheets fetch failed:', e);
-  }
-  return [];
+  return getWithCache<ELoadRow>('eload', 'eload', () =>
+    sheets.getAll<ELoadRow>('eload')
+  );
 }
 
 export async function createEload(data: Partial<ELoadRow>): Promise<ELoadRow> {
@@ -224,25 +232,9 @@ export async function deleteEload(id: string): Promise<boolean> {
 // ── Users ──────────────────────────────────────────────
 
 export async function getAllUsers(): Promise<UserRow[]> {
-  if (typeof window !== 'undefined' && window.indexedDB) {
-    const localData = await localDb.getAll<UserRow>('users');
-    if (localData.length > 0) {
-      return localData;
-    }
-  }
-
-  try {
-    const data = await sheets.getAll<UserRow>('users');
-    if (data.length > 0) {
-      if (typeof window !== 'undefined' && window.indexedDB) {
-        await localDb.putBatch('users', data);
-      }
-      return data;
-    }
-  } catch (e) {
-    console.warn('[DB] Sheets fetch failed:', e);
-  }
-  return [];
+  return getWithCache<UserRow>('users', 'users', () =>
+    sheets.getAll<UserRow>('users')
+  );
 }
 
 export async function createUser(data: { username: string; password: string; role: string }): Promise<UserRow> {
@@ -298,25 +290,9 @@ export async function authenticateUser(username: string): Promise<UserRow | null
 // ── Historical Data ────────────────────────────────────
 
 export async function getAllHistoricalData(): Promise<HistoricalDataRow[]> {
-  if (typeof window !== 'undefined' && window.indexedDB) {
-    const localData = await localDb.getAll<HistoricalDataRow>('historicaldata');
-    if (localData.length > 0) {
-      return localData;
-    }
-  }
-
-  try {
-    const data = await sheets.getAll<HistoricalDataRow>('historicaldata');
-    if (data.length > 0) {
-      if (typeof window !== 'undefined' && window.indexedDB) {
-        await localDb.putBatch('historicaldata', data);
-      }
-      return data;
-    }
-  } catch (e) {
-    console.warn('[DB] Sheets fetch failed:', e);
-  }
-  return [];
+  return getWithCache<HistoricalDataRow>('historicaldata', 'historicaldata', () =>
+    sheets.getAll<HistoricalDataRow>('historicaldata')
+  );
 }
 
 // ── Sync ───────────────────────────────────────────────
@@ -362,8 +338,8 @@ export async function archivePreviousYears(currentYear: number): Promise<number>
   try {
     const installations = await getAllInstallations();
     const toArchive = installations.filter(inst => {
-      const year = parseInt(String(inst.yearInstalled || ''));
-      return !isNaN(year) && year < currentYear;
+      const year = Number(inst.yearInstalled || 0);
+      return Number.isFinite(year) && year < currentYear;
     });
 
     if (toArchive.length === 0) return 0;
