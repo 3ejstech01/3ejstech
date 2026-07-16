@@ -14,6 +14,7 @@ const ROUTE_ROLES: Record<string, UserRole[]> = {
   '/api/users': [UserRole.ADMIN],
   '/api/archive': [UserRole.ADMIN],
   '/api/sheets-proxy': [UserRole.ADMIN, UserRole.TECHNICIAN, UserRole.E_LOAD, UserRole.VIEW_ONLY],
+  '/api/debug-sheets': [UserRole.ADMIN],
 };
 
 export async function middleware(req: NextRequest) {
@@ -26,7 +27,10 @@ export async function middleware(req: NextRequest) {
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
-  const allowed = ROUTE_ROLES[pathname];
+  const matched = Object.entries(ROUTE_ROLES).find(
+    ([prefix]) => pathname === prefix || pathname.startsWith(prefix + '/')
+  );
+  const allowed = matched ? matched[1] : undefined;
   if (allowed && !allowed.includes(session.role as UserRole) && session.role !== UserRole.ADMIN) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }

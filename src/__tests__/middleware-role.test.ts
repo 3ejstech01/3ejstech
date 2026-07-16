@@ -33,6 +33,7 @@ jest.mock('@/lib/session-edge', () => ({
 import { NextRequest } from 'next/server';
 import { middleware } from '../../middleware';
 import { verifySessionEdge } from '@/lib/session-edge';
+import { UserRole } from '@/lib/types';
 
 function req(path: string, cookie?: string) {
   const url = `http://localhost${path}`;
@@ -50,6 +51,14 @@ describe('middleware role enforcement', () => {
     (verifySessionEdge as jest.Mock).mockResolvedValue(null);
     const res = await middleware(req('/api/auth/login'));
     expect(res.status).not.toBe(401);
+    expect(res.status).toBe(200);
+  });
+
+  it('allows public logout without a session', async () => {
+    (verifySessionEdge as jest.Mock).mockResolvedValue(null);
+    const res = await middleware(req('/api/auth/logout'));
+    expect(res.status).not.toBe(401);
+    expect(res.status).toBe(200);
   });
 
   it('rejects unauthenticated /api/installations', async () => {
@@ -68,6 +77,59 @@ describe('middleware role enforcement', () => {
     });
     const cookie = `3ejs_session=valid.token.here`;
     const res = await middleware(req('/api/users', cookie));
+    expect(res.status).toBe(403);
+  });
+
+  it('allows an ADMIN session on /api/users', async () => {
+    (verifySessionEdge as jest.Mock).mockResolvedValue({
+      sub: 'admin1',
+      username: 'admin1',
+      role: UserRole.ADMIN,
+      iat: Date.now(),
+      exp: Date.now() + 999999,
+    });
+    const cookie = `3ejs_session=valid.token.here`;
+    const res = await middleware(req('/api/users', cookie));
+    expect(res.status).toBe(200);
+  });
+
+  it('allows an authenticated request to a non-/api path like /dashboard', async () => {
+    (verifySessionEdge as jest.Mock).mockResolvedValue({
+      sub: 'u1',
+      username: 'u1',
+      role: UserRole.VIEW_ONLY,
+      iat: Date.now(),
+      exp: Date.now() + 999999,
+    });
+    const cookie = `3ejs_session=valid.token.here`;
+    const res = await middleware(req('/dashboard', cookie));
+    expect(res).toBeTruthy();
+    expect(res.status).not.toBe(401);
+  });
+
+  it('rejects E_LOAD on nested /api/installations/123 (prefix-match regression)', async () => {
+    (verifySessionEdge as jest.Mock).mockResolvedValue({
+      sub: 'u1',
+      username: 'u1',
+      role: UserRole.E_LOAD,
+      iat: Date.now(),
+      exp: Date.now() + 999999,
+    });
+    const cookie = `3ejs_session=valid.token.here`;
+    const res = await middleware(req('/api/installations/123', cookie));
+    expect(res.status).toBe(403);
+  });
+
+  it('rejects VIEW_ONLY on /api/debug-sheets (admin-only route)', async () => {
+    (verifySessionEdge as jest.Mock).mockResolvedValue({
+      sub: 'u1',
+      username: 'u1',
+      role: UserRole.VIEW_ONLY,
+      iat: Date.now(),
+      exp: Date.now() + 999999,
+    });
+    const cookie = `3ejs_session=valid.token.here`;
+    const res = await middleware(req('/api/debug-sheets', cookie));
     expect(res.status).toBe(403);
   });
 });
