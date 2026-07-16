@@ -9,6 +9,10 @@ import { useTechnicianProfilesStore } from '@/stores/technicianProfilesStore';
 import { UserRole, InstallationRow } from '@/lib/types';
 import { localDb } from '@/lib/database';
 import { formatDateDisplay } from '@/lib/utils';
+import { EmptyState } from '@/components/common/EmptyState';
+import { SkeletonRows } from '@/components/common/SkeletonRows';
+import { DataTable } from '@/components/common/DataTable';
+import type { ColumnDef } from '@/hooks/useTableConfig';
 
 interface SearchableDropdownProps {
   technicians: { name: string; count: number }[];
@@ -205,10 +209,13 @@ const MergeModal: React.FC<{
       <div
         className="bg-surface rounded-2xl shadow-2xl w-full max-w-lg border border-border"
         onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="merge-technicians-title"
       >
         <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-5 text-white">
           <div className="flex items-center justify-between">
-            <h2 className="text-lg font-bold">Merge Technicians</h2>
+            <h2 id="merge-technicians-title" className="text-lg font-bold">Merge Technicians</h2>
             <button onClick={onClose} className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center hover:bg-white/30">
               <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
@@ -365,40 +372,30 @@ export default function TechniciansPage() {
         </div>
 
         {isLoading && technicians.length === 0 ? (
-          <div className="flex items-center justify-center py-20">
-            <div className="w-10 h-10 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" />
+          <div className="p-12">
+            <SkeletonRows rows={6} />
           </div>
         ) : filteredTechnicians.length === 0 ? (
           <Card>
-            <div className="text-center py-12">
-              <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
-                <svg className="w-10 h-10 text-text" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-semibold text-slate-700 dark:text-slate-200">No Technicians Found</h3>
-              <p className="text-text/70 dark:text-text mt-2">Technicians will appear here once installations are created and assigned.</p>
-            </div>
+            <EmptyState
+              title="No technicians found"
+              description="Technicians will appear here once installations are created and assigned."
+            />
           </Card>
         ) : (
-          <Card>
-            <table className="w-full text-xs">
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="px-2 py-1 text-left text-xs font-medium text-text/60">Technician</th>
-                  <th className="px-2 py-1 text-left text-xs font-medium text-text/60">Installations</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredTechnicians.map((tech) => (
-                  <tr key={tech.name} className="border-b border-border/50 hover:bg-background/50">
-                    <td className="px-2 py-1 text-xs text-text">{tech.name}</td>
-                    <td className="px-2 py-1 text-xs text-left text-text/70">{tech.count}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </Card>
+          (() => {
+            const techColumns: ColumnDef<{ name: string; count: number }>[] = [
+              { key: 'name', label: 'Technician', render: (row) => row.name },
+              { key: 'count', label: 'Installations', render: (row) => row.count, className: 'text-left' },
+            ];
+            return (
+              <DataTable
+                columns={techColumns}
+                data={filteredTechnicians}
+                rowKey={(row) => row.name}
+              />
+            );
+          })()
         )}
 
         {showMergeModal && (
@@ -417,10 +414,13 @@ export default function TechniciansPage() {
             <div
               className="bg-surface rounded-2xl shadow-2xl w-full max-w-lg border border-border"
               onClick={(e) => e.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="edit-profile-title"
             >
               <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-5 text-white">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-lg font-bold">Edit Profile: {editingProfile.name}</h2>
+                  <h2 id="edit-profile-title" className="text-lg font-bold">Edit Profile: {editingProfile.name}</h2>
                   <button onClick={() => setEditingProfile(null)} className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center hover:bg-white/30">
                     <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
                   </button>
@@ -501,11 +501,14 @@ export default function TechniciansPage() {
             <div
               className="bg-surface rounded-2xl shadow-2xl w-full max-w-md border border-border"
               onClick={(e) => e.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="technician-installation-title"
             >
               <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4 text-white">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="font-bold text-lg">{viewingInstallation.subscriberName || '-'}</h3>
+                    <h3 id="technician-installation-title" className="font-bold text-lg">{viewingInstallation.subscriberName || 'No subscriber'}</h3>
                     <p className="text-white/70 text-xs">Acct #{String(viewingInstallation.accountNumber || '').replace(/\.0$/, '')}</p>
                   </div>
                   <button onClick={() => setViewingInstallation(null)} className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center hover:bg-white/30">
@@ -514,18 +517,18 @@ export default function TechniciansPage() {
                 </div>
               </div>
               <div className="p-4 grid grid-cols-2 gap-3 text-sm">
-                <div><p className="text-xs text-text/40 uppercase">Date</p><p className="font-medium text-text">{formatDateDisplay(viewingInstallation.dateInstalled || '')}</p></div>
-                <div><p className="text-xs text-text/40 uppercase">Status</p>
-                  <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${(viewingInstallation.status || 'pending') === 'completed' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
-                    {viewingInstallation.status || 'pending'}
-                  </span>
-                </div>
-                <div><p className="text-xs text-text/40 uppercase">JO #</p><p className="font-medium text-text">{viewingInstallation.joNumber || '-'}</p></div>
-                <div><p className="text-xs text-text/40 uppercase">Technician</p><p className="font-medium text-text">{viewingInstallation.assignedTechnician || '-'}</p></div>
-                <div className="col-span-2"><p className="text-xs text-text/40 uppercase">Address</p><p className="font-medium text-text">{viewingInstallation.address || '-'}</p></div>
-                <div><p className="text-xs text-text/40 uppercase">Contact #1</p><p className="font-medium text-text">{viewingInstallation.contactNumber1 || '-'}</p></div>
-                <div><p className="text-xs text-text/40 uppercase">Modem S/N</p><p className="font-medium text-text">{viewingInstallation.modemSerial || '-'}</p></div>
-                <div><p className="text-xs text-text/40 uppercase">Port</p><p className="font-medium text-text">{viewingInstallation.port || '-'}</p></div>
+                  <div><p className="text-xs text-text/40 uppercase">Date</p><p className="font-medium text-text">{formatDateDisplay(viewingInstallation.dateInstalled || '') || 'No date'}</p></div>
+                  <div><p className="text-xs text-text/40 uppercase">Status</p>
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${(viewingInstallation.status || 'pending') === 'completed' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}`}>
+                      {viewingInstallation.status || 'pending'}
+                    </span>
+                  </div>
+                  <div><p className="text-xs text-text/40 uppercase">JO #</p><p className="font-medium text-text">{viewingInstallation.joNumber || 'No JO number'}</p></div>
+                  <div><p className="text-xs text-text/40 uppercase">Technician</p><p className="font-medium text-text">{viewingInstallation.assignedTechnician || 'Unassigned'}</p></div>
+                  <div className="col-span-2"><p className="text-xs text-text/40 uppercase">Address</p><p className="font-medium text-text">{viewingInstallation.address || 'No address'}</p></div>
+                  <div><p className="text-xs text-text/40 uppercase">Contact #1</p><p className="font-medium text-text">{viewingInstallation.contactNumber1 || 'No contact'}</p></div>
+                  <div><p className="text-xs text-text/40 uppercase">Modem S/N</p><p className="font-medium text-text">{viewingInstallation.modemSerial || 'No modem serial'}</p></div>
+                  <div><p className="text-xs text-text/40 uppercase">Port</p><p className="font-medium text-text">{viewingInstallation.port || 'No port'}</p></div>
               </div>
               <div className="px-4 pb-4">
                 <button onClick={() => setViewingInstallation(null)} className="w-full py-2 rounded-xl bg-primary/10 text-primary text-sm font-medium hover:bg-primary/20 transition-colors">Close</button>

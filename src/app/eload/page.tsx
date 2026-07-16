@@ -12,6 +12,9 @@ import { formatDateDisplay, formatDate, formatTime, toInputDate, toStorageDate, 
 import { useTableConfig, sortData, ColumnDef } from '@/hooks/useTableConfig';
 import { ColumnConfigPanel } from '@/components/common/ColumnConfigPanel';
 import { useQuickAction } from '@/hooks/useQuickAction';
+import { showToast } from '@/components/common/ToastStack';
+import { SkeletonRows } from '@/components/common/SkeletonRows';
+import { EmptyState } from '@/components/common/EmptyState';
 
 const MONTHS = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -218,9 +221,9 @@ export default function ELoadPage() {
       await updateTransaction(editingTransaction!.id!, transactionData);
     } else {
       await addTransaction(transactionData);
-      // Show success toast for new entries
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 3000);
+      showToast('E-Load transaction added successfully', 'success');
     }
   };
 
@@ -231,11 +234,31 @@ export default function ELoadPage() {
     setIsDeleting(false);
     setDeleteTarget(null);
     setViewingTransaction(null);
+    showToast('E-Load transaction deleted', 'success');
   };
 
   const handlePrint = () => {
     const pw = window.open('', '_blank');
     if (!pw) return;
+    const escapeHtml = (value: unknown) => String(value ?? '').replace(/[&<>"']/g, (char) => ({
+      '&': '&',
+      '<': '<',
+      '>': '>',
+      '"': '"',
+      "'": '&#039;',
+    }[char] || char));
+    type RowShape = Record<string, unknown> & { amount?: number };
+    const cell = (t: RowShape, col: { key: string; label: string }) => {
+      const value = t[col.key];
+      if (col.label.toLowerCase().includes('amount')) {
+        const n = Number(value);
+        return `₱${Number.isFinite(n) ? n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : '0.00'}`;
+      }
+      return escapeHtml(value || '-');
+    };
+    const rowsHtml = filteredTransactions.slice(0, pageSize).map(t =>
+      `<tr>${visibleColumns.map(col => `<td>${cell(t as unknown as RowShape, col)}</td>`).join('')}</tr>`
+    ).join('');
     pw.document.write(`<!DOCTYPE html><html><head><title>3EJS E-Load Report</title>
       <style>body{font-family:sans-serif;padding:24px;color:#1e293b}table{width:100%;border-collapse:collapse;margin-top:12px}
       th,td{border:1px solid #e2e8f0;padding:8px 12px;text-align:center;font-size:13px}th{background:#f8fafc;font-weight:600}
@@ -243,8 +266,8 @@ export default function ELoadPage() {
       </head><body>
       <h1>3EJS Tech — E-Load Report</h1>
       <p style="color:#64748b;font-size:14px;">${filteredTransactions.length} records</p>
-      <table><thead><tr>${visibleColumns.map(col => `<th>${col.label}</th>`).join('')}</tr></thead>
-      <tbody>${filteredTransactions.slice(0, pageSize).map(t => `<tr>${visibleColumns.map(col => `<td>${col.render ? col.render(t) : (t[col.key as keyof typeof t] || '-')}</td>`).join('')}</tr>`).join('')}</tbody></table>
+      <table><thead><tr>${visibleColumns.map(col => `<th>${escapeHtml(col.label)}</th>`).join('')}</tr></thead>
+      <tbody>${rowsHtml}</tbody></table>
       <p class="footer">Generated on ${new Date().toLocaleDateString()} | 3EJS Tech Reports</p>
       </body></html>`);
     pw.document.close();
@@ -342,10 +365,8 @@ export default function ELoadPage() {
           {/* Transactions Table */}
           <Card className="!p-0 overflow-hidden">
             {isLoading && transactions.length === 0 ? (
-              <div className="p-8 space-y-3">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <div key={i} className="h-10 bg-slate-100 rounded animate-pulse" />
-                ))}
+              <div className="p-8">
+                <SkeletonRows rows={6} />
               </div>
             ) : (
               <div className="overflow-x-auto">
@@ -402,10 +423,11 @@ export default function ELoadPage() {
                     ))}
                   </tbody>
                 </table>
-                {filteredTransactions.length === 0 && (
-                  <div className="text-center py-12 text-text/40">
-                    {isLoading ? 'Loading transactions...' : 'No transactions found'}
-                  </div>
+                {filteredTransactions.length === 0 && !isLoading && (
+                  <EmptyState
+                    title="No transactions"
+                    description="Add your first e-load transaction to get started."
+                  />
                 )}
               </div>
             )}

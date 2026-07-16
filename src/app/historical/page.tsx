@@ -11,6 +11,9 @@ import { UserRole } from '@/lib/types';
 import { motion, AnimatePresence } from 'framer-motion';
 import { formatDateDisplay, formatTime } from '@/lib/utils';
 import { normalizeAccountNumber } from '@/lib/mappers';
+import { EmptyState } from '@/components/common/EmptyState';
+import { ErrorState } from '@/components/common/ErrorState';
+import { SkeletonRows } from '@/components/common/SkeletonRows';
 
 const MONTHS = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -228,18 +231,17 @@ export default function HistoricalDataPage() {
 
           {/* Error message */}
           {error && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700 text-sm">
-              {error}
-            </div>
+            <ErrorState
+              message={error}
+              retry={fetchRecords}
+            />
           )}
 
           {/* Data Table */}
           <Card className="!p-0 overflow-hidden">
             {isLoading && !records.length ? (
-              <div className="p-8 space-y-3">
-                {Array.from({ length: 8 }).map((_, i) => (
-                  <div key={i} className="h-10 bg-slate-100 rounded animate-pulse" />
-                ))}
+              <div className="p-8">
+                <SkeletonRows rows={8} />
               </div>
             ) : (
               <div className="overflow-x-auto">
@@ -274,9 +276,10 @@ export default function HistoricalDataPage() {
                   </tbody>
                 </table>
                 {filteredRecords.length === 0 && (
-                  <div className="text-center py-12 text-text/40">
-                    No records found matching your criteria
-                  </div>
+                  <EmptyState
+                    title="No records found"
+                    description="Try adjusting your search or filter criteria"
+                  />
                 )}
               </div>
             )}

@@ -8,6 +8,7 @@ import { useSubscribersStore } from '@/stores/subscribersStore';
 import { UserRole, Installation } from '@/lib/types';
 import { motion, AnimatePresence } from 'framer-motion';
 import { formatDateDisplay } from '@/lib/utils';
+import { EmptyState } from '@/components/common/EmptyState';
 
 export default function ClawbackPage() {
   const { user } = useAuth();
@@ -198,14 +199,11 @@ export default function ClawbackPage() {
 
           <Card className="!p-0 overflow-hidden">
             {filteredSubscribers.length === 0 ? (
-              <div className="p-12 text-center">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-background flex items-center justify-center">
-                  <svg className="w-8 h-8 text-text/30" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <p className="text-text/50">No clawback subscribers found</p>
-              </div>
+              <EmptyState
+                icon="check"
+                title="No clawback subscribers found"
+                description="All caught up — no subscribers match your filter"
+              />
             ) : (
               <>
                 <div className="overflow-x-auto">

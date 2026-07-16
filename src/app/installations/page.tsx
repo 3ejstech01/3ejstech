@@ -9,6 +9,7 @@ import { UserRole } from '@/lib/types';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from '@/lib/axios';
 import { toInputDate, toStorageDate, todayStorageDate } from '@/lib/utils';
+import { showToast } from '@/components/common/ToastStack';
 
 interface InstallationFormData {
   dateInstalled: string;
@@ -78,6 +79,7 @@ export default function InstallationsPage() {
   const [formData, setFormData] = useState<InstallationFormData>(initialFormData);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [formError, setFormError] = useState('');
   const [showSyncWarning, setShowSyncWarning] = useState(false);
   const [showForm, setShowForm] = useState(true);
   const [techInput, setTechInput] = useState('');
@@ -89,6 +91,12 @@ export default function InstallationsPage() {
       fetchTechnicians();
     }
   }, [hasAccess, fetchTechnicians]);
+
+  const handleCloseForm = () => {
+    setShowForm(false);
+    setFormData(initialFormData);
+    setFormError('');
+  };
 
   const handleInputChange = (field: keyof InstallationFormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -116,6 +124,19 @@ export default function InstallationsPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const missingFields = [
+      !formData.joNumber?.trim() && 'JO Number',
+      !formData.accountNumber?.trim() && 'Account Number',
+      !formData.subscriberName?.trim() && 'Subscriber Name',
+    ].filter(Boolean) as string[];
+
+    if (missingFields.length > 0) {
+      setFormError(`Please fill in: ${missingFields.join(', ')}`);
+      return;
+    }
+    setFormError('');
+
     setIsSubmitting(true);
 
     const submissionData = {
@@ -138,12 +159,14 @@ export default function InstallationsPage() {
 
     try {
       await axios.post('/api/installations', submissionData);
+      showToast('Installation created successfully', 'success');
     } catch (apiError) {
       console.warn('[Installations] API sync failed, saved locally only:', apiError);
       setShowSyncWarning(true);
       setTimeout(() => setShowSyncWarning(false), 5000);
+      showToast('Installation saved locally. Sync will retry automatically.', 'warning');
     }
-    
+
     setFormData(initialFormData);
     setShowForm(false);
     setShowSuccess(true);
@@ -192,7 +215,7 @@ export default function InstallationsPage() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className="modal-backdrop flex items-center justify-center p-4"
-              onClick={() => { setShowForm(false); setFormData(initialFormData); }}
+              onClick={handleCloseForm}
             >
               <motion.div
                 initial={{ scale: 0.95, opacity: 0, y: 20 }}
@@ -201,6 +224,9 @@ export default function InstallationsPage() {
                 transition={{ type: 'spring', duration: 0.4 }}
                 className="modal-container w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col"
                 onClick={(e) => e.stopPropagation()}
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="installation-form-title"
               >
                 <div className="modal-header">
                   <div className="flex items-center gap-4">
@@ -210,7 +236,7 @@ export default function InstallationsPage() {
                       </svg>
                     </div>
                     <div>
-                      <h2 className="text-xl font-bold text-text">New Installation</h2>
+                      <h2 id="installation-form-title" className="text-xl font-bold text-text">New Installation</h2>
                       <p className="text-sm text-text-muted">Fill in the installation details</p>
                     </div>
                   </div>
@@ -529,6 +555,12 @@ export default function InstallationsPage() {
                     </div>
                   </div>
 
+                  {formError && (
+                    <p role="alert" className="rounded-xl bg-red-500/10 p-3 text-sm text-red-600">
+                      {formError}
+                    </p>
+                  )}
+
                   <div className="flex gap-3 pt-4 border-t border-border">
                     <Button type="submit" disabled={isSubmitting} className="flex-1">
                       {isSubmitting ? (
@@ -541,7 +573,7 @@ export default function InstallationsPage() {
                         </span>
                       ) : 'Save Installation'}
                     </Button>
-                    <Button type="button" variant="secondary" onClick={() => { setShowForm(false); setFormData(initialFormData); }} className="flex-1">
+                    <Button type="button" variant="secondary" onClick={handleCloseForm} className="flex-1">
                       Cancel
                     </Button>
                   </div>
