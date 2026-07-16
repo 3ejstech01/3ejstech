@@ -9,6 +9,7 @@ interface SubscribersState {
   isSubmitting: boolean;
   lastFetched: number | null;
   error: string | null;
+  hasData: boolean;
   setSubscribers: (subscribers: Installation[]) => void;
   setLoading: (loading: boolean) => void;
   setSubmitting: (submitting: boolean) => void;
@@ -26,8 +27,9 @@ export const useSubscribersStore = create<SubscribersState>((set, get) => ({
   isSubmitting: false,
   lastFetched: null,
   error: null,
+  hasData: false,
 
-  setSubscribers: (subscribers) => set({ subscribers, lastFetched: Date.now(), isLoading: false, error: null }),
+  setSubscribers: (subscribers) => set({ subscribers, lastFetched: Date.now(), isLoading: false, error: null, hasData: subscribers.length > 0 }),
   setLoading: (isLoading) => set({ isLoading }),
   setSubmitting: (isSubmitting) => set({ isSubmitting }),
   setError: (error) => set({ error, isLoading: false }),
@@ -37,7 +39,7 @@ export const useSubscribersStore = create<SubscribersState>((set, get) => ({
      try {
        const rows = await getAllInstallations();
        const subscribers = (rows as InstallationRow[]).map(normalizeInstallationRow);
-       set({ subscribers, lastFetched: Date.now(), isLoading: false });
+       set({ subscribers, lastFetched: Date.now(), isLoading: false, error: null, hasData: subscribers.length > 0 });
      } catch (error) {
        console.error('Error fetching subscribers:', error);
        set({ isLoading: false, error: 'Failed to fetch subscribers' });
@@ -49,8 +51,7 @@ export const useSubscribersStore = create<SubscribersState>((set, get) => ({
     try {
       const row = denormalizeInstallationRow(subscriber);
       await createInstallation(row);
-      await get().fetchSubscribers();
-      window.dispatchEvent(new CustomEvent('records-updated'));
+      window.dispatchEvent(new CustomEvent('data-version'));
     } catch (error) {
       console.error('Error adding subscriber:', error);
       set({ error: 'Failed to add subscriber', isSubmitting: false });
@@ -63,8 +64,7 @@ export const useSubscribersStore = create<SubscribersState>((set, get) => ({
   updateSubscriber: async (id, updates) => {
     try {
       await updateInstallation(id, updates as Partial<InstallationRow>);
-      await get().fetchSubscribers();
-      window.dispatchEvent(new CustomEvent('records-updated'));
+      window.dispatchEvent(new CustomEvent('data-version'));
     } catch (error) {
       console.error('Error updating subscriber:', error);
     }
@@ -74,8 +74,7 @@ export const useSubscribersStore = create<SubscribersState>((set, get) => ({
     const original = get().subscribers;
     try {
       await deleteInstallation(id);
-      await get().fetchSubscribers();
-      window.dispatchEvent(new CustomEvent('records-updated'));
+      window.dispatchEvent(new CustomEvent('data-version'));
       return true;
     } catch (error) {
       console.error('Error deleting subscriber:', error);
@@ -84,5 +83,9 @@ export const useSubscribersStore = create<SubscribersState>((set, get) => ({
     }
   },
 
-  clearCache: () => set({ subscribers: [], lastFetched: null }),
+  clearCache: () => set({ subscribers: [], lastFetched: null, error: null, hasData: false }),
 }));
+
+window.addEventListener('data-version', () => {
+  useSubscribersStore.getState().fetchSubscribers();
+});

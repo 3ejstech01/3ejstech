@@ -11,6 +11,8 @@ import { Installation } from '@/lib/types';
 import { formatDateDisplay } from '@/lib/utils';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Brush } from '@/components/common/RechartsLazy';
 import { useHistoricalDataStore } from '@/stores/historicalDataStore';
+import { formatDateKey, monthLabel, parseDateInput } from '@/lib/date-utils';
+import { formatCurrency as formatCurrencyUtil, parseNumberInput } from '@/lib/number-utils';
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -21,43 +23,33 @@ export default function DashboardPage() {
 
   const currentYear = new Date().getFullYear();
 
+  const dashboardMetrics = useMemo(() => {
+    const parsedInstallations = installations
+      .map(inst => ({ inst, date: parseDateInput(inst.dateInstalled) }))
+      .filter((item): item is { inst: Installation; date: Date } => Boolean(item.date));
+
+    const recentInstallations = [...installations]
+      .sort((a, b) => (parseDateInput(b.dateInstalled)?.getTime() || 0) - (parseDateInput(a.dateInstalled)?.getTime() || 0))
+      .slice(0, 10);
+
+    const recentEloadTransactions = [...eloadTransactions]
+      .sort((a, b) => (parseDateInput(b.dateLoaded)?.getTime() || 0) - (parseDateInput(a.dateLoaded)?.getTime() || 0))
+      .slice(0, 20);
+
+    return { parsedInstallations, recentInstallations, recentEloadTransactions };
+  }, [installations, eloadTransactions]);
+
   const subscriberGraphData = useMemo(() => {
     const monthly: Record<string, number> = {};
-    installations.forEach(inst => {
-      const raw = inst.dateInstalled as string | number;
-      if (!raw && raw !== 0) return;
-      let date: Date | null = null;
-
-      if (typeof raw === 'number' || /^\d{5,6}$/.test(String(raw).trim())) {
-        const serial = typeof raw === 'number' ? raw : parseInt(String(raw).trim());
-        date = new Date((serial - 25569) * 86400 * 1000);
-      } else {
-        const s = String(raw).trim();
-        if (!s) return;
-        if (/^\d{4}-\d{2}/.test(s)) {
-          date = new Date(s.substring(0, 10));
-        } else if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(s)) {
-          const parts = s.split('/');
-          date = new Date(parseInt(parts[2]), parseInt(parts[0]) - 1, parseInt(parts[1]));
-        } else if (s.includes(' ')) {
-          const datePart = s.replace(/GMT[+-]\d{4}.*/i, '').replace(/\(.*\)/, '').trim();
-          date = new Date(datePart);
-        }
-      }
-
-      if (!date || isNaN(date.getTime())) return;
-      const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+    dashboardMetrics.parsedInstallations.forEach(({ date }) => {
+      const key = formatDateKey(date);
+      if (!key) return;
       monthly[key] = (monthly[key] || 0) + 1;
     });
     return Object.entries(monthly)
       .sort(([a], [b]) => a.localeCompare(b))
-      .map(([month, count]) => {
-        const [yr, mo] = month.split('-').map(Number);
-        const label = isNaN(yr) || isNaN(mo) ? month
-          : new Date(yr, mo - 1, 1).toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
-        return { month, label, count };
-      });
-  }, [installations]);
+      .map(([month, count]) => ({ month, label: monthLabel(month), count }));
+  }, [dashboardMetrics.parsedInstallations]);
 
   useEffect(() => {
     fetchSubscribers();
@@ -66,92 +58,42 @@ export default function DashboardPage() {
   }, [fetchSubscribers, fetchELoad, fetchHistorical]);
 
   useEffect(() => {
-    const handleSync = () => {
+    const handleDataVersion = () => {
       fetchSubscribers();
       fetchELoad();
       fetchHistorical();
     };
-    window.addEventListener('db-synced', handleSync);
-    window.addEventListener('records-updated', handleSync);
+    window.addEventListener('data-version', handleDataVersion);
     return () => {
-      window.removeEventListener('db-synced', handleSync);
-      window.removeEventListener('records-updated', handleSync);
+      window.removeEventListener('data-version', handleDataVersion);
     };
   }, [fetchSubscribers, fetchELoad, fetchHistorical]);
 
   const totalSubscribers = installations.length + historicalRecords.length;
 
-  const recentEloadTransactions = useMemo(() => {
-    return [...eloadTransactions]
-      .sort((a, b) => {
-        const dateA = a.dateLoaded ? new Date(a.dateLoaded).getTime() : 0;
-        const dateB = b.dateLoaded ? new Date(b.dateLoaded).getTime() : 0;
-        return dateB - dateA;
-      })
-      .slice(0, 20);
-  }, [eloadTransactions]);
-
-  const recentInstallations = useMemo(() => {
-    return [...installations]
-      .sort((a, b) => {
-        const dateA = a.dateInstalled ? new Date(a.dateInstalled).getTime() : 0;
-        const dateB = b.dateInstalled ? new Date(b.dateInstalled).getTime() : 0;
-        return dateB - dateA;
-      })
-      .slice(0, 10);
-  }, [installations]);
+  const recentEloadTransactions = dashboardMetrics.recentEloadTransactions;
+  const recentInstallations = dashboardMetrics.recentInstallations;
 
   const clawbackSubscribers = useMemo(() => {
     const daysFilter = 90;
     const daysAgo = new Date();
     daysAgo.setDate(daysAgo.getDate() - daysFilter);
 
-    return installations.filter(sub => {
-      let dateInstalled: Date | null = null;
-      const raw = sub.dateInstalled;
+    return dashboardMetrics.parsedInstallations
+      .filter(({ inst, date }) => {
+        const isWithinDays = date >= daysAgo;
+        const isNotNeeded = inst.notifyStatus === 'Not Needed';
+        const isNotified = inst.notifyStatus === 'Notified';
+        const isNotLoaded = inst.loadStatus !== 'Account Loaded';
 
-      if (!raw) return false;
+        return isWithinDays && !isNotNeeded && (isNotified || inst.notifyStatus === 'Not Yet Notified') && isNotLoaded;
+      })
+      .slice(0, 20)
+      .map(({ inst }) => inst);
+  }, [dashboardMetrics.parsedInstallations]);
 
-      if (typeof raw === 'number' || /^\d{5,6}$/.test(String(raw).trim())) {
-        const serial = typeof raw === 'number' ? raw : parseInt(String(raw).trim());
-        dateInstalled = new Date((serial - 25569) * 86400 * 1000);
-      } else {
-        const s = String(raw).trim();
-        if (!s) return false;
-        if (/^\d{4}-\d{2}/.test(s)) {
-          dateInstalled = new Date(s.substring(0, 10));
-        } else if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(s)) {
-          const parts = s.split('/');
-          dateInstalled = new Date(parseInt(parts[2]), parseInt(parts[0]) - 1, parseInt(parts[1]));
-        } else if (s.includes(' ')) {
-          const datePart = s.replace(/GMT[+-]\d{4}.*/i, '').replace(/\(.*\)/, '').trim();
-          dateInstalled = new Date(datePart);
-        }
-      }
-
-      if (!dateInstalled || isNaN(dateInstalled.getTime())) return false;
-
-      const isWithinDays = dateInstalled >= daysAgo;
-      const isNotNeeded = sub.notifyStatus === 'Not Needed';
-      const isNotified = sub.notifyStatus === 'Notified';
-      const isNotLoaded = sub.loadStatus !== 'Account Loaded';
-
-      return isWithinDays && !isNotNeeded && (isNotified || sub.notifyStatus === 'Not Yet Notified') && isNotLoaded;
-    }).slice(0, 20);
-  }, [installations]);
-
-  const parseNum = (v: unknown): number => {
-    if (typeof v === 'number') return v;
-    if (typeof v === 'string') {
-      const parsed = parseFloat(v);
-      return isNaN(parsed) ? 0 : parsed;
-    }
-    return 0;
-  };
-
-  const formatCurrency = (value: number) => {
-    return `₱${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-  };
+  const parseNum = parseNumberInput;
+  const formatCurrency = (value: number) => formatCurrencyUtil(value);
 
   return (
     <LayoutWrapper>
@@ -314,9 +256,9 @@ export default function DashboardPage() {
                   <tbody>
                     {recentEloadTransactions.map((t, i) => (
                       <tr key={t.id || i} className="border-b border-border/30 hover:bg-primary/5">
-                        <td className="py-2 font-medium text-text">{t.accountNo || 'N/A'}</td>
-                        <td className="py-2 text-text/60">{t.gcashAcct || 'N/A'}</td>
-                        <td className="py-2 text-text/60 font-mono text-xs">{t.gcashReference || '-'}</td>
+                        <td className="py-2 font-medium text-text">{t.accountNo || 'No account'}</td>
+                        <td className="py-2 text-text/60">{t.gcashAcct || 'No handler'}</td>
+                        <td className="py-2 text-text/60 font-mono text-xs">{t.gcashReference || 'No reference'}</td>
                         <td className="py-2 text-text/60 text-right">{formatCurrency(parseNum(t.amount))}</td>
                       </tr>
                     ))}
@@ -359,10 +301,10 @@ export default function DashboardPage() {
                   <tbody>
                     {clawbackSubscribers.map((inst, i) => (
                       <tr key={inst.id || i} onDoubleClick={() => setSelectedItem(inst)} className="border-b border-border/30 hover:bg-primary/5 cursor-pointer">
-                        <td className="py-2 font-medium text-text">{inst.subscriberName || 'N/A'}</td>
-                        <td className="py-2 text-text/60">{String(inst.accountNumber || '').replace(/\.0$/, '')}</td>
-                        <td className="py-2 text-text/60">{inst.contactNumber1 || '-'}</td>
-                        <td className="py-2 text-text/60 max-w-[150px] truncate">{inst.address || '-'}</td>
+                        <td className="py-2 font-medium text-text">{inst.subscriberName || 'No subscriber'}</td>
+                        <td className="py-2 text-text/60">{String(inst.accountNumber || '').replace(/\.0$/, '') || 'No account'}</td>
+                        <td className="py-2 text-text/60">{inst.contactNumber1 || 'No contact'}</td>
+                        <td className="py-2 text-text/60 max-w-[150px] truncate">{inst.address || 'No address'}</td>
                       </tr>
                     ))}
                     {clawbackSubscribers.length === 0 && (
@@ -396,9 +338,9 @@ export default function DashboardPage() {
                   <tbody>
                     {recentInstallations.map((inst, i) => (
                       <tr key={inst.id || i} onDoubleClick={() => setSelectedItem(inst)} className="border-b border-border/30 hover:bg-primary/5 cursor-pointer">
-                        <td className="py-2 font-medium text-text">{inst.subscriberName || 'N/A'}</td>
-                        <td className="py-2 text-text/60">{String(inst.accountNumber || '').replace(/\.0$/, '')}</td>
-                        <td className="py-2 text-text/60">{formatDateDisplay(inst.dateInstalled)}</td>
+                        <td className="py-2 font-medium text-text">{inst.subscriberName || 'No subscriber'}</td>
+                        <td className="py-2 text-text/60">{String(inst.accountNumber || '').replace(/\.0$/, '') || 'No account'}</td>
+                        <td className="py-2 text-text/60">{formatDateDisplay(inst.dateInstalled) || 'No date'}</td>
                       </tr>
                     ))}
                     {recentInstallations.length === 0 && (
@@ -417,10 +359,10 @@ export default function DashboardPage() {
       <AnimatePresence>
         {selectedItem && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setSelectedItem(null)}>
-            <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} className="bg-surface rounded-2xl shadow-2xl w-full max-w-lg" onClick={(e) => e.stopPropagation()}>
+            <motion.div initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }} className="bg-surface rounded-2xl shadow-2xl w-full max-w-lg" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="installation-detail-title">
               <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 p-4 text-white">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-lg font-bold">{selectedItem.subscriberName}</h2>
+                  <h2 id="installation-detail-title" className="text-lg font-bold">{selectedItem.subscriberName}</h2>
                   <button onClick={() => setSelectedItem(null)} className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -430,11 +372,11 @@ export default function DashboardPage() {
               </div>
               <div className="p-4">
                 <div className="grid grid-cols-2 gap-3">
-                  <div><p className="text-xs text-text/50">Account #</p><p className="font-medium">{String(selectedItem.accountNumber || '').replace(/\.0$/, '')}</p></div>
-                  <div><p className="text-xs text-text/50">Date Installed</p><p className="font-medium">{formatDateDisplay(selectedItem.dateInstalled)}</p></div>
-                  <div><p className="text-xs text-text/50">Contact</p><p className="font-medium">{selectedItem.contactNumber1 || '-'}</p></div>
-                  <div><p className="text-xs text-text/50">Technician</p><p className="font-medium">{selectedItem.assignedTechnician || '-'}</p></div>
-                  <div className="col-span-2"><p className="text-xs text-text/50">Address</p><p className="font-medium">{selectedItem.address || '-'}</p></div>
+                  <div><p className="text-xs text-text/50">Account #</p><p className="font-medium">{String(selectedItem.accountNumber || '').replace(/\.0$/, '') || 'No account'}</p></div>
+                  <div><p className="text-xs text-text/50">Date Installed</p><p className="font-medium">{formatDateDisplay(selectedItem.dateInstalled) || 'No date'}</p></div>
+                  <div><p className="text-xs text-text/50">Contact</p><p className="font-medium">{selectedItem.contactNumber1 || 'No contact'}</p></div>
+                  <div><p className="text-xs text-text/50">Technician</p><p className="font-medium">{selectedItem.assignedTechnician || 'Unassigned'}</p></div>
+                  <div className="col-span-2"><p className="text-xs text-text/50">Address</p><p className="font-medium">{selectedItem.address || 'No address'}</p></div>
                 </div>
               </div>
             </motion.div>

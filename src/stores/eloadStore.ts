@@ -9,6 +9,7 @@ interface ELoadState {
   isSubmitting: boolean;
   lastFetched: number | null;
   error: string | null;
+  hasData: boolean;
   setTransactions: (transactions: ELoadTransaction[]) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
@@ -32,8 +33,9 @@ export const useELoadStore = create<ELoadState>((set, get) => ({
   isSubmitting: false,
   lastFetched: null,
   error: null,
+  hasData: false,
 
-  setTransactions: (transactions) => set({ transactions, lastFetched: Date.now(), isLoading: false, error: null }),
+  setTransactions: (transactions) => set({ transactions, lastFetched: Date.now(), isLoading: false, error: null, hasData: transactions.length > 0 }),
   setLoading: (isLoading) => set({ isLoading }),
   setError: (error) => set({ error, isLoading: false }),
 
@@ -42,7 +44,7 @@ export const useELoadStore = create<ELoadState>((set, get) => ({
      try {
        const rows = await getAllEload();
        const transactions = (rows as unknown as ELoadRow[]).map(normalizeEloadRow);
-       set({ transactions, lastFetched: Date.now(), isLoading: false });
+       set({ transactions, lastFetched: Date.now(), isLoading: false, error: null, hasData: transactions.length > 0 });
      } catch (error) {
        console.error('Error fetching eload:', error);
        set({ isLoading: false, error: 'Failed to fetch transactions' });
@@ -54,8 +56,7 @@ export const useELoadStore = create<ELoadState>((set, get) => ({
     try {
       const row = denormalizeEloadRow(transaction);
       await createEload(row as Parameters<typeof createEload>[0]);
-      await get().fetchTransactions();
-      window.dispatchEvent(new CustomEvent('records-updated'));
+      window.dispatchEvent(new CustomEvent('data-version'));
     } catch (error) {
       console.error('Error adding transaction:', error);
       const errorMsg = (error as Error).message || 'Failed to add transaction';
@@ -70,7 +71,7 @@ export const useELoadStore = create<ELoadState>((set, get) => ({
     const original = get().transactions;
     try {
       await updateEload(id, data as Parameters<typeof updateEload>[1]);
-      await get().fetchTransactions();
+      window.dispatchEvent(new CustomEvent('data-version'));
     } catch (error) {
       console.error('Error updating transaction:', error);
       set({ transactions: original, error: 'Failed to update transaction' });
@@ -81,13 +82,16 @@ export const useELoadStore = create<ELoadState>((set, get) => ({
     const original = get().transactions;
     try {
       await deleteEload(id);
-      await get().fetchTransactions();
-      window.dispatchEvent(new CustomEvent('records-updated'));
+      window.dispatchEvent(new CustomEvent('data-version'));
     } catch (error) {
       console.error('Error deleting transaction:', error);
       set({ transactions: original, error: 'Failed to delete transaction' });
     }
   },
 
-  clearAll: () => set({ transactions: [], lastFetched: null }),
+  clearAll: () => set({ transactions: [], lastFetched: null, error: null, hasData: false }),
 }));
+
+window.addEventListener('data-version', () => {
+  useELoadStore.getState().fetchTransactions();
+});

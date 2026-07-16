@@ -30,6 +30,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
         console.log('[DataProvider] Loading initial data...');
         await syncFromRemote();
         console.log('[DataProvider] Data loaded successfully');
+        window.dispatchEvent(new CustomEvent('data-version'));
         setIsReady(true);
       } catch (err) {
         console.error('[DataProvider] Failed to load data:', err);
