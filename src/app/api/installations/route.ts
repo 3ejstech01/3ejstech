@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAllInstallations, createInstallation, deleteInstallation } from '@/lib/unified-db';
 import { validateInstallation } from '@/lib/validation';
+import { requireRole } from '@/lib/auth-guard';
+import { UserRole } from '@/lib/types';
 
 function toCamelCaseInstallation(data: Record<string, unknown>): Record<string, unknown> {
   const mapping: Record<string, string> = {
@@ -27,8 +29,10 @@ function toCamelCaseInstallation(data: Record<string, unknown>): Record<string, 
   return result;
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const auth = requireRole(request, [UserRole.ADMIN, UserRole.TECHNICIAN, UserRole.VIEW_ONLY]);
+    if ('response' in auth) return auth.response;
     const installations = await getAllInstallations();
     return NextResponse.json(installations);
   } catch (error) {
@@ -39,13 +43,14 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    const auth = requireRole(request, [UserRole.ADMIN, UserRole.TECHNICIAN, UserRole.VIEW_ONLY]);
+    if ('response' in auth) return auth.response;
     const data = await request.json();
-    const validation = validateInstallation(data);
+    const camelCaseData = toCamelCaseInstallation(data);
+    const validation = validateInstallation(camelCaseData);
     if (!validation.success) {
       return NextResponse.json({ error: validation.error }, { status: 400 });
     }
-
-    const camelCaseData = toCamelCaseInstallation(data);
     const installation = await createInstallation(camelCaseData);
     return NextResponse.json(installation, { status: 201 });
   } catch (error) {
@@ -56,6 +61,8 @@ export async function POST(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
+    const auth = requireRole(request, [UserRole.ADMIN, UserRole.TECHNICIAN, UserRole.VIEW_ONLY]);
+    if ('response' in auth) return auth.response;
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
     if (!id) return NextResponse.json({ error: 'ID required' }, { status: 400 });

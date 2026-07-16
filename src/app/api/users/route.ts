@@ -1,15 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAllUsers, createUser, updateUser, deleteUser } from '@/lib/unified-db';
+import { toPublicUser } from '@/lib/auth-server';
+import { validateUser } from '@/lib/validation';
+import { requireRole } from '@/lib/auth-guard';
+import { UserRole } from '@/lib/types';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const auth = requireRole(request, [UserRole.ADMIN]);
+    if ('response' in auth) return auth.response;
     const users = await getAllUsers();
-    return NextResponse.json(users.map(u => ({
-      id: u.id || u.username,
-      username: u.username,
-      role: u.role,
-      createdAt: u.createdAt,
-    })));
+    return NextResponse.json(users.map(toPublicUser));
   } catch (error) {
     console.error('Error fetching users:', error);
     return NextResponse.json({ error: 'Failed to fetch users' }, { status: 500 });
@@ -18,21 +19,21 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    const auth = requireRole(request, [UserRole.ADMIN]);
+    if ('response' in auth) return auth.response;
     const data = await request.json();
-    if (!data.username || !data.role) {
-      return NextResponse.json({ error: 'Username and role are required' }, { status: 400 });
-    }
-    if (data.username.length < 3) {
-      return NextResponse.json({ error: 'Username must be at least 3 characters' }, { status: 400 });
+    const result = validateUser(data);
+    if (!result.success) {
+      return NextResponse.json({ error: result.error }, { status: 400 });
     }
 
     const user = await createUser({
-      username: data.username,
-      password: data.password || 'default',
-      role: data.role,
+      username: result.data.username,
+      password: result.data.password,
+      role: result.data.role,
     });
 
-    return NextResponse.json({ id: user.id, username: user.username, role: user.role, createdAt: user.createdAt }, { status: 201 });
+    return NextResponse.json(toPublicUser(user), { status: 201 });
   } catch (error) {
     console.error('Error creating user:', error);
     return NextResponse.json({ error: 'Failed to create user' }, { status: 500 });
@@ -41,8 +42,24 @@ export async function POST(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   try {
+    const auth = requireRole(request, [UserRole.ADMIN]);
+    if ('response' in auth) return auth.response;
     const { id, ...data } = await request.json();
     if (!id) return NextResponse.json({ error: 'User ID required' }, { status: 400 });
+
+    const existing = (await getAllUsers()).find(u => u.id === id);
+    if (!existing) return NextResponse.json({ error: 'User not found' }, { status: 404 });
+
+    const merged = {
+      id,
+      username: data.username ?? existing.username,
+      password: data.password ?? 'placeholder-password-123',
+      role: data.role ?? existing.role,
+    };
+    const result = validateUser(merged);
+    if (!result.success) {
+      return NextResponse.json({ error: result.error }, { status: 400 });
+    }
 
     const updated = await updateUser(id, {
       username: data.username,
@@ -51,7 +68,7 @@ export async function PATCH(request: NextRequest) {
     });
 
     if (!updated) return NextResponse.json({ error: 'User not found' }, { status: 404 });
-    return NextResponse.json({ id, username: updated.username, role: updated.role });
+    return NextResponse.json(toPublicUser(updated));
   } catch (error) {
     console.error('Error updating user:', error);
     return NextResponse.json({ error: 'Failed to update user' }, { status: 500 });
@@ -60,6 +77,8 @@ export async function PATCH(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
+    const auth = requireRole(request, [UserRole.ADMIN]);
+    if ('response' in auth) return auth.response;
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
     if (!id) return NextResponse.json({ error: 'User ID required' }, { status: 400 });
