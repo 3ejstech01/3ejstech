@@ -7,6 +7,14 @@ const { createServer } = require('http');
 const { parse } = require('url');
 const next = require('next');
 
+const SECURE_HEADERS = {
+  'X-Content-Type-Options': 'nosniff',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'X-Frame-Options': 'DENY',
+  'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+  'Permissions-Policy': 'geolocation=(), microphone=(), camera=()',
+};
+
 // Starts the Next.js server in-process.
 // `dev` is explicit so the Electron main process can force production mode
 // when packaged (there is no standalone `node` binary to spawn in a build).
@@ -30,6 +38,9 @@ async function startServer(dev = process.env.NODE_ENV !== 'production') {
   });
 
   await new Promise((resolve) => server.listen(port, resolve));
+  server.on('request', (req, res) => {
+    for (const [k, v] of Object.entries(SECURE_HEADERS)) res.setHeader(k, v);
+  });
   console.log(`> Ready on http://${hostname}:${port}`);
   return server;
 }
