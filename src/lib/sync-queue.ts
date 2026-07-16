@@ -4,8 +4,14 @@ import { useSyncQueueStore, type SheetName, type OpType, type QueuedOperation } 
 
 let opCounter = 0;
 
+const MAX_RETRY_COUNT = 3;
+
 function generateOpId(): string {
   return `op-${Date.now()}-${++opCounter}`;
+}
+
+function getRetryDelayMs(retryCount: number): number {
+  return Math.min(60_000, 1000 * 2 ** retryCount);
 }
 
 function getSyncQueueStore() {
@@ -82,20 +88,15 @@ async function updateOpStatus(
 ): Promise<void> {
   const updated = { ...op, ...updates };
   await localDb.put('syncQueue', updated);
-  const store = getSyncQueueStore();
-  const queue = store.getQueue().map(o => (o.id === op.id ? updated : o));
-  store._setQueue(queue);
 }
 
 async function removeOp(opId: string): Promise<void> {
   await localDb.remove('syncQueue', opId);
-  const store = getSyncQueueStore();
-  store._setQueue(store.getQueue().filter(o => o.id !== opId));
 }
 
 export async function resolveConflict(
   opId: string,
-  resolution: 'mine' | 'theirs'
+  resolution: 'mine' | 'theirs' | 'retry'
 ): Promise<void> {
   const store = getSyncQueueStore();
   const op = store.getQueue().find(o => o.id === opId);
@@ -103,6 +104,13 @@ export async function resolveConflict(
 
   if (resolution === 'mine') {
     await updateOpStatus(op, { status: 'pending', conflictData: undefined });
+  } else if (resolution === 'retry') {
+    await updateOpStatus(op, {
+      status: 'pending',
+      retryCount: 0,
+      nextRetryAt: Date.now(),
+      lastError: undefined,
+    });
   } else {
     await removeOp(opId);
   }
@@ -122,11 +130,11 @@ export async function flushQueue(): Promise<FlushResult> {
   const store = getSyncQueueStore();
   if (store.isFlushing) return { success: 0, failed: 0, conflicts: 0 };
 
-  const pending = store.getQueue().filter(op => op.status === 'pending');
-  if (pending.length === 0) return { success: 0, failed: 0, conflicts: 0 };
-
-  await store.loadQueue();
-  const currentQueue = store.getQueue();
+  const now = Date.now();
+  const snapshot = store.getQueue().filter(op =>
+    op.status === 'pending' && (!op.nextRetryAt || op.nextRetryAt <= now)
+  );
+  if (snapshot.length === 0) return { success: 0, failed: 0, conflicts: 0 };
 
   let success = 0;
   let failed = 0;
@@ -134,8 +142,9 @@ export async function flushQueue(): Promise<FlushResult> {
   let firstConflictDetected = false;
   let corsDetected = false;
 
-  for (const op of currentQueue) {
+  for (const op of snapshot) {
     if (op.status !== 'pending') continue;
+    if (op.nextRetryAt && op.nextRetryAt > now) continue;
 
     await updateOpStatus(op, { status: 'syncing' });
 
@@ -148,9 +157,10 @@ export async function flushQueue(): Promise<FlushResult> {
         } else if (result.isCorsError) {
           store.setHasCorsError(true);
           corsDetected = true;
-          await updateOpStatus(op, { status: 'pending', retryCount: op.retryCount + 1 });
+          await scheduleRetry(op);
+          failed++;
         } else {
-          await updateOpStatus(op, { status: 'pending', retryCount: op.retryCount + 1 });
+          await scheduleRetry(op, 'Sync failed');
           failed++;
         }
       } else if (op.type === 'update') {
@@ -177,9 +187,10 @@ export async function flushQueue(): Promise<FlushResult> {
           } else if (result.isCorsError) {
             store.setHasCorsError(true);
             corsDetected = true;
-            await updateOpStatus(op, { status: 'pending', retryCount: op.retryCount + 1 });
+            await scheduleRetry(op);
+            failed++;
           } else {
-            await updateOpStatus(op, { status: 'pending', retryCount: op.retryCount + 1 });
+            await scheduleRetry(op, 'Sync failed');
             failed++;
           }
         }
@@ -191,26 +202,17 @@ export async function flushQueue(): Promise<FlushResult> {
         } else if (result.isCorsError) {
           store.setHasCorsError(true);
           corsDetected = true;
-          await updateOpStatus(op, { status: 'pending', retryCount: op.retryCount + 1 });
+          await scheduleRetry(op);
+          failed++;
         } else {
-          await updateOpStatus(op, { status: 'pending', retryCount: op.retryCount + 1 });
+          await scheduleRetry(op, 'Sync failed');
           failed++;
         }
       }
     } catch (e) {
       console.warn('[SyncQueue] Flush error for op', op.id, e);
-      if (op.retryCount >= 2) {
-        await updateOpStatus(op, { status: 'conflict' });
-        store.setHasConflicts(true);
-        if (!firstConflictDetected) {
-          store.setShowConflictModal(true);
-          firstConflictDetected = true;
-        }
-        conflicts++;
-      } else {
-        await updateOpStatus(op, { status: 'pending', retryCount: op.retryCount + 1 });
-        failed++;
-      }
+      await scheduleRetry(op, e instanceof Error ? e.message : 'Sync failed');
+      failed++;
     }
   }
 
@@ -225,4 +227,22 @@ export async function flushQueue(): Promise<FlushResult> {
   }
 
   return { success, failed, conflicts };
+}
+
+async function scheduleRetry(op: QueuedOperation, errorMessage?: string): Promise<void> {
+  const store = getSyncQueueStore();
+  const message = errorMessage || 'Sync failed';
+  if (op.retryCount >= MAX_RETRY_COUNT) {
+    await updateOpStatus(op, { status: 'dead-letter', lastError: message });
+    store.setHasConflicts(true);
+    store.setLastError(message);
+    return;
+  }
+  const nextRetryAt = Date.now() + getRetryDelayMs(op.retryCount);
+  await updateOpStatus(op, {
+    status: 'pending',
+    retryCount: op.retryCount + 1,
+    lastError: message,
+    nextRetryAt,
+  });
 }

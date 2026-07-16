@@ -3,7 +3,7 @@ import { create } from 'zustand';
 export type SheetName = 'installations' | 'eload' | 'users' | 'historicaldata';
 
 export type OpType = 'create' | 'update' | 'delete';
-export type OpStatus = 'pending' | 'syncing' | 'conflict' | 'resolved';
+export type OpStatus = 'pending' | 'syncing' | 'conflict' | 'resolved' | 'dead-letter';
 
 export interface QueuedOperation {
   id: string;
@@ -17,6 +17,8 @@ export interface QueuedOperation {
   status: OpStatus;
   conflictData?: Record<string, unknown>;
   retryCount: number;
+  lastError?: string;
+  nextRetryAt?: number;
 }
 
 export interface SyncNotification {
@@ -35,6 +37,8 @@ interface SyncQueueState {
   notifications: SyncNotification[];
   showConflictModal: boolean;
   conflictOpId: string | null;
+  deadLetterCount: number;
+  lastError: string | null;
 
   loadQueue: () => Promise<void>;
   _setQueue: (queue: QueuedOperation[]) => void;
@@ -43,8 +47,10 @@ interface SyncQueueState {
   setHasConflicts: (v: boolean) => void;
   setHasCorsError: (v: boolean) => void;
   setShowConflictModal: (show: boolean, opId?: string | null) => void;
+  setLastError: (error: string | null) => void;
   getQueue: () => QueuedOperation[];
   getPendingCount: () => number;
+  getDeadLetterCount: () => number;
 }
 
 export const useSyncQueueStore = create<SyncQueueState>((set, get) => ({
@@ -56,6 +62,8 @@ export const useSyncQueueStore = create<SyncQueueState>((set, get) => ({
   notifications: [],
   showConflictModal: false,
   conflictOpId: null,
+  deadLetterCount: 0,
+  lastError: null,
 
   loadQueue: async () => {
     if (typeof window === 'undefined' || !window.indexedDB) return;
@@ -64,13 +72,14 @@ export const useSyncQueueStore = create<SyncQueueState>((set, get) => ({
       const items = await localDb.getAll<QueuedOperation>('syncQueue');
       set({ queue: items.filter(op => op.status !== 'resolved') });
       const hasConflicts = items.some(op => op.status === 'conflict');
-      set({ hasConflicts });
+      const deadLetterCount = items.filter(op => op.status === 'dead-letter').length;
+      set({ hasConflicts, deadLetterCount });
     } catch (e) {
       console.warn('[SyncQueue] Failed to load queue:', e);
     }
   },
 
-  _setQueue: (queue) => set({ queue }),
+  _setQueue: (queue) => set({ queue, deadLetterCount: queue.filter(op => op.status === 'dead-letter').length }),
 
   addNotification: (message, type) => {
     const id = `notif-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
@@ -85,12 +94,11 @@ export const useSyncQueueStore = create<SyncQueueState>((set, get) => ({
   },
 
   setHasConflicts: (v) => set({ hasConflicts: v }),
-
   setHasCorsError: (v) => set({ hasCorsError: v }),
-
   setShowConflictModal: (show, opId = null) => set({ showConflictModal: show, conflictOpId: opId ?? null }),
+  setLastError: (error) => set({ lastError: error }),
 
   getQueue: () => get().queue,
-
   getPendingCount: () => get().queue.filter(op => op.status === 'pending' || op.status === 'syncing').length,
+  getDeadLetterCount: () => get().queue.filter(op => op.status === 'dead-letter').length,
 }));
