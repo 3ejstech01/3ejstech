@@ -48,7 +48,8 @@ export async function enqueueOp(
 export async function saveRecordSnapshot(
   sheet: SheetName,
   recordId: string,
-  updatedAt: string
+  updatedAt: string,
+  metadata?: { resolution?: string }
 ): Promise<void> {
   if (typeof window === 'undefined' || !window.indexedDB) return;
   const snapshot = {
@@ -57,6 +58,7 @@ export async function saveRecordSnapshot(
     recordId,
     updatedAt,
     loadedAt: Date.now(),
+    ...metadata,
   };
   await localDb.put('recordSnapshots', snapshot);
 }
@@ -104,6 +106,10 @@ export async function resolveConflict(
 
   if (resolution === 'mine') {
     await updateOpStatus(op, { status: 'pending', conflictData: undefined });
+    const remoteRow = op.conflictData;
+    if (remoteRow && typeof remoteRow === 'object') {
+      await saveRecordSnapshot(op.sheet, op.keyValue, String((remoteRow as Record<string, unknown>).updatedAt ?? ''), { resolution: 'mine' });
+    }
   } else if (resolution === 'retry') {
     await updateOpStatus(op, {
       status: 'pending',

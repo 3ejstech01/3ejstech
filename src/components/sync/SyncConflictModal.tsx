@@ -10,11 +10,13 @@ export function SyncConflictModal() {
 
   if (!showConflictModal) return null;
 
-  const conflictOp = queue.find(op => op.status === 'conflict');
+  const conflictOp = queue.find(op => op.status === 'conflict' || op.status === 'dead-letter');
   if (!conflictOp) return null;
 
-  const localData = conflictOp.data;
-  const theirData = conflictOp.conflictData || {};
+  const deadLetterOps = queue.filter(op => op.status === 'dead-letter');
+  const currentOp = deadLetterOps.find(op => op.id === conflictOp.id) ?? conflictOp;
+  const localData = currentOp.data;
+  const theirData = currentOp.conflictData || {};
 
   const allKeys = Array.from(new Set([...Object.keys(localData), ...Object.keys(theirData)])).filter(
     k => !['id', 'createdAt', 'timestamp'].includes(k)
@@ -26,14 +28,16 @@ export function SyncConflictModal() {
     return lv !== tv;
   });
 
-  const handleResolve = async (resolution: 'mine' | 'theirs') => {
+  const handleResolve = async (resolution: 'mine' | 'theirs' | 'retry', opId?: string) => {
     setResolving(true);
     try {
-      await resolveConflict(conflictOp.id, resolution);
+      await resolveConflict(opId ?? conflictOp.id, resolution);
     } finally {
       setResolving(false);
     }
   };
+
+  const isDeadLetter = conflictOp.status === 'dead-letter';
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
@@ -58,6 +62,33 @@ export function SyncConflictModal() {
         <div className="px-6 py-4 text-sm text-gray-600 dark:text-gray-300">
           This record was also modified elsewhere. Choose which version to keep.
         </div>
+
+        {deadLetterOps.length > 0 && (
+          <div className="mx-6 mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+            <h4 className="text-sm font-semibold text-red-800 dark:text-red-300 mb-2">Failed Operations ({deadLetterOps.length})</h4>
+            {deadLetterOps.map(op => (
+              <div key={op.id} className="flex items-center justify-between py-1">
+                <span className="text-sm text-red-700 dark:text-red-400">{op.type} — {op.keyValue}</span>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => handleResolve('retry', op.id)}
+                    disabled={resolving}
+                    className="text-xs text-blue-600 dark:text-blue-400 hover:underline disabled:opacity-50"
+                  >
+                    Retry
+                  </button>
+                  <button
+                    onClick={() => handleResolve('theirs', op.id)}
+                    disabled={resolving}
+                    className="text-xs text-red-600 dark:text-red-400 hover:underline disabled:opacity-50"
+                  >
+                    Discard
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
 
         <div className="flex-1 overflow-auto px-6 pb-4">
           <div className="grid grid-cols-2 gap-4">
@@ -114,6 +145,15 @@ export function SyncConflictModal() {
           >
             Keep Mine
           </button>
+          {isDeadLetter && (
+            <button
+              onClick={() => handleResolve('retry')}
+              disabled={resolving}
+              className="px-4 py-2 text-sm bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors disabled:opacity-50"
+            >
+              Retry
+            </button>
+          )}
         </div>
       </div>
     </div>
