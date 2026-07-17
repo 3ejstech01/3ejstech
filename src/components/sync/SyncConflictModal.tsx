@@ -2,11 +2,19 @@
 
 import { useSyncQueueStore } from '@/stores/syncQueueStore';
 import { resolveConflict } from '@/lib/sync-queue';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export function SyncConflictModal() {
-  const { showConflictModal, queue } = useSyncQueueStore();
+  const { showConflictModal, queue, setShowConflictModal } = useSyncQueueStore();
   const [resolving, setResolving] = useState(false);
+
+  const handleClose = () => setShowConflictModal(false);
+
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => { if (e.key === 'Escape') handleClose(); };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, []);
 
   if (!showConflictModal) return null;
 
@@ -48,7 +56,7 @@ export function SyncConflictModal() {
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Conflict Detected</h2>
           </div>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            {op.sheet} — {op.keyValue}
+            {op.sheet || 'unknown sheet'} — {op.keyValue || 'unknown key'}
           </p>
         </div>
 
@@ -58,7 +66,7 @@ export function SyncConflictModal() {
               <h3 className="text-sm font-semibold text-blue-600 dark:text-blue-400 mb-3">YOUR VERSION</h3>
               <div className="text-xs text-gray-500 dark:text-gray-400 mb-4">
                 <p>By: You</p>
-                <p>When: {formatTime(op.timestamp)}</p>
+                <p>When: {op.timestamp ? formatTime(new Date(op.timestamp).getTime()) : 'Unknown'}</p>
               </div>
               <div className="space-y-2">
                 {differingFields.map(field => (
@@ -68,7 +76,7 @@ export function SyncConflictModal() {
                   </div>
                 ))}
                 {differingFields.length === 0 && (
-                  <p className="text-sm text-gray-500 dark:text-gray-400 italic">No differing fields.</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 italic">No differing fields detected — conflict may be due to checksum or ordering differences.</p>
                 )}
               </div>
               <button
@@ -84,7 +92,10 @@ export function SyncConflictModal() {
               <h3 className="text-sm font-semibold text-red-600 dark:text-red-400 mb-3">SHEETS VERSION</h3>
               <div className="text-xs text-gray-500 dark:text-gray-400 mb-4">
                 <p>By: {op._lastModifiedBy || 'Unknown'}</p>
-                <p>When: {remoteData.__updatedAt ? formatTime(new Date(String(remoteData.__updatedAt)).getTime()) : 'Unknown'}</p>
+                <p>When: {(() => {
+                  const remoteDate = remoteData?.__updatedAt ? new Date(String(remoteData.__updatedAt)).getTime() : null;
+                  return remoteDate && !isNaN(remoteDate) ? formatTime(remoteDate) : 'Unknown';
+                })()}</p>
               </div>
               <div className="space-y-2">
                 {differingFields.map(field => (
@@ -94,7 +105,7 @@ export function SyncConflictModal() {
                   </div>
                 ))}
                 {differingFields.length === 0 && (
-                  <p className="text-sm text-gray-500 dark:text-gray-400 italic">No differing fields.</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 italic">No differing fields detected — conflict may be due to checksum or ordering differences.</p>
                 )}
               </div>
               <button
