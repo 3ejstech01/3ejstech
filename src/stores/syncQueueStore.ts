@@ -4,14 +4,15 @@ export type SheetName = 'installations' | 'users' | 'historicaldata';
 
 export type OpType = 'create' | 'update' | 'delete';
 export type OpStatus = 'pending' | 'syncing' | 'conflict' | 'resolved' | 'dead-letter';
+export type SyncOpStatus = 'pending' | 'syncing' | 'synced' | 'conflict' | 'failed';
 
 export interface SyncingOp {
   id: string;
   who: string;
   type: 'create' | 'update' | 'delete';
-  sheet: string;
+  sheet: SheetName;
   keyValue: string;
-  status: 'pending' | 'syncing' | 'synced' | 'conflict' | 'failed';
+  status: SyncOpStatus;
 }
 
 export interface QueuedOperation {

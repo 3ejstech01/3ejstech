@@ -6,6 +6,8 @@ let opCounter = 0;
 
 let _currentUser = 'system';
 export function setCurrentSyncUser(user: string) { _currentUser = user; }
+export function getCurrentSyncUser(): string { return _currentUser; }
+export function clearCurrentSyncUser(): void { _currentUser = 'system'; }
 
 const MAX_RETRY_COUNT = 3;
 
