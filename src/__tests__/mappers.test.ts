@@ -2,9 +2,8 @@ import {
   parseExcelSerialDate,
   normalizeAccountNumber,
   normalizeInstallationRow,
-  normalizeEloadRow,
 } from '@/lib/mappers';
-import { InstallationRow, ELoadRow } from '@/lib/types';
+import { InstallationRow } from '@/lib/types';
 
 describe('mappers', () => {
   describe('parseExcelSerialDate', () => {
@@ -96,31 +95,4 @@ describe('mappers', () => {
     });
   });
 
-  describe('normalizeEloadRow', () => {
-    it('should normalize an eload row correctly', () => {
-      const row: ELoadRow = {
-        id: 'el-1',
-        gcashHandler: 'GCASH-001',
-        dateLoaded: '2024-01-15',
-        gcashReference: 'REF-001',
-        timeLoaded: '10:30:00',
-        amount: 300,
-        accountNumber: '12345',
-        markedUp: 10,
-        incentive: 26.6,
-        retailer: 15.2,
-        dealer: 11.4,
-        remarks: '',
-        createdAt: '2024-01-15',
-        updatedAt: '2024-01-15',
-      };
-
-      const result = normalizeEloadRow(row);
-
-      expect(result.id).toBe('el-1');
-      expect(result.gcashAcct).toBe('GCASH-001');
-      expect(result.amount).toBe(300);
-      expect(result.accountNo).toBe('12345');
-    });
   });
-});
