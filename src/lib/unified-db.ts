@@ -1,7 +1,8 @@
+import { computeChecksum } from './checksum';
 import { sheets } from './sheets';
 import { localDb } from './local-db';
 import { hashPasswordIfNeeded } from './auth-utils';
-import { enqueueOp, saveRecordSnapshot, getRecordSnapshot } from './sync-queue';
+import { enqueueOp, saveRecordSnapshot, getRecordSnapshot, getCurrentSyncUser } from './sync-queue';
 import type { SheetName } from '@/stores/syncQueueStore';
 import { parseDateInput } from '@/lib/date-utils';
 import { parseNumberInput } from '@/lib/number-utils';
@@ -118,10 +119,14 @@ export async function createInstallation(data: Partial<InstallationRow>): Promis
     updatedAt: now,
   } as InstallationRow;
 
-  await localDb.put('installations', row);
-  await enqueueOp('create', 'installations', row.id, row as unknown as Record<string, unknown>);
+  const currentUser = getCurrentSyncUser();
+  const checksum = computeChecksum(row as unknown as Record<string, unknown>);
+  const recordWithMeta: InstallationRow = { ...row, _checksum: checksum, _lastModifiedBy: currentUser } as InstallationRow;
 
-  return row;
+  await localDb.put('installations', recordWithMeta);
+  await enqueueOp('create', 'installations', recordWithMeta.id, recordWithMeta as unknown as Record<string, unknown>);
+
+  return recordWithMeta;
 }
 
 export async function updateInstallation(id: string, data: Partial<InstallationRow>): Promise<InstallationRow | undefined> {
@@ -152,10 +157,14 @@ export async function updateInstallation(id: string, data: Partial<InstallationR
 
   const updated = { ...existing, ...data, loadExpire: loadExpire || existing.loadExpire, updatedAt: new Date().toISOString() };
 
-  await localDb.put('installations', updated);
-  await enqueueOp('update', 'installations', id, updated as unknown as Record<string, unknown>, existing.updatedAt);
+  const currentUser = getCurrentSyncUser();
+  const checksum = computeChecksum(updated as unknown as Record<string, unknown>);
+  const recordWithMeta: InstallationRow = { ...updated, _checksum: checksum, _lastModifiedBy: currentUser } as InstallationRow;
 
-  return updated;
+  await localDb.put('installations', recordWithMeta);
+  await enqueueOp('update', 'installations', id, recordWithMeta as unknown as Record<string, unknown>, existing.updatedAt);
+
+  return recordWithMeta;
 }
 
 export async function deleteInstallation(id: string): Promise<boolean> {
@@ -163,8 +172,9 @@ export async function deleteInstallation(id: string): Promise<boolean> {
     throw new Error('deleteInstallation requires IndexedDB - call from client only');
   }
 
+  const currentUser = getCurrentSyncUser();
   await localDb.remove('installations', id);
-  await enqueueOp('delete', 'installations', id, {});
+  await enqueueOp('delete', 'installations', id, { _lastModifiedBy: currentUser });
   return true;
 }
 
@@ -188,9 +198,13 @@ export async function createUser(data: { username: string; password: string; rol
     updatedAt: now,
   };
 
-  await localDb.put('users', row);
-  await enqueueOp('create', 'users', row.id, row as unknown as Record<string, unknown>);
-  return row;
+  const currentUser = getCurrentSyncUser();
+  const checksum = computeChecksum(row as unknown as Record<string, unknown>);
+  const recordWithMeta: UserRow = { ...row, _checksum: checksum, _lastModifiedBy: currentUser } as UserRow;
+
+  await localDb.put('users', recordWithMeta);
+  await enqueueOp('create', 'users', recordWithMeta.id, recordWithMeta as unknown as Record<string, unknown>);
+  return recordWithMeta;
 }
 
 export async function updateUser(id: string, data: { username?: string; password?: string; role?: string }): Promise<UserRow | null> {
@@ -209,14 +223,19 @@ export async function updateUser(id: string, data: { username?: string; password
   updates.updatedAt = new Date().toISOString();
   const updated = updates as UserRow;
 
-  await localDb.put('users', updated);
-  await enqueueOp('update', 'users', id, updated as unknown as Record<string, unknown>, existing.updatedAt);
-  return updated;
+  const currentUser = getCurrentSyncUser();
+  const checksum = computeChecksum(updated as unknown as Record<string, unknown>);
+  const recordWithMeta: UserRow = { ...updated, _checksum: checksum, _lastModifiedBy: currentUser } as UserRow;
+
+  await localDb.put('users', recordWithMeta);
+  await enqueueOp('update', 'users', id, recordWithMeta as unknown as Record<string, unknown>, existing.updatedAt);
+  return recordWithMeta;
 }
 
 export async function deleteUser(id: string): Promise<boolean> {
+  const currentUser = getCurrentSyncUser();
   await localDb.remove('users', id);
-  await enqueueOp('delete', 'users', id, {});
+  await enqueueOp('delete', 'users', id, { _lastModifiedBy: currentUser });
   return true;
 }
 
