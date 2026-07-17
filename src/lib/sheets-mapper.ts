@@ -12,6 +12,7 @@ export const INSTALLATION_SNAKE_MAP: Record<string, string> = {
   status: 'status', monthinstalled: 'monthInstalled', yearinstalled: 'yearInstalled',
   loadexpire: 'loadExpire', notifstatus: 'notifyStatus', loadstatus: 'loadStatus',
   createdat: 'createdAt', updatedat: 'updatedAt',
+  __checksum: '_checksum', __lastmodifiedby: '_lastModifiedBy',
 };
 
 export const USER_SNAKE_MAP: Record<string, string> = {
