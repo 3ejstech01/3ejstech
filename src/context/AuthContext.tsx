@@ -2,12 +2,13 @@
 
 import React, { createContext, useContext, useState } from 'react';
 import { User, UserRole } from '@/lib/types';
+import { localDb } from '@/lib/local-db';
 
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   isAuthenticated: boolean;
-  login: (username: string) => Promise<void>;
+  login: (username: string, password?: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -19,13 +20,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user] = useState<User | null>(AUTO_USER);
   const [isLoading] = useState(false);
 
+  const login = async (username: string, _password?: string) => {
+    const userRecord = await localDb.getById('users', username);
+    if (userRecord && typeof userRecord === 'object' && 'password' in userRecord) {
+      const record = userRecord as { password?: string };
+      if (record.password) {
+        await localDb.put('credentials', { id: username, passwordHash: record.password });
+      }
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
         user,
         isLoading,
         isAuthenticated: true,
-        login: async () => {},
+        login,
         logout: () => {},
       }}
     >
