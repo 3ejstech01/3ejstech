@@ -5,6 +5,8 @@ import { LayoutWrapper } from '@/components/common/LayoutWrapper';
 import { useSubscribersStore } from '@/stores/subscribersStore';
 import { useAuth } from '@/hooks/useAuth';
 import { Card } from '@/components/common/PageContainer';
+import { OfflineBanner } from '@/components/common/OfflineBanner';
+import { flushQueue } from '@/lib/sync-queue';
 import { AnimatePresence } from 'framer-motion';
 import { Installation } from '@/lib/types';
 import { formatDateDisplay } from '@/lib/utils';
@@ -84,6 +86,7 @@ export default function DashboardPage() {
 
   return (
     <LayoutWrapper>
+      <OfflineBanner onSync={flushQueue} />
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>

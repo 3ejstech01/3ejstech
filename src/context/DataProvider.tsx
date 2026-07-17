@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState, createContext, useContext } from 'react';
 import { syncFromRemote } from '@/lib/unified-db';
+import { useOnlineStatus } from '@/hooks/useOnlineStatus';
+import { flushQueue } from '@/lib/sync-queue';
 
 interface DataLoadingContextType {
   isLoading: boolean;
@@ -23,6 +25,8 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const [isReady, setIsReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const isOnline = useOnlineStatus();
+  const [wasOffline, setWasOffline] = useState(false);
 
   useEffect(() => {
     async function loadData() {
@@ -42,6 +46,16 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
 
     loadData();
   }, []);
+
+  useEffect(() => {
+    if (wasOffline && isOnline) {
+      const t = setTimeout(() => {
+        flushQueue();
+      }, 2000);
+      return () => clearTimeout(t);
+    }
+    if (!isOnline) setWasOffline(true);
+  }, [isOnline]);
 
   return (
     <DataLoadingContext.Provider value={{ isLoading, isReady, error }}>
