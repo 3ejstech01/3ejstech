@@ -273,13 +273,11 @@ function doPost(e) {
           }
           // Include metadata columns if present
           var totalCols = row.length;
-          if (totalCols >= 3) {
-            var lastHeader = headers[totalCols - 3];
-            if (lastHeader === '__lastModifiedBy') {
-              obj.__lastModifiedBy = row[totalCols - 3] || '';
-              obj.__updatedAt = row[totalCols - 2] || '';
-              obj.__checksum = row[totalCols - 1] || '';
-            }
+          var lastModifiedByIdx = headers.lastIndexOf('__lastModifiedBy');
+          if (lastModifiedByIdx !== -1 && totalCols >= lastModifiedByIdx + 3) {
+            obj.__lastModifiedBy = row[lastModifiedByIdx] || '';
+            obj.__updatedAt = row[lastModifiedByIdx + 1] || '';
+            obj.__checksum = row[lastModifiedByIdx + 2] || '';
           }
           rows.push(obj);
         }
@@ -334,12 +332,12 @@ function doPost(e) {
               sheet.getRange(i + 1, colIdx + 1).setValue(payload.row[h]);
             }
           });
-          // Update metadata columns (last 3 columns)
-          var totalCols = updatedHeaders.length;
-          sheet.getRange(i + 1, totalCols - 1).setValue(payload._lastModifiedBy || 'unknown');
-          sheet.getRange(i + 1, totalCols).setValue(new Date().toISOString());
+          // Update metadata columns (last 3 columns of actual data)
+          var lastCol = sheet.getLastColumn();
+          sheet.getRange(i + 1, lastCol - 2, 1, 1).setValue(payload._lastModifiedBy || 'unknown');
+          sheet.getRange(i + 1, lastCol - 1, 1, 1).setValue(new Date().toISOString());
           if (payload._checksum) {
-            sheet.getRange(i + 1, totalCols - 2).setValue(payload._checksum);
+            sheet.getRange(i + 1, lastCol, 1, 1).setValue(payload._checksum);
           }
           return json({ success: true, action: 'update', rowIndex: i + 1 });
         }
