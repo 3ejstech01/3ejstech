@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Build output
+    "dist/**",
     // Electron main process + standalone server (CommonJS, not part of the Next build)
     "electron/**",
     "server.js",
