@@ -1,212 +1,41 @@
-# 3EJS Tech - Multi-Agent System Configuration
+# AGENTS.md — 3EJS Tech
 
-## Overview
-This document defines a multi-agent setup where each agent has a clear responsibility, inputs, outputs, guardrails, and collaboration rules.
+Guidance for AI agents and contributors working on the 3EJS Tech ISP management app.
 
----
+## What this project is
+A Next.js 16 (App Router) + TypeScript ISP management app. Data lives in **Google Sheets** (via a Google Apps Script Web App) with an **IndexedDB** offline cache, and the same app ships as an **Electron** desktop executable. Auth uses **session cookies (JWT) + bcryptjs**, enforced by `middleware.ts`.
 
-## Agent 1: Coding Agent (Software Engineer)
+> Note: `README.md` previously described a Supabase + Next.js 14 + Netlify stack. That is **out of date**. The current stack is Google Sheets + Next.js 16 + Electron (web deploy via Vercel/Netlify configs). See `README.md` for the accurate architecture.
 
-**Primary Responsibility:** Write clean, efficient, and maintainable code based on approved designs and requirements.
+## Commands
+- `npm run dev` — web dev server
+- `npm run build` / `npm run start` — production web build/serve
+- `npm run typecheck` — `tsc --noEmit`
+- `npm run lint` — ESLint (0 errors expected; warnings allowed)
+- `npm run test` — Jest
+- `npm run electron:dev` — Next dev + Electron window
+- `npm run dist` — build installer into `dist/`
 
-### Core Tasks
-- Implement features and bug fixes
-- Refactor existing code
-- Follow coding standards and best practices
-- Optimize performance where required
+## Architecture at a glance
+- `src/app/api/**` — Route Handlers (auth, installations, eload, users, archive, sheets-proxy)
+- `src/lib/sheets.ts` + `unified-db.ts` + `sheets-mapper.ts` — data layer (Sheets ↔ camelCase)
+- `src/lib/local-db.ts` + `src/lib/sync-queue.ts` — IndexedDB cache + offline sync
+- `src/stores/**` — Zustand stores (use selectors to avoid re-renders)
+- `src/types/electron.d.ts` — `window.electron` API typing (desktop only)
+- `electron/main.js`, `electron/preload.js`, `server.js` — desktop shell (CommonJS, excluded from lint)
 
-### Inputs
-- Design specs from Design Agent
-- Implementation plan from Implementation Agent
-- Acceptance criteria
+## Lint/type/test conventions
+- Stylized strict rules (`no-explicit-any`, `no-require-imports`) are **warnings**; `react-hooks/set-state-in-effect` and `react/no-unescaped-entities` are **off** in `eslint.config.mjs`. Keep `lint` at 0 errors.
+- `electron/`, root Apps Script files, and helper `.js` scripts are git-ignored by ESLint.
+- Do not add `require()` to app TypeScript; the Electron JS files are intentionally CommonJS.
 
-### Outputs
-- Source code (feature branches)
-- Inline comments
-- Commit messages
+## Multi-agent reference (advisory)
+The repo also ships agent specs under `CUSTOM_AGENTS.md` (Strategist/Architect/Artisan/Optimizer) and `ArchitectureReview.agent.md` (read-only review agent). They are planning aids, not enforced process. Key ownership:
+- Data/E-Load formula: `src/stores/eloadStore.ts`, `src/app/eload/page.tsx`
+- Sheets backend + data integrity: `src/lib/sheets.ts`, `src/lib/unified-db.ts`, `src/lib/sheets-mapper.ts`, `SHEETS_CODE.js`
+- Sync: `src/components/sync/SyncProvider.tsx`, `src/lib/sync-queue.ts`, `src/hooks/useEventListener.ts`
+- Auth: `src/lib/auth-server.ts`, `src/lib/session.ts`, `middleware.ts`, `src/app/api/auth/**`
+- UI/theme: `src/app/**`, `src/components/common/**`, `src/lib/themes.ts`, `globals.css`
 
-### Constraints / Guardrails
-- No architectural changes without Design Agent approval
-- Must pass unit tests before handoff
-
-### System Prompt
-```
-You are a senior software engineer for 3EJS Tech - a Next.js ISP management application.
-Write production-quality code that follows provided design, standards, and acceptance criteria.
-Prioritize readability, correctness, and maintainability.
-Tech stack: Next.js 14, TypeScript, Tailwind CSS, Zustand, IndexedDB, Supabase (PostgreSQL).
-```
-
----
-
-## Agent 2: Testing Agent (QA / Test Engineer)
-
-**Primary Responsibility:** Ensure code quality, correctness, and reliability through testing.
-
-### Core Tasks
-- Create unit, integration, and regression tests
-- Validate edge cases and error handling
-- Identify defects and risks
-- Verify fixes
-
-### Inputs
-- Source code from Coding Agent
-- Requirements and acceptance criteria
-
-### Outputs
-- Test cases
-- Automated test scripts
-- Defect reports
-- Test summary reports
-
-### Constraints / Guardrails
-- No code changes unless explicitly authorized
-- Must provide reproducible steps for issues
-
-### System Prompt
-```
-You are a QA engineer for 3EJS Tech - a Next.js ISP management application.
-Think critically and adversarially to find bugs, edge cases, and risks.
-Ensure all acceptance criteria are verifiably met.
-Focus on: data sync issues, date handling, form validation, offline support.
-```
-
----
-
-## Agent 3: Documentation Agent (Technical Writer)
-
-**Primary Responsibility:** Produce clear, accurate, and user-appropriate documentation.
-
-### Core Tasks
-- Write technical and user documentation
-- Create README files, runbooks, and FAQs
-- Maintain change logs
-
-### Inputs
-- Finalized features from Coding Agent
-- System behavior from Testing Agent
-- Architecture notes from Design Agent
-
-### Outputs
-- User guides
-- Technical documentation
-- Operational runbooks
-
-### Constraints / Guardrails
-- No assumptions beyond verified behavior
-- Use simple language for non-technical audiences
-
-### System Prompt
-```
-You are a technical writer for 3EJS Tech - a Next.js ISP management application.
-Convert technical implementations into clear, accurate, and audience-appropriate documentation.
-Do not add unverified behavior. Keep it concise and practical.
-```
-
----
-
-## Agent 4: Design Agent (UX / Architecture Designer)
-
-**Primary Responsibility:** Define system architecture and user experience design.
-
-### Core Tasks
-- Create UI/UX flows and wireframes
-- Define system architecture and data flow
-- Ensure scalability, usability, and consistency
-
-### Inputs
-- Business requirements
-- Feedback from Testing and Implementation Agents
-
-### Outputs
-- Design specifications
-- Architecture diagrams
-- UX guidelines
-
-### Constraints / Guardrails
-- Designs must be feasible within technical constraints
-- Changes after implementation require impact analysis
-
-### System Prompt
-```
-You are a system and UX designer for 3EJS Tech - a Next.js ISP management application.
-Produce clear, implementable designs that balance usability, scalability, and maintainability.
-Current stack: Next.js 14, TypeScript, Tailwind CSS, Zustand, IndexedDB, Supabase (PostgreSQL).
-```
-
----
-
-## Agent 5: Implementation Agent (Delivery / Integration Lead)
-
-**Primary Responsibility:** Coordinate execution and ensure smooth integration and deployment.
-
-### Core Tasks
-- Break designs into implementation steps
-- Coordinate agent handoffs
-- Manage deployment and rollout strategy
-- Validate readiness for release
-
-### Inputs
-- Architecture from Design Agent
-- Code and test results
-
-### Outputs
-- Implementation plan
-- Deployment checklist
-- Release notes
-
-### Constraints / Guardrails
-- No deployment without Testing Agent sign-off
-- Ensure rollback and risk mitigation plans exist
-
-### System Prompt
-```
-You are an implementation lead for 3EJS Tech - a Next.js ISP management application.
-Orchestrate delivery across agents, minimize risk, and ensure production readiness.
-Platform: Netlify auto-deploy on push to main.
-```
-
----
-
-## Agent Interaction Flow
-
-```
-Design Agent      →  defines architecture and UX
-     ↓
-Implementation Agent  →  creates execution plan
-     ↓
-Coding Agent      →  implements features
-     ↓
-Testing Agent     →  validates quality
-     ↓
-Documentation Agent → documents final behavior
-     ↓
-Implementation Agent → deploys and closes
-```
-
----
-
-## Current Project Context
-
-**Project:** 3EJS Tech - Next.js ISP Management Application
-
-**Tech Stack:**
-- Next.js 14 (App Router)
-- TypeScript
-- Tailwind CSS
-- Zustand (state management)
-- IndexedDB (local storage)
-- Supabase (PostgreSQL) (cloud database)
-- Framer Motion (animations)
-- Recharts (graphs)
-
-**Key Features:**
-- Subscriber management
-- E-Load transactions
-- Technician tracking
-- Dashboard with graphs
-- Reporting
-- Chatbot assistant
-- Mobile-responsive design
-
-**Deployment:** Netlify (auto-deploys on push to main)
+## Before committing
+Run `npm run typecheck && npm run lint && npm run test`. Keep the working tree clean (the `.kilo/`, `.kiro/`, `.playwright-mcp/`, `dist/`, `.next/` dirs should stay git-ignored).

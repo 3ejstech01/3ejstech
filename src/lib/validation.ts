@@ -52,43 +52,18 @@ export const InstallationSchema = z.object({
   message: "joNumber, subscriberName, and accountNumber are required"
 });
 
-export const ELoadTransactionSchema = z.object({
-  id: z.string().optional(),
-  gcashAcct: z.string().min(1, 'GCash handler is required'),
-  dateLoaded: z.string().optional(),
-  timeLoaded: z.string().optional(),
-  time: z.string().optional(),
-  gcashReference: z.string().min(1, 'GCash reference is required'),
-  amount: z.union([z.number().min(1), z.string()]).transform(v => typeof v === 'string' ? parseFloat(v) : v),
-  accountNo: z.string().min(1, 'Account number is required'),
-  remarks: z.string().optional(),
-  markedUp: z.union([z.number(), z.string()]).optional().transform(v => typeof v === 'string' ? parseFloat(v) : v),
-  incentive: z.union([z.number(), z.string()]).optional().transform(v => typeof v === 'string' ? parseFloat(v) : v),
-  retailer: z.union([z.number(), z.string()]).optional().transform(v => typeof v === 'string' ? parseFloat(v) : v),
-  dealer: z.union([z.number(), z.string()]).optional().transform(v => typeof v === 'string' ? parseFloat(v) : v),
-}).strict();
-
 export const UserSchema = z.object({
   id: z.string().optional(),
   username: z.string().min(3, 'Username must be at least 3 characters'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
-  role: z.enum(['admin', 'technician', 'eload', 'view_only']),
+  role: z.enum(['admin', 'technician', 'view_only']),
 }).strict();
 
 export type ValidatedInstallation = z.infer<typeof InstallationSchema>;
-export type ValidatedELoadTransaction = z.infer<typeof ELoadTransactionSchema>;
 export type ValidatedUser = z.infer<typeof UserSchema>;
 
 export function validateInstallation(data: unknown): { success: true; data: ValidatedInstallation } | { success: false; error: string } {
   const result = InstallationSchema.safeParse(data);
-  if (result.success) {
-    return { success: true, data: result.data };
-  }
-  return { success: false, error: result.error.errors.map(e => e.message).join(', ') };
-}
-
-export function validateELoadTransaction(data: unknown): { success: true; data: ValidatedELoadTransaction } | { success: false; error: string } {
-  const result = ELoadTransactionSchema.safeParse(data);
   if (result.success) {
     return { success: true, data: result.data };
   }

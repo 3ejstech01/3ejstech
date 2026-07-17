@@ -5,12 +5,10 @@ import { LayoutWrapper } from '@/components/common/LayoutWrapper';
 import { PageContainer, Card, Button } from '@/components/common/PageContainer';
 import { useAuth } from '@/hooks/useAuth';
 import { useHistoricalDataStore } from '@/stores/historicalDataStore';
-import { useELoadStore } from '@/stores/eloadStore';
 import { HistoricalDataRow } from '@/lib/types';
 import { UserRole } from '@/lib/types';
 import { motion, AnimatePresence } from 'framer-motion';
 import { formatDateDisplay, formatTime } from '@/lib/utils';
-import { normalizeAccountNumber } from '@/lib/mappers';
 import { EmptyState } from '@/components/common/EmptyState';
 import { ErrorState } from '@/components/common/ErrorState';
 import { SkeletonRows } from '@/components/common/SkeletonRows';
@@ -31,23 +29,15 @@ const tableColumns = [
 
 export default function HistoricalDataPage() {
   const { user } = useAuth();
-  const hasAccess = user && (user.role === UserRole.ADMIN || user.role === UserRole.TECHNICIAN || user.role === UserRole.E_LOAD || user.role === UserRole.VIEW_ONLY);
+  const hasAccess = user && (user.role === UserRole.ADMIN || user.role === UserRole.TECHNICIAN || user.role === UserRole.VIEW_ONLY);
 
   const { records, fetchRecords, isLoading, error, lastFetched } = useHistoricalDataStore();
-  const { transactions, fetchTransactions } = useELoadStore();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [monthFilter, setMonthFilter] = useState<string>('');
   const [yearFilter, setYearFilter] = useState<string>('');
   const [viewingRecord, setViewingRecord] = useState<HistoricalDataRow | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
-
-  // Fetch eload transactions if not already loaded
-  useEffect(() => {
-    if (transactions.length === 0) {
-      fetchTransactions();
-    }
-  }, [fetchTransactions, transactions.length]);
 
   // Fetch records on mount
   useEffect(() => {
@@ -151,13 +141,6 @@ export default function HistoricalDataPage() {
     pw.document.close();
     pw.print();
   };
-
-  // Get e-load transactions for the viewing account
-  const accountEloadTransactions = useMemo(() => {
-    if (!viewingRecord?.accountNumber) return [];
-    const normalizedAcct = normalizeAccountNumber(viewingRecord.accountNumber);
-    return transactions.filter(t => normalizeAccountNumber(t.accountNo || '') === normalizedAcct);
-  }, [viewingRecord, transactions]);
 
   if (!hasAccess) {
     return (
@@ -336,38 +319,6 @@ export default function HistoricalDataPage() {
                         </div>
                       ))}
                     </div>
-                  </div>
-
-                  {/* E-Load Transactions List */}
-                  <div>
-                    <h3 className="font-semibold text-text uppercase tracking-wider mb-3 flex items-center gap-2 text-xs">
-                      <span className="w-5 h-5 rounded bg-purple-500/15 flex items-center justify-center">
-                        <svg className="w-3 h-3 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
-                      </span>
-                      E-Load Transactions ({accountEloadTransactions.length})
-                    </h3>
-                    {accountEloadTransactions.length > 0 ? (
-                      <div className="space-y-2 max-h-[300px] overflow-y-auto">
-                        {accountEloadTransactions.map((t) => (
-                          <div key={t.id} className="flex items-center justify-between p-3 border border-border bg-background/50 rounded-lg text-sm">
-                            <div className="flex-1">
-                              <span className="text-text/60">{formatDateDisplay(t.dateLoaded || '')}</span>
-                            </div>
-                            <div className="flex-1 text-center">
-                              <span className="font-medium text-emerald-600">₱{(t.amount || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
-                            </div>
-                            <div className="flex-1 text-center">
-                              <span className="font-mono text-text/70">{t.gcashAcct || '-'}</span>
-                            </div>
-                            <div className="flex-1 text-right">
-                              <span className="text-text/50 text-xs">{t.remarks || '-'}</span>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-sm text-text/40">No e-load transactions found for this account.</p>
-                    )}
                   </div>
                 </div>
 

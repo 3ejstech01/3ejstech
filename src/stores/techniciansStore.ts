@@ -11,6 +11,8 @@ interface TechniciansState {
   technicians: TechnicianData[];
   isLoading: boolean;
   lastFetched: number | null;
+  error: string | null;
+  hasData: boolean;
   fetchTechnicians: () => Promise<void>;
   refreshCount: () => Promise<void>;
 }
@@ -21,6 +23,8 @@ export const useTechniciansStore = create<TechniciansState>((set, get) => ({
   technicians: [],
   isLoading: false,
   lastFetched: null,
+  error: null,
+  hasData: false,
 
   fetchTechnicians: async () => {
     const { lastFetched } = get();
@@ -39,15 +43,15 @@ export const useTechniciansStore = create<TechniciansState>((set, get) => ({
         }
       });
       const technicians = Object.entries(techCounts).map(([name, count]) => ({ name, count })).sort((a, b) => b.count - a.count);
-      set({ technicians, lastFetched: now, isLoading: false });
+      set({ technicians, lastFetched: now, isLoading: false, error: null, hasData: technicians.length > 0 });
     } catch (error) {
       console.error('Error fetching technicians:', error);
-      set({ isLoading: false });
+      set({ isLoading: false, error: 'Failed to fetch technicians' });
     }
   },
 
   refreshCount: async () => {
-    set({ lastFetched: null });
+    set({ lastFetched: null, hasData: false });
     await get().fetchTechnicians();
   },
 }));

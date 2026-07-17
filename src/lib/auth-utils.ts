@@ -15,18 +15,11 @@ export async function verifyPassword(
     return false;
   }
 
-  // If the stored password looks like a bcrypt hash, use bcrypt
-  if (hashedPassword.startsWith('$2')) {
-    return bcrypt.compare(password, hashedPassword);
+  if (!hashedPassword.startsWith('$2')) {
+    return false;
   }
 
-  // Fallback: plain text comparison for migrated accounts
-  // This handles passwords that were stored in plain text during initial migration
-  if (hashedPassword === password) {
-    return true;
-  }
-
-  return false;
+  return bcrypt.compare(password, hashedPassword);
 }
 
 export async function hashPasswordIfNeeded(password: string): Promise<string> {
@@ -49,6 +42,5 @@ export function checkPermission(userRole: UserRole, requiredRole: UserRole | Use
 export const rolePermissions = {
   [UserRole.ADMIN]: ['*'],
   [UserRole.TECHNICIAN]: ['view_profile', 'update_installations', 'report_modem'],
-  [UserRole.E_LOAD]: ['eload_system', 'eload_reporting'],
   [UserRole.VIEW_ONLY]: ['view_dashboard', 'view_reports']
 };

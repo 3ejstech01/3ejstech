@@ -1,6 +1,16 @@
 import { getMappingForSheet, mapCamelToSnake, mapSnakeToCamel } from './sheets-mapper';
 
-const WEBAPP_URL = process.env.NEXT_PUBLIC_WEBAPP_URL || '';
+// Get Web App URL from Electron settings or environment
+async function getWebAppUrl(): Promise<string> {
+  if (typeof window !== 'undefined' && window.electron?.isElectron) {
+    // In the desktop app the URL is stored via Settings (electron-store).
+    // Fall back to the build-time NEXT_PUBLIC_WEBAPP_URL (inlined into the
+    // client bundle) so the app connects out-of-the-box, same as the web app.
+    const stored = await window.electron.getSheetsUrl();
+    if (stored) return stored;
+  }
+  return process.env.NEXT_PUBLIC_WEBAPP_URL || '';
+}
 
 export interface SheetsResponse<T> {
   data: T[] | null;
@@ -17,6 +27,8 @@ async function sheetsFetch<T>(
     keyValue?: string;
   } = {}
 ): Promise<SheetsResponse<T>> {
+  const WEBAPP_URL = await getWebAppUrl();
+  
   if (!WEBAPP_URL) {
     return { data: null, error: 'Google Sheets Web App URL not configured' };
   }

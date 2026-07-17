@@ -1,14 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireRole } from '@/lib/auth-guard';
-import { UserRole } from '@/lib/types';
 
-const ALLOWED_SHEETS = ['installations', 'eload', 'users', 'historicaldata'];
+const ALLOWED_SHEETS = ['installations', 'users', 'historicaldata'];
 
 export async function GET(request: NextRequest) {
   try {
-    const auth = requireRole(request, [UserRole.ADMIN, UserRole.TECHNICIAN, UserRole.E_LOAD, UserRole.VIEW_ONLY]);
-    if ('response' in auth) return auth.response;
-
     const { searchParams } = new URL(request.url);
     const sheet = searchParams.get('sheet') || 'installations';
     if (!ALLOWED_SHEETS.includes(sheet)) {
@@ -37,9 +32,6 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const auth = requireRole(request, [UserRole.ADMIN, UserRole.TECHNICIAN, UserRole.E_LOAD, UserRole.VIEW_ONLY]);
-    if ('response' in auth) return auth.response;
-
     const payload = await request.json();
     const sheet = payload.sheet;
     if (!ALLOWED_SHEETS.includes(sheet)) {

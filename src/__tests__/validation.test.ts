@@ -79,6 +79,7 @@ describe('validation', () => {
         gcashAcct: 'GCASH-001',
         amount: 300,
         accountNo: '12345',
+        gcashReference: 'REF-001',
       };
 
       const result = validateELoadTransaction(data);
@@ -94,11 +95,23 @@ describe('validation', () => {
       expect(result.success).toBe(false);
     });
 
+    it('should reject missing GCash reference', () => {
+      const data = {
+        gcashAcct: 'GCASH-001',
+        amount: 300,
+        accountNo: '12345',
+      };
+
+      const result = validateELoadTransaction(data);
+      expect(result.success).toBe(false);
+    });
+
     it('should reject zero amount', () => {
       const data = {
         gcashAcct: 'GCASH-001',
         amount: 0,
         accountNo: '12345',
+        gcashReference: 'REF-001',
       };
 
       const result = validateELoadTransaction(data);

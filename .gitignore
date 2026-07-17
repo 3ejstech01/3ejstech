@@ -25,6 +25,16 @@
 .DS_Store
 *.pem
 
+# tooling / agent dirs (generated, not source)
+.kilo/
+.kiro/
+.playwright-mcp/
+.opencode/
+
+# electron build output
+/dist/
+*.exe
+
 # debug
 npm-debug.log*
 yarn-debug.log*

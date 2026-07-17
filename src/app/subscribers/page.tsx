@@ -15,7 +15,6 @@ import { useTableConfig, ColumnDef } from '@/hooks/useTableConfig';
 import { ColumnConfigPanel } from '@/components/common/ColumnConfigPanel';
 import { EmptyState } from '@/components/common/EmptyState';
 import { SkeletonRows } from '@/components/common/SkeletonRows';
-import { getEloadTransactionsByAccount } from '@/lib/database';
 import { saveRecordSnapshot } from '@/lib/sync-queue';
 
 const PAGE_SIZE_OPTIONS = [20, 50, 100, 200, 500, 0];
@@ -82,8 +81,6 @@ export default function SubscribersPage() {
   const [deleteTarget, setDeleteTarget] = useState<Installation | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [dateSortDir, setDateSortDir] = useState<'desc' | 'asc'>('desc');
-  const [eloadTransactions, setEloadTransactions] = useState<any[]>([]);
-  const [isLoadingEload, setIsLoadingEload] = useState(false);
   const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
   const [showEquipment, setShowEquipment] = useState(false);
 
@@ -178,8 +175,8 @@ export default function SubscribersPage() {
       };
       const ta = parseDate(a.dateInstalled || '');
       const tb = parseDate(b.dateInstalled || '');
-      if (dateSortDir === 'desc') return ta - tb;
-      return tb - ta;
+      if (dateSortDir === 'desc') return tb - ta;
+      return ta - tb;
     });
   }, [subscribers, searchTerm, dateFilter, dateSortDir]);
 
@@ -318,18 +315,6 @@ export default function SubscribersPage() {
       setIsUpdatingStatus(false);
     }
   };
-
-  useEffect(() => {
-    if (viewingSubscriber?.accountNumber) {
-      setIsLoadingEload(true);
-      getEloadTransactionsByAccount(viewingSubscriber.accountNumber)
-        .then(setEloadTransactions)
-        .catch(err => console.error('Error fetching E-Load transactions:', err))
-        .finally(() => setIsLoadingEload(false));
-    } else {
-      setEloadTransactions([]);
-    }
-  }, [viewingSubscriber?.accountNumber]);
 
   if (!hasAccess) {
     return (
@@ -656,49 +641,6 @@ export default function SubscribersPage() {
                 </div>
 
                 
-
-                {/* E-Load Transaction History */}
-                {viewingSubscriber.accountNumber && (
-                  <div className="px-4 pb-4">
-                    <h3 className="font-semibold text-text uppercase tracking-wider mb-2 flex items-center gap-1.5 text-xs">
-                      <span className="w-5 h-5 rounded bg-purple-500/15 flex items-center justify-center">
-                        <svg className="w-3 h-3 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
-                      </span>
-                      E-Load Transactions
-                    </h3>
-                    {isLoadingEload ? (
-                      <div className="text-center py-4 text-text/40 text-sm">Loading transactions...</div>
-                    ) : eloadTransactions.length === 0 ? (
-                      <div className="text-center py-4 text-text/40 text-sm">No E-Load transactions found</div>
-                    ) : (
-                      <div className="max-h-40 overflow-y-auto border border-border rounded-lg">
-                        <table className="w-full text-xs">
-                          <thead className="bg-background sticky top-0">
-                            <tr className="border-b border-border">
-                              <th className="px-2 py-1 text-left text-text/50">Date</th>
-                              <th className="px-2 py-1 text-left text-text/50">Amount</th>
-                              <th className="px-2 py-1 text-left text-text/50">Reference</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {eloadTransactions.slice(0, 10).map((t, i) => (
-<tr key={t.id || i} className="border-b border-border/30">
-                              <td className="px-2 py-1 text-text">{t.dateLoaded || '-'}</td>
-                              <td className="px-2 py-1 text-text font-medium">₱{parseFloat(String(t.amount || 0)).toLocaleString()}</td>
-                              <td className="px-2 py-1 text-text/70">{t.gcashReference || '-'}</td>
-                            </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                        {eloadTransactions.length > 10 && (
-                          <div className="px-2 py-1 text-xs text-text/40 text-center bg-background">
-                            +{eloadTransactions.length - 10} more transactions
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                )}
 
                 {/* Footer */}
                 <div className="px-5 py-3 border-t border-border flex gap-3">

@@ -1,4 +1,5 @@
-import { Installation, InstallationRow, ELoadTransaction, ELoadRow } from './types';
+import { Installation, InstallationRow } from './types';
+import { parseNumberInput } from '@/lib/number-utils';
 
 export function parseExcelSerialDate(value: string | number | null | undefined): string {
   if (!value && value !== 0) return '';
@@ -142,43 +143,5 @@ createdAt: inst.createdAt || new Date().toISOString(),
 updatedAt: inst.updatedAt || new Date().toISOString(),
 notifyStatus: inst.notifyStatus || 'Not Yet Notified',
 loadStatus: inst.loadStatus || 'Not yet Loaded',
-};
-}
-
-export function normalizeEloadRow(t: ELoadRow): ELoadTransaction {
-return {
-id: t.id,
-gcashAcct: t.gcashHandler || '',
-dateLoaded: t.dateLoaded,
-gcashReference: t.gcashReference,
-time: t.timeLoaded,
-amount: parseFloat(String(t.amount)) || 0,
-accountNo: normalizeAccountNumber(t.accountNumber),
-remarks: t.remarks || '',
-markedUp: t.markedUp,
-incentive: t.incentive,
-retailer: t.retailer,
-dealer: t.dealer,
-createdAt: t.createdAt,
-updatedAt: t.updatedAt,
-};
-}
-
-export function denormalizeEloadRow(t: Partial<ELoadTransaction>): Partial<ELoadRow> {
-return {
-id: t.id,
-gcashHandler: t.gcashAcct || '',
-dateLoaded: t.dateLoaded || '',
-gcashReference: t.gcashReference || '',
-timeLoaded: t.time || '',
-amount: t.amount || 0,
-accountNumber: t.accountNo || '',
-remarks: t.remarks || '',
-markedUp: t.markedUp,
-incentive: t.incentive,
-retailer: t.retailer,
-dealer: t.dealer,
-createdAt: t.createdAt || new Date().toISOString(),
-updatedAt: t.updatedAt || new Date().toISOString(),
 };
 }

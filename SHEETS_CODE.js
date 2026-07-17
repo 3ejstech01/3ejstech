@@ -24,7 +24,6 @@
 
 var SHEET_NAMES = {
   installations: 'Installations',
-  eload: 'E-Load',
   users: 'Users',
   historicaldata: 'HistoricalData'
 };
@@ -188,7 +187,7 @@ function doPost(e) {
     var sheetName = payload.sheet || e.parameter.sheet || 'installations';
     var action = payload.action || 'append';
 
-    var ALLOWED_SHEETS = ['installations', 'eload', 'users', 'historicaldata'];
+    var ALLOWED_SHEETS = ['installations', 'users', 'historicaldata'];
     if (ALLOWED_SHEETS.indexOf(sheetName) === -1) {
       return json({ error: 'sheet not allowed' }, 400);
     }

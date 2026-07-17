@@ -4,7 +4,6 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { LayoutWrapper } from '@/components/common/LayoutWrapper';
 import { useSubscribersStore } from '@/stores/subscribersStore';
 import { useAuth } from '@/hooks/useAuth';
-import { useELoadStore } from '@/stores/eloadStore';
 import { Card } from '@/components/common/PageContainer';
 import { AnimatePresence } from 'framer-motion';
 import { Installation } from '@/lib/types';
@@ -12,12 +11,10 @@ import { formatDateDisplay } from '@/lib/utils';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from '@/components/common/RechartsLazy';
 import { useHistoricalDataStore } from '@/stores/historicalDataStore';
 import { formatDateKey, monthLabel, parseDateInput } from '@/lib/date-utils';
-import { formatCurrency as formatCurrencyUtil, parseNumberInput } from '@/lib/number-utils';
 
 export default function DashboardPage() {
   const { user } = useAuth();
   const { subscribers: installations, fetchSubscribers } = useSubscribersStore();
-  const { transactions: eloadTransactions, fetchTransactions: fetchELoad } = useELoadStore();
   const { records: historicalRecords, fetchRecords: fetchHistorical } = useHistoricalDataStore();
   const [selectedItem, setSelectedItem] = useState<Installation | null>(null);
 
@@ -32,12 +29,8 @@ export default function DashboardPage() {
       .sort((a, b) => (parseDateInput(b.dateInstalled)?.getTime() || 0) - (parseDateInput(a.dateInstalled)?.getTime() || 0))
       .slice(0, 10);
 
-    const recentEloadTransactions = [...eloadTransactions]
-      .sort((a, b) => (parseDateInput(b.dateLoaded)?.getTime() || 0) - (parseDateInput(a.dateLoaded)?.getTime() || 0))
-      .slice(0, 20);
-
-    return { parsedInstallations, recentInstallations, recentEloadTransactions };
-  }, [installations, eloadTransactions]);
+    return { parsedInstallations, recentInstallations };
+  }, [installations]);
 
   const subscriberGraphData = useMemo(() => {
     const monthly: Record<string, number> = {};
@@ -53,25 +46,22 @@ export default function DashboardPage() {
 
   useEffect(() => {
     fetchSubscribers();
-    fetchELoad();
     fetchHistorical();
-  }, [fetchSubscribers, fetchELoad, fetchHistorical]);
+  }, [fetchSubscribers, fetchHistorical]);
 
   useEffect(() => {
     const handleDataVersion = () => {
       fetchSubscribers();
-      fetchELoad();
       fetchHistorical();
     };
     window.addEventListener('data-version', handleDataVersion);
     return () => {
       window.removeEventListener('data-version', handleDataVersion);
     };
-  }, [fetchSubscribers, fetchELoad, fetchHistorical]);
+  }, [fetchSubscribers, fetchHistorical]);
 
   const totalSubscribers = installations.length + historicalRecords.length;
 
-  const recentEloadTransactions = dashboardMetrics.recentEloadTransactions;
   const recentInstallations = dashboardMetrics.recentInstallations;
 
   const clawbackSubscribers = useMemo(() => {
@@ -92,9 +82,6 @@ export default function DashboardPage() {
       .map(({ inst }) => inst);
   }, [dashboardMetrics.parsedInstallations]);
 
-  const parseNum = parseNumberInput;
-  const formatCurrency = (value: number) => formatCurrencyUtil(value);
-
   return (
     <LayoutWrapper>
       <div className="space-y-6">
@@ -105,7 +92,7 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <Card className="p-5 bg-surface transition-transform duration-200 hover:scale-[1.02]">
             <div className="relative group">
               <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-300" />
@@ -119,23 +106,6 @@ export default function DashboardPage() {
               <div>
                 <p className="text-xs text-text/50 uppercase tracking-wider">Total Subscribers</p>
                 <p className="text-2xl font-bold text-text">{totalSubscribers}</p>
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-5 bg-surface transition-transform duration-200 hover:scale-[1.02]">
-            <div className="relative group">
-              <div className="absolute -inset-0.5 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-300" />
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center">
-                <svg className="w-6 h-6 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75a.75.75 0 00-.75-.75H2.25" />
-                </svg>
-              </div>
-              <div>
-                <p className="text-xs text-text/50 uppercase tracking-wider">E-Load Transactions</p>
-                <p className="text-2xl font-bold text-emerald-600">{eloadTransactions.length}</p>
               </div>
             </div>
           </Card>
@@ -175,7 +145,7 @@ export default function DashboardPage() {
           </Card>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6">
           <Card className="relative p-5 bg-surface transition-transform duration-200 hover:scale-[1.01]">
             <div className="relative group">
               <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-300" />
@@ -209,48 +179,9 @@ export default function DashboardPage() {
               </ResponsiveContainer>
             )}
           </Card>
-
-          <Card className="relative p-5 bg-surface transition-transform duration-200 hover:scale-[1.01]">
-            <div className="relative group">
-              <div className="absolute -inset-0.5 bg-gradient-to-r from-teal-500 to-emerald-500 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-300" />
-            </div>
-            <div className="mb-4">
-              <h2 className="text-base font-semibold text-text">Recent E-Load Transactions</h2>
-              <p className="text-xs text-text/40 mt-0.5">
-                Latest {recentEloadTransactions.length} transactions
-              </p>
-            </div>
-            <div className="overflow-x-auto max-h-[240px] overflow-y-auto">
-              <table className="w-full text-sm">
-                <thead className="sticky top-0 bg-surface">
-                  <tr className="text-left text-text/40 border-b border-border">
-                    <th className="pb-2 font-medium">Account #</th>
-                    <th className="pb-2 font-medium">Loaded by</th>
-                    <th className="pb-2 font-medium">GCash Reference</th>
-                    <th className="pb-2 font-medium text-right">Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {recentEloadTransactions.map((t, i) => (
-                    <tr key={t.id || i} className="border-b border-border/30 hover:bg-primary/5">
-                      <td className="py-2 font-medium text-text">{t.accountNo || 'No account'}</td>
-                      <td className="py-2 text-text/60">{t.gcashAcct || 'No handler'}</td>
-                      <td className="py-2 text-text/60 font-mono text-xs">{t.gcashReference || 'No reference'}</td>
-                      <td className="py-2 text-text/60 text-right">{formatCurrency(parseNum(t.amount))}</td>
-                    </tr>
-                  ))}
-                  {recentEloadTransactions.length === 0 && (
-                    <tr>
-                      <td colSpan={4} className="py-8 text-center text-text/40">No E-Load transactions yet</td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </Card>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
           <Card className="relative p-5 bg-surface transition-transform duration-200 hover:scale-[1.01]">
             <div className="relative group">
               <div className="absolute -inset-0.5 bg-gradient-to-r from-red-500 to-orange-500 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-300" />

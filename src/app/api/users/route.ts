@@ -1,13 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAllUsers, createUser, updateUser, deleteUser } from '@/lib/unified-db';
 import { toPublicUser } from '@/lib/auth-server';
-import { requireRole } from '@/lib/auth-guard';
-import { UserRole } from '@/lib/types';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const auth = requireRole(request, [UserRole.ADMIN]);
-    if ('response' in auth) return auth.response;
     const users = await getAllUsers();
     return NextResponse.json(users.map(u => ({
       id: u.id || u.username,
@@ -23,8 +19,6 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const auth = requireRole(request, [UserRole.ADMIN]);
-    if ('response' in auth) return auth.response;
     const data = await request.json();
     if (!data.username || !data.role) {
       return NextResponse.json({ error: 'Username and role are required' }, { status: 400 });
@@ -48,8 +42,6 @@ export async function POST(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   try {
-    const auth = requireRole(request, [UserRole.ADMIN]);
-    if ('response' in auth) return auth.response;
     const { id, ...data } = await request.json();
     if (!id) return NextResponse.json({ error: 'User ID required' }, { status: 400 });
 
@@ -80,8 +72,6 @@ export async function PATCH(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    const auth = requireRole(request, [UserRole.ADMIN]);
-    if ('response' in auth) return auth.response;
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
     if (!id) return NextResponse.json({ error: 'User ID required' }, { status: 400 });

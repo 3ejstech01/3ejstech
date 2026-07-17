@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export type SheetName = 'installations' | 'eload' | 'users' | 'historicaldata';
+export type SheetName = 'installations' | 'users' | 'historicaldata';
 
 export type OpType = 'create' | 'update' | 'delete';
 export type OpStatus = 'pending' | 'syncing' | 'conflict' | 'resolved' | 'dead-letter';

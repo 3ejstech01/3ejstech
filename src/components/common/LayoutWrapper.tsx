@@ -6,6 +6,7 @@ import { MobileNav } from '@/components/common/MobileNav';
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
+import { ToastStack } from '@/components/common/ToastStack';
 
 interface LayoutWrapperProps {
   children: React.ReactNode;
@@ -17,9 +18,7 @@ export const LayoutWrapper: React.FC<LayoutWrapperProps> = ({ children, requireA
   const router = useRouter();
 
   React.useEffect(() => {
-    if (requireAuth && !isLoading && !isAuthenticated) {
-      router.push('/login');
-    }
+    // Auth removed — app is now public. All users proceed directly.
   }, [isAuthenticated, isLoading, requireAuth, router]);
 
   if (requireAuth && (isLoading || !isAuthenticated)) {
@@ -41,7 +40,8 @@ export const LayoutWrapper: React.FC<LayoutWrapperProps> = ({ children, requireA
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen page-shell">
+      <ToastStack />
       <MobileNav />
       <div className="flex">
         {isAuthenticated && (

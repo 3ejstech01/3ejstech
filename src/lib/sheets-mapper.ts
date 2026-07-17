@@ -14,14 +14,6 @@ export const INSTALLATION_SNAKE_MAP: Record<string, string> = {
   createdat: 'createdAt', updatedat: 'updatedAt',
 };
 
-export const ELOAD_SNAKE_MAP: Record<string, string> = {
-  id: 'id', gcashhandler: 'gcashHandler', dateloaded: 'dateLoaded',
-  gcashreference: 'gcashReference', timeloaded: 'timeLoaded', amount: 'amount',
-  accountnumber: 'accountNumber', markup: 'markup', incentive: 'incentive',
-  retailer: 'retailer', dealer: 'dealer', remarks: 'remarks',
-  createdat: 'createdAt', updatedat: 'updatedAt',
-};
-
 export const USER_SNAKE_MAP: Record<string, string> = {
   id: 'id', username: 'username', password: 'password', role: 'role', createdat: 'createdAt', updatedat: 'updatedAt',
 };
@@ -45,7 +37,6 @@ export const HISTORICAL_SNAKE_MAP: Record<string, string> = {
 export function getMappingForSheet(sheet: string): Record<string, string> {
   const normalized = sheet.toLowerCase().replace(/[-_]/g, '');
   if (normalized === 'installations') return INSTALLATION_SNAKE_MAP;
-  if (normalized === 'eload') return ELOAD_SNAKE_MAP;
   if (normalized === 'users') return USER_SNAKE_MAP;
   if (normalized === 'historicaldata') return HISTORICAL_SNAKE_MAP;
   return {};

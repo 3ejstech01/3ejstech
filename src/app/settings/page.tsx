@@ -8,11 +8,12 @@ import { User } from '@/stores/usersStore';
 import { LayoutWrapper } from '@/components/common/LayoutWrapper';
 import { PageContainer, Card, Button } from '@/components/common/PageContainer';
 import { ThemeCustomizer } from '@/components/theme/ThemeCustomizer';
+import { GoogleSheetsConfig } from '@/components/settings/GoogleSheetsConfig';
 import { useUsersStore } from '@/stores/usersStore';
 import { syncFromRemote } from '@/lib/unified-db';
 import { saveRecordSnapshot } from '@/lib/sync-queue';
 
-type TabType = 'themes' | 'data' | 'users';
+type TabType = 'themes' | 'data' | 'users' | 'sheets';
 
 export default function SettingsPage() {
   const { user } = useAuth();
@@ -142,6 +143,7 @@ export default function SettingsPage() {
         <div className="flex gap-2 mb-6">
           {[
             { key: 'themes' as TabType, label: 'Themes' },
+            { key: 'sheets' as TabType, label: 'Google Sheets' },
             { key: 'data' as TabType, label: 'Data' },
             { key: 'users' as TabType, label: 'Users' },
           ].map((tab) => (
@@ -169,6 +171,21 @@ export default function SettingsPage() {
               className="space-y-6"
             >
               <ThemeCustomizer />
+            </motion.div>
+          )}
+
+          {activeTab === 'sheets' && (
+            <motion.div
+              key="sheets"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="space-y-6"
+            >
+              <Card className="p-6">
+                <h3 className="text-xl font-semibold mb-4">Google Sheets Configuration</h3>
+                <GoogleSheetsConfig />
+              </Card>
             </motion.div>
           )}
 
@@ -334,7 +351,6 @@ export default function SettingsPage() {
                             <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
                               u.role === UserRole.ADMIN ? 'bg-purple-500/20 text-purple-400' :
                               u.role === UserRole.TECHNICIAN ? 'bg-blue-500/20 text-blue-400' :
-                              u.role === UserRole.E_LOAD ? 'bg-green-500/20 text-green-400' :
                               'bg-gray-500/20 text-gray-400'
                             }`}>
                               {u.role}
@@ -399,7 +415,6 @@ export default function SettingsPage() {
                           >
                             <option value={UserRole.ADMIN}>Admin</option>
                             <option value={UserRole.TECHNICIAN}>Technician</option>
-                            <option value={UserRole.E_LOAD}>E-Load</option>
                             <option value={UserRole.VIEW_ONLY}>View Only</option>
                           </select>
                         </div>

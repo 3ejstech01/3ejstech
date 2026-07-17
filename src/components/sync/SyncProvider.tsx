@@ -11,6 +11,8 @@ const SYNC_SESSION_KEY = 'db_synced_session';
 export function SyncProvider({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
   const syncingRef = useRef(false);
+  const lastFlushRef = useRef(0);
+  const FLUSH_THROTTLE_MS = 15_000;
 
   useAutoFlush();
 
@@ -25,6 +27,10 @@ export function SyncProvider({ children }: { children: React.ReactNode }) {
 
     async function syncOnChange() {
       if (syncingRef.current) return;
+
+      const now = Date.now();
+      if (now - lastFlushRef.current < FLUSH_THROTTLE_MS) return;
+      lastFlushRef.current = now;
 
       syncingRef.current = true;
       try {

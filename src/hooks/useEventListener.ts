@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 
 type EventCallback = () => void;
 
@@ -24,7 +24,15 @@ export function useEventListener(
   callback: EventCallback,
   deps: React.DependencyList = []
 ): void {
-  const stableCallback = useCallback(callback, deps);
+  const callbackRef = useRef(callback);
+
+  useEffect(() => {
+    callbackRef.current = callback;
+  }, [callback, ...deps]);
+
+  const stableCallback = useCallback(() => {
+    callbackRef.current();
+  }, []);
 
   useEffect(() => {
     const listenerSet = getListenerSet(eventName);

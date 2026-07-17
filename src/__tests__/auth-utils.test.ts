@@ -41,6 +41,12 @@ describe('auth-utils', () => {
       expect(isValid).toBe(false);
     });
 
+    it('should reject a non-bcrypt hash equal to the password (no plaintext fallback)', async () => {
+      const password = 'password';
+      const isValid = await verifyPassword(password, password);
+      expect(isValid).toBe(false);
+    });
+
     it('should reject empty hash', async () => {
       const isValid = await verifyPassword('password', '');
       expect(isValid).toBe(false);

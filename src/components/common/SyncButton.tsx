@@ -3,6 +3,7 @@
 import React, { useState, useCallback } from 'react';
 import { syncFromRemote } from '@/lib/unified-db';
 import { motion, AnimatePresence } from 'framer-motion';
+import { showToast } from './ToastStack';
 
 export const SyncButton: React.FC = () => {
   const [isSyncing, setIsSyncing] = useState(false);
@@ -17,9 +18,10 @@ export const SyncButton: React.FC = () => {
       window.dispatchEvent(new CustomEvent('db-synced'));
       setShowCheck(true);
       setTimeout(() => setShowCheck(false), 2000);
+      showToast('Sync completed', 'success');
     } catch (err) {
       console.error('Sync failed:', err);
-      alert('Sync failed. Please try again.');
+      showToast('Sync failed. Data remains saved locally.', 'error');
     } finally {
       setIsSyncing(false);
     }

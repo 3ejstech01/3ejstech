@@ -21,10 +21,9 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { label: 'Dashboard', href: '/dashboard', allowedRoles: [UserRole.ADMIN], icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
-  { label: 'Subscribers', href: '/subscribers', allowedRoles: [UserRole.ADMIN, UserRole.TECHNICIAN, UserRole.E_LOAD, UserRole.VIEW_ONLY], icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z' },
+  { label: 'Subscribers', href: '/subscribers', allowedRoles: [UserRole.ADMIN, UserRole.TECHNICIAN, UserRole.VIEW_ONLY], icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z' },
   { label: 'Clawback', href: '/clawback', allowedRoles: [UserRole.ADMIN, UserRole.TECHNICIAN], icon: 'M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z' },
-  { label: 'E-Load', href: '/eload', allowedRoles: [UserRole.ADMIN, UserRole.E_LOAD], icon: 'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z' },
-  { label: 'Historical Data', href: '/historical', allowedRoles: [UserRole.ADMIN, UserRole.TECHNICIAN, UserRole.E_LOAD, UserRole.VIEW_ONLY], icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' },
+  { label: 'Historical Data', href: '/historical', allowedRoles: [UserRole.ADMIN, UserRole.TECHNICIAN, UserRole.VIEW_ONLY], icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' },
 ];
 
 function NavIcon({ d, className = '' }: { d: string; className?: string }) {
@@ -38,7 +37,7 @@ function NavIcon({ d, className = '' }: { d: string; className?: string }) {
 export const Sidebar: React.FC = () => {
   const { user, logout } = useAuth();
   const pathname = usePathname();
-  const { setOpenNewInstallation, setOpenNewELoad } = useQuickAction();
+  const { setOpenNewInstallation } = useQuickAction();
   const router = useRouter();
   const [isSyncing, setIsSyncing] = useState(false);
 
@@ -66,13 +65,6 @@ export const Sidebar: React.FC = () => {
     }
   };
 
-  const handleNewELoad = () => {
-    setOpenNewELoad(true);
-    if (pathname !== '/eload') {
-      router.push('/eload');
-    }
-  };
-
   return (
     <motion.aside
       initial={{ opacity: 0, x: -20 }}
@@ -95,7 +87,7 @@ export const Sidebar: React.FC = () => {
 
       {/* Quick Actions - Circular Buttons */}
       <div className="px-3 pb-3">
-        {(user.role === UserRole.ADMIN || user.role === UserRole.TECHNICIAN || user.role === UserRole.E_LOAD) && (
+        {(user.role === UserRole.ADMIN || user.role === UserRole.TECHNICIAN) && (
           <div className="flex items-center justify-center gap-4 py-1">
             {/* New Installation Button */}
             {(user.role === UserRole.ADMIN || user.role === UserRole.TECHNICIAN) && (
@@ -123,36 +115,6 @@ export const Sidebar: React.FC = () => {
                 </motion.button>
                 <span className="absolute -bottom-7 left-1/2 -translate-x-1/2 text-[10px] text-text/60 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none font-medium">
                   New Install
-                </span>
-              </div>
-            )}
-
-            {/* New E-Load Button */}
-            {(user.role === UserRole.ADMIN || user.role === UserRole.E_LOAD) && (
-              <div className="relative group">
-                <motion.button
-                  onClick={handleNewELoad}
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="relative w-12 h-12 rounded-full overflow-hidden"
-                  animate={{
-                    boxShadow: [
-                      '0 0 15px 3px color-mix(in srgb, var(--color-secondary) 35%, transparent)',
-                      '0 0 25px 6px color-mix(in srgb, var(--color-secondary) 55%, transparent)',
-                      '0 0 15px 3px color-mix(in srgb, var(--color-secondary) 35%, transparent)',
-                    ],
-                  }}
-                  transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-br from-secondary to-accent" />
-                  <div className="absolute inset-0 flex items-center justify-center text-white">
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                    </svg>
-                  </div>
-                </motion.button>
-                <span className="absolute -bottom-7 left-1/2 -translate-x-1/2 text-[10px] text-text/60 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none font-medium">
-                  New E-Load
                 </span>
               </div>
             )}

@@ -57,13 +57,6 @@ export interface InstallationRow {
   notifyStatus?: string; loadStatus?: string;
 }
 
-export interface ELoadRow {
-  id: string; gcashHandler?: string; dateLoaded?: string; gcashReference?: string;
-  timeLoaded?: string; amount?: number; accountNumber?: string;
-  markup?: number; incentive?: number; retailer?: number; dealer?: number;
-  remarks?: string; createdAt?: string; updatedAt?: string;
-}
-
 export interface HistoricalDataRow {
   id: string;
   dateInstalled?: string; joNumber?: string; accountNumber?: string;
@@ -175,60 +168,6 @@ export async function deleteInstallation(id: string): Promise<boolean> {
   return true;
 }
 
-// ── E-Load ─────────────────────────────────────────────
-
-export async function getAllEload(): Promise<ELoadRow[]> {
-  return getWithCache<ELoadRow>('eload', 'eload', () =>
-    sheets.getAll<ELoadRow>('eload')
-  );
-}
-
-export async function createEload(data: Partial<ELoadRow>): Promise<ELoadRow> {
-  if (typeof window === 'undefined' || !window.indexedDB) {
-    throw new Error('createEload requires IndexedDB - call from client only');
-  }
-
-  const now = new Date().toISOString();
-  const id = data.id || `EL-${Date.now()}`;
-  const row: ELoadRow = { ...data, id, createdAt: now, updatedAt: now } as ELoadRow;
-
-  await localDb.put('eload', row);
-  await enqueueOp('create', 'eload', row.id, row as unknown as Record<string, unknown>);
-
-  return row;
-}
-
-export async function updateEload(id: string, data: Partial<ELoadRow>): Promise<ELoadRow | undefined> {
-  if (typeof window === 'undefined' || !window.indexedDB) {
-    throw new Error('updateEload requires IndexedDB - call from client only');
-  }
-
-  const all = await getAllEload();
-  const existing = all.find(e => e.id === id);
-  if (!existing) return undefined;
-
-  if (existing.updatedAt) {
-    await saveRecordSnapshot('eload', id, existing.updatedAt);
-  }
-
-  const updated = { ...existing, ...data, updatedAt: new Date().toISOString() };
-
-  await localDb.put('eload', updated);
-  await enqueueOp('update', 'eload', id, updated as unknown as Record<string, unknown>, existing.updatedAt);
-
-  return updated;
-}
-
-export async function deleteEload(id: string): Promise<boolean> {
-  if (typeof window === 'undefined' || !window.indexedDB) {
-    throw new Error('deleteEload requires IndexedDB - call from client only');
-  }
-
-  await localDb.remove('eload', id);
-  await enqueueOp('delete', 'eload', id, {});
-  return true;
-}
-
 // ── Users ──────────────────────────────────────────────
 
 export async function getAllUsers(): Promise<UserRow[]> {
@@ -299,40 +238,23 @@ export async function getAllHistoricalData(): Promise<HistoricalDataRow[]> {
 
 export async function syncFromRemote(): Promise<void> {
   try {
-    const [installations, eload, users, historicaldata] = await Promise.all([
-      getAllInstallations(), getAllEload(), getAllUsers(), getAllHistoricalData(),
+    const [installations, users, historicaldata] = await Promise.all([
+      getAllInstallations(), getAllUsers(), getAllHistoricalData(),
     ]);
 
     await Promise.all([
       localDb.putBatch('installations', installations),
-      localDb.putBatch('eload', eload),
       localDb.putBatch('users', users),
       localDb.putBatch('historicaldata', historicaldata),
     ]);
 
-    console.log('[Sync] Complete — installations:', installations.length, '| eload:', eload.length, '| users:', users.length, '| historicaldata:', historicaldata.length);
+    console.log('[Sync] Complete — installations:', installations.length, '| users:', users.length, '| historicaldata:', historicaldata.length);
   } catch (err) {
     console.error('[Sync] Failed:', err);
   }
 }
 
 // ── Auto-Load & Archive ────────────────────────────────
-
-export async function checkAndUpdateInstallationForLoad(accountNumber: string, _createdAt: string): Promise<void> {
-  try {
-    const installations = await getAllInstallations();
-    const installation = installations.find(inst => inst.accountNumber === accountNumber);
-    if (installation && installation.loadStatus !== 'Account Loaded') {
-      const updates: Partial<InstallationRow> = { loadStatus: 'Account Loaded' };
-      if (installation.notifyStatus === 'Not Yet Notified') {
-        updates.notifyStatus = 'Not Needed';
-      }
-      await updateInstallation(installation.id, updates);
-    }
-  } catch (error) {
-    console.error('[Auto-Load] Failed:', error);
-  }
-}
 
 export async function archivePreviousYears(currentYear: number): Promise<number> {
   try {

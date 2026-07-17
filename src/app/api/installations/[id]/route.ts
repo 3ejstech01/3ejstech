@@ -1,12 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { updateInstallation } from '@/lib/unified-db';
-import { requireRole } from '@/lib/auth-guard';
-import { UserRole } from '@/lib/types';
 
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const auth = requireRole(request, [UserRole.ADMIN]);
-    if ('response' in auth) return auth.response;
     const { id } = await params;
     const data = await request.json();
     

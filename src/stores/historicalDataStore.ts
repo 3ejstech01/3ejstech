@@ -1,27 +1,19 @@
 import { create } from 'zustand';
 import { HistoricalDataRow } from '@/lib/types';
 import { getAllHistoricalData } from '@/lib/unified-db';
+import { parseNumberInput } from '@/lib/number-utils';
 
 interface HistoricalDataState {
   records: HistoricalDataRow[];
   isLoading: boolean;
   error: string | null;
   lastFetched: number | null;
+  hasData: boolean;
   fetchRecords: () => Promise<void>;
   clearCache: () => void;
 }
 
-// Client-side normalization: convert any remaining string numerics to proper types
 function normalizeHistoricalRow(row: any): HistoricalDataRow {
-  const parseNum = (v: unknown): number => {
-    if (typeof v === 'number') return v;
-    if (typeof v === 'string') {
-      const parsed = parseFloat(v);
-      return isNaN(parsed) ? 0 : parsed;
-    }
-    return 0;
-  };
-
   return {
     id: row.id,
     dateInstalled: row.dateInstalled || '',
@@ -48,11 +40,11 @@ function normalizeHistoricalRow(row: any): HistoricalDataRow {
     gcashHandler: row.gcashHandler || '',
     gcashReference: row.gcashReference || '',
     timeLoaded: row.timeLoaded || '',
-    amount: parseNum(row.amount),
-    markup: parseNum(row.markup),
-    incentive: parseNum(row.incentive),
-    retailer: parseNum(row.retailer),
-    dealer: parseNum(row.dealer),
+    amount: parseNumberInput(row.amount),
+    markup: parseNumberInput(row.markup),
+    incentive: parseNumberInput(row.incentive),
+    retailer: parseNumberInput(row.retailer),
+    dealer: parseNumberInput(row.dealer),
     remarks: row.remarks || '',
     createdAt: row.createdAt || '',
     updatedAt: row.updatedAt || '',
@@ -64,18 +56,19 @@ export const useHistoricalDataStore = create<HistoricalDataState>((set) => ({
   isLoading: false,
   error: null,
   lastFetched: null,
+  hasData: false,
 
   fetchRecords: async () => {
     set({ isLoading: true, error: null });
     try {
       const data = await getAllHistoricalData();
       const mapped = data.map(row => normalizeHistoricalRow(row));
-      set({ records: mapped, lastFetched: Date.now(), isLoading: false });
+      set({ records: mapped, hasData: mapped.length > 0, lastFetched: Date.now(), isLoading: false });
     } catch (error) {
       console.error('Error fetching historical data:', error);
       set({ isLoading: false, error: 'Failed to fetch historical data' });
     }
   },
 
-  clearCache: () => set({ records: [], lastFetched: null }),
+  clearCache: () => set({ records: [], lastFetched: null, hasData: false }),
 }));

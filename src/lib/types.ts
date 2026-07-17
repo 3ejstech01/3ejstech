@@ -2,7 +2,6 @@
 export enum UserRole {
   ADMIN = 'admin',
   TECHNICIAN = 'technician',
-  E_LOAD = 'eload',
   VIEW_ONLY = 'view_only'
 }
 
@@ -102,43 +101,6 @@ notifyStatus: string;
 loadStatus: string;
 }
 
-// E-Load Transaction
-export interface ELoadTransaction {
-  id?: string;
-  gcashAcct?: string;
-  dateLoaded?: string;
-  gcashReference?: string;
-  time?: string;
-  amount?: number;
-  accountNo?: string;
-  technician?: string;
-  remarks?: string;
-  markedUp?: number;
-  incentive?: number;
-  retailer?: number;
-  dealer?: number;
-  createdAt?: string;
-  updatedAt?: string;
-}
-
-// Raw row format as stored in IndexedDB (camelCase keys)
-export interface ELoadRow {
-id: string;
-gcashHandler: string;
-dateLoaded: string;
-gcashReference: string;
-timeLoaded: string;
-amount: number | string;
-accountNumber: string;
-markedUp?: number;
-incentive?: number;
-retailer?: number;
-dealer?: number;
-remarks?: string;
-createdAt: string;
-updatedAt: string;
-}
-
 // Historical Data Row
 export interface HistoricalDataRow {
   id: string;
@@ -227,4 +189,10 @@ export interface DashboardMetrics {
   pendingInstallations: number;
   dailyELoadRevenue: number;
   monthlyRevenue: number;
+}
+
+export type NullableString = string | null | undefined;
+
+export function blankToDash(value: NullableString): string {
+  return value === null || value === undefined || value === '' ? '—' : value;
 }

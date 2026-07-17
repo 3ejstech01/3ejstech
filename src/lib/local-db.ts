@@ -8,7 +8,7 @@
 const DB_NAME = '3jes_local_db';
 const DB_VERSION = 3;
 
-const STORES = ['installations', 'eload', 'modems', 'users', 'historicaldata', 'syncQueue', 'recordSnapshots'] as const;
+const STORES = ['installations', 'modems', 'users', 'historicaldata', 'syncQueue', 'recordSnapshots'] as const;
 type StoreName = (typeof STORES)[number];
 
 let dbPromise: Promise<IDBDatabase> | null = null;
@@ -101,6 +101,17 @@ async function putBatch<T>(store: StoreName, items: T[]): Promise<void> {
     for (const item of items) os.put(item);
     tx.oncomplete = () => resolve();
     tx.onerror = () => reject(tx.error);
+    tx.onabort = () => reject(tx.error);
+  });
+}
+
+async function getCacheStatus(store: StoreName): Promise<{ count: number; lastFetched: number | null }> {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(store, 'readonly');
+    const countRequest = tx.objectStore(store).count();
+    countRequest.onsuccess = () => resolve({ count: countRequest.result, lastFetched: null });
+    countRequest.onerror = () => reject(countRequest.error);
   });
 }
 
@@ -135,6 +146,7 @@ export const localDb = {
   clear: clearStore,
   clearStore,
   putBatch,
+  getCacheStatus,
   exportAll,
   importAll,
   clearAll,

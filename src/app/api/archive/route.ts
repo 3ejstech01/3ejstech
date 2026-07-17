@@ -1,12 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { archivePreviousYears } from '@/lib/unified-db';
-import { requireRole } from '@/lib/auth-guard';
-import { UserRole } from '@/lib/types';
 
 export async function POST(request: NextRequest) {
   try {
-    const auth = requireRole(request, [UserRole.ADMIN]);
-    if ('response' in auth) return auth.response;
     const body = await request.json().catch(() => ({}));
     const rawYear = body?.currentYear;
     const now = new Date();

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { User, UserRole } from '@/lib/types';
 
 interface AuthContextType {
@@ -13,84 +13,20 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const AUTO_USER: User = { id: 'system', name: 'System', email: '', username: 'system', role: UserRole.ADMIN, createdAt: new Date(), updatedAt: new Date() };
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(() => {
-    if (typeof window === 'undefined') return null;
-    try {
-      const storedUser = localStorage.getItem('authUser');
-      if (storedUser) {
-        const parsed = JSON.parse(storedUser);
-        if (!parsed.username) {
-          parsed.username = parsed.name || parsed.id;
-        }
-        return parsed;
-      }
-    } catch (error) {
-      console.error('Auth check failed:', error);
-    }
-    return null;
-  });
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    if (user) {
-      localStorage.setItem('authUser', JSON.stringify(user));
-    }
-  }, [user]);
-
-  const login = async (username: string) => {
-    setIsLoading(true);
-    try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username }),
-      });
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || 'Login failed');
-      }
-
-      const data = await response.json();
-      const userData: User = {
-        id: data.user.id,
-        email: data.user.email,
-        name: data.user.name,
-        username: data.user.username || data.user.name,
-        role: data.user.role as UserRole,
-        createdAt: new Date(data.user.createdAt),
-        updatedAt: new Date(data.user.updatedAt || data.user.createdAt),
-      };
-
-      setUser(userData);
-      localStorage.setItem('authUser', JSON.stringify(userData));
-    } catch (error) {
-      console.error('Login error:', error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('authUser');
-    // Clear the session sync flag so the next login triggers a fresh sync
-    sessionStorage.removeItem('db_synced_session');
-    if (typeof window !== 'undefined') {
-      import('@/lib/database').then(({ localDb }) => localDb.clearAll());
-    }
-  };
+  const [user] = useState<User | null>(AUTO_USER);
+  const [isLoading] = useState(false);
 
   return (
     <AuthContext.Provider
       value={{
         user,
         isLoading,
-        isAuthenticated: !!user,
-        login,
-        logout,
+        isAuthenticated: true,
+        login: async () => {},
+        logout: () => {},
       }}
     >
       {children}
