@@ -2,11 +2,14 @@
 import { useSyncQueueStore } from '@/stores/syncQueueStore';
 
 export function SyncAnimationModal() {
-  const { syncingOps, showAnimationModal } = useSyncQueueStore();
+  const syncingOps = useSyncQueueStore(state => state.syncingOps);
+  const showAnimationModal = useSyncQueueStore(state => state.showAnimationModal);
 
   if (!showAnimationModal) return null;
 
-  const progress = syncingOps.filter(op => op.status === 'synced').length / syncingOps.length;
+  const total = syncingOps.length;
+  const processedCount = syncingOps.filter(op => op.status === 'synced' || op.status === 'conflict' || op.status === 'failed').length;
+  const progress = total > 0 ? processedCount / total : 0;
   const currentOp = syncingOps.find(op => op.status === 'syncing');
 
   return (
