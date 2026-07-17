@@ -1,6 +1,6 @@
 import { sheets } from './sheets';
 import { localDb } from './local-db';
-import { useSyncQueueStore, type SheetName, type OpType, type QueuedOperation } from '@/stores/syncQueueStore';
+import { useSyncQueueStore, type SheetName, type OpType, type QueuedOperation, type SyncingOp } from '@/stores/syncQueueStore';
 
 let opCounter = 0;
 
@@ -144,10 +144,22 @@ export async function flushQueue(): Promise<FlushResult> {
   if (store.isFlushing) return { success: 0, failed: 0, conflicts: 0 };
 
   const now = Date.now();
-  const snapshot = store.getQueue().filter(op =>
+  const queue = store.getQueue();
+  const snapshot = queue.filter(op =>
     op.status === 'pending' && (!op.nextRetryAt || op.nextRetryAt <= now)
   );
   if (snapshot.length === 0) return { success: 0, failed: 0, conflicts: 0 };
+
+  store.setShowAnimationModal(true);
+  const syncingOpsInit: SyncingOp[] = snapshot.map(op => ({
+    id: op.id,
+    who: op._lastModifiedBy || 'Unknown',
+    type: op.type,
+    sheet: op.sheet,
+    keyValue: op.keyValue,
+    status: 'pending' as const,
+  }));
+  store.setSyncingOps(syncingOpsInit);
 
   let success = 0;
   let failed = 0;
@@ -159,6 +171,7 @@ export async function flushQueue(): Promise<FlushResult> {
     if (op.status !== 'pending') continue;
     if (op.nextRetryAt && op.nextRetryAt > now) continue;
 
+    store.updateSyncingOp(op.id, 'syncing');
     await updateOpStatus(op, { status: 'syncing' });
 
     try {
@@ -166,14 +179,17 @@ export async function flushQueue(): Promise<FlushResult> {
         const result = await sheets.appendRow(op.sheet, op.data as Record<string, unknown>);
         if (result.success) {
           await removeOp(op.id);
+          store.updateSyncingOp(op.id, 'synced');
           success++;
         } else if (result.isCorsError) {
           store.setHasCorsError(true);
           corsDetected = true;
           await scheduleRetry(op);
+          store.updateSyncingOp(op.id, 'failed');
           failed++;
         } else {
           await scheduleRetry(op, 'Sync failed');
+          store.updateSyncingOp(op.id, 'failed');
           failed++;
         }
       } else if (op.type === 'update') {
@@ -182,6 +198,7 @@ export async function flushQueue(): Promise<FlushResult> {
         if (current && op.updatedAt && current.updatedAt && current.updatedAt !== op.updatedAt) {
           await updateOpStatus(op, { status: 'conflict', conflictData: current });
           store.setHasConflicts(true);
+          store.updateSyncingOp(op.id, 'conflict');
           if (!firstConflictDetected) {
             store.setShowConflictModal(true);
             firstConflictDetected = true;
@@ -196,14 +213,17 @@ export async function flushQueue(): Promise<FlushResult> {
           );
           if (result.success) {
             await removeOp(op.id);
+            store.updateSyncingOp(op.id, 'synced');
             success++;
           } else if (result.isCorsError) {
             store.setHasCorsError(true);
             corsDetected = true;
             await scheduleRetry(op);
+            store.updateSyncingOp(op.id, 'failed');
             failed++;
           } else {
             await scheduleRetry(op, 'Sync failed');
+            store.updateSyncingOp(op.id, 'failed');
             failed++;
           }
         }
@@ -211,20 +231,24 @@ export async function flushQueue(): Promise<FlushResult> {
         const result = await sheets.deleteRow(op.sheet, op.keyColumn, op.keyValue);
         if (result.success) {
           await removeOp(op.id);
+          store.updateSyncingOp(op.id, 'synced');
           success++;
         } else if (result.isCorsError) {
           store.setHasCorsError(true);
           corsDetected = true;
           await scheduleRetry(op);
+          store.updateSyncingOp(op.id, 'failed');
           failed++;
         } else {
           await scheduleRetry(op, 'Sync failed');
+          store.updateSyncingOp(op.id, 'failed');
           failed++;
         }
       }
     } catch (e) {
       console.warn('[SyncQueue] Flush error for op', op.id, e);
       await scheduleRetry(op, e instanceof Error ? e.message : 'Sync failed');
+      store.updateSyncingOp(op.id, 'failed');
       failed++;
     }
   }
@@ -239,6 +263,14 @@ export async function flushQueue(): Promise<FlushResult> {
   if (corsDetected) {
     store.addNotification('Sheets sync blocked by CORS. Data saved locally.', 'warning');
   }
+
+  if (conflicts > 0) {
+    store.setShowConflictModal(true);
+  }
+
+  setTimeout(() => {
+    store.setShowAnimationModal(false);
+  }, 1500);
 
   return { success, failed, conflicts };
 }
