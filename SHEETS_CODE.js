@@ -1,6 +1,13 @@
 // ============================================================
 // 3EJS Tech - Google Apps Script (Updated for 2025)
-// Handles 4 sheets: installations, eload, users, historicaldata
+// Handles 3 sheets: installations, users, historicaldata
+//
+// METADATA COLUMNS:
+// - __lastModifiedBy: who last modified the row
+// - __updatedAt: ISO timestamp of last modification
+// - __checksum: data integrity checksum
+// These are added as the LAST 3 columns in each sheet to avoid
+// disrupting existing data column positions.
 //
 // HOW TO DEPLOY:
 // 1. Open your Google Sheet
@@ -74,6 +81,22 @@ function formatCellValue(value) {
     return m + '/' + d + '/' + y;
   }
   return value !== undefined && value !== null ? String(value) : '';
+}
+
+var META_HEADERS = ['__lastModifiedBy', '__updatedAt', '__checksum'];
+
+function ensureMetaHeaders(sheet, data, headerRowIndex) {
+  var headers = data[headerRowIndex].map(function(h) {
+    return String(h).replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
+  });
+  var hasAllMeta = META_HEADERS.every(function(m) { return headers.indexOf(m) !== -1; });
+  if (!hasAllMeta) {
+    var lastCol = headers.length + 1;
+    META_HEADERS.forEach(function(meta, i) {
+      sheet.getRange(headerRowIndex + 1, lastCol + i).setValue(meta);
+    });
+  }
+  return !hasAllMeta;
 }
 
 /**
@@ -158,6 +181,19 @@ function doGet(e) {
           if (String(colValue) !== String(filterVal)) continue;
         }
       }
+
+      // Include metadata columns if present (last 3 columns)
+      var totalCols = row.length;
+      if (totalCols >= 3) {
+        var metaStart = totalCols - 3;
+        var lastHeader = headers[totalCols - 3];
+        if (lastHeader === '__lastModifiedBy') {
+          obj.__lastModifiedBy = row[totalCols - 3] || '';
+          obj.__updatedAt = row[totalCols - 2] || '';
+          obj.__checksum = row[totalCols - 1] || '';
+        }
+      }
+
       rows.push(obj);
     }
 
@@ -235,6 +271,16 @@ function doPost(e) {
             var col = validColumns[c];
             obj[col.name] = formatCellValue(row[col.index]);
           }
+          // Include metadata columns if present
+          var totalCols = row.length;
+          if (totalCols >= 3) {
+            var lastHeader = headers[totalCols - 3];
+            if (lastHeader === '__lastModifiedBy') {
+              obj.__lastModifiedBy = row[totalCols - 3] || '';
+              obj.__updatedAt = row[totalCols - 2] || '';
+              obj.__checksum = row[totalCols - 1] || '';
+            }
+          }
           rows.push(obj);
         }
       }
@@ -244,9 +290,21 @@ function doPost(e) {
 
     // ── APPEND: add a new row ──────────────────────────────────
     if (action === 'append') {
+      // Ensure metadata headers exist
+      ensureMetaHeaders(sheet, data, headerRowIndex);
+      // Refresh data to get updated headers
+      data = sheet.getDataRange().getValues();
+      headers = data[headerRowIndex].map(function(h) {
+        return String(h).replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
+      });
+
       var row = headers.map(function(h) {
         return payload.row[h] !== undefined ? payload.row[h] : '';
       });
+      // Append metadata columns
+      row.push(payload._lastModifiedBy || 'unknown');
+      row.push(new Date().toISOString());
+      row.push(payload._checksum || '');
       sheet.appendRow(row);
       return json({ success: true, action: 'append' });
     }
@@ -261,14 +319,28 @@ function doPost(e) {
         return json({ error: 'Key column not found: ' + keyColumn }, 400);
       }
 
+      // Ensure metadata headers exist
+      ensureMetaHeaders(sheet, data, headerRowIndex);
+
       var allData = sheet.getDataRange().getValues();
+      // Refresh headers after potential update
+      var updatedHeaders = allData[headerRowIndex].map(function(h) {
+        return String(h).replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
+      });
       for (var i = headerRowIndex + 1; i < allData.length; i++) {
         if (String(allData[i][keyIndex]) === String(keyValue)) {
-          headers.forEach(function(h, colIdx) {
+          updatedHeaders.forEach(function(h, colIdx) {
             if (payload.row[h] !== undefined) {
               sheet.getRange(i + 1, colIdx + 1).setValue(payload.row[h]);
             }
           });
+          // Update metadata columns (last 3 columns)
+          var totalCols = updatedHeaders.length;
+          sheet.getRange(i + 1, totalCols - 1).setValue(payload._lastModifiedBy || 'unknown');
+          sheet.getRange(i + 1, totalCols).setValue(new Date().toISOString());
+          if (payload._checksum) {
+            sheet.getRange(i + 1, totalCols - 2).setValue(payload._checksum);
+          }
           return json({ success: true, action: 'update', rowIndex: i + 1 });
         }
       }
