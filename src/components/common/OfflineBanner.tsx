@@ -11,17 +11,12 @@ function timeAgo(ts: number): string {
   return new Date(ts).toLocaleDateString();
 }
 
-export function OfflineBanner({ onSync }: { onSync: () => void }) {
+export function OfflineBanner() {
   const isOnline = useOnlineStatus();
   const { queue, lastSyncAt } = useSyncQueueStore();
   const [dismissed, setDismissed] = useState(false);
-  const [pageKey, setPageKey] = useState(0);
 
   const pending = queue.filter(op => op.status === 'pending' || op.status === 'syncing');
-
-  useEffect(() => {
-    if (dismissed) setDismissed(false);
-  }, [pageKey]);
 
   if (isOnline || dismissed || pending.length === 0) return null;
 

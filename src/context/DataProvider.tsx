@@ -55,7 +55,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
       return () => clearTimeout(t);
     }
     if (!isOnline) setWasOffline(true);
-  }, [isOnline]);
+  }, [isOnline, wasOffline]);
 
   return (
     <DataLoadingContext.Provider value={{ isLoading, isReady, error }}>
