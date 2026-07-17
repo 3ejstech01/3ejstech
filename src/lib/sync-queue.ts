@@ -4,6 +4,9 @@ import { useSyncQueueStore, type SheetName, type OpType, type QueuedOperation } 
 
 let opCounter = 0;
 
+let _currentUser = 'system';
+export function setCurrentSyncUser(user: string) { _currentUser = user; }
+
 const MAX_RETRY_COUNT = 3;
 
 function generateOpId(): string {
@@ -23,7 +26,8 @@ export async function enqueueOp(
   sheet: SheetName,
   keyValue: string,
   data: Record<string, unknown>,
-  updatedAt?: string
+  updatedAt?: string,
+  lastModifiedBy?: string
 ): Promise<void> {
   if (typeof window === 'undefined' || !window.indexedDB) return;
 
@@ -38,6 +42,7 @@ export async function enqueueOp(
     updatedAt,
     status: 'pending',
     retryCount: 0,
+    _lastModifiedBy: lastModifiedBy || _currentUser,
   };
 
   await localDb.put('syncQueue', op);

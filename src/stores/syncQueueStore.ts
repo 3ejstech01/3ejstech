@@ -5,6 +5,15 @@ export type SheetName = 'installations' | 'users' | 'historicaldata';
 export type OpType = 'create' | 'update' | 'delete';
 export type OpStatus = 'pending' | 'syncing' | 'conflict' | 'resolved' | 'dead-letter';
 
+export interface SyncingOp {
+  id: string;
+  who: string;
+  type: 'create' | 'update' | 'delete';
+  sheet: string;
+  keyValue: string;
+  status: 'pending' | 'syncing' | 'synced' | 'conflict' | 'failed';
+}
+
 export interface QueuedOperation {
   id: string;
   type: OpType;
@@ -19,6 +28,7 @@ export interface QueuedOperation {
   retryCount: number;
   lastError?: string;
   nextRetryAt?: number;
+  _lastModifiedBy?: string;
 }
 
 export interface SyncNotification {
@@ -40,6 +50,7 @@ interface SyncQueueState {
   conflictOpId: string | null;
   deadLetterCount: number;
   lastError: string | null;
+  syncingOps: SyncingOp[];
 
   loadQueue: () => Promise<void>;
   loadSyncMeta: () => Promise<void>;
@@ -50,6 +61,8 @@ interface SyncQueueState {
   setHasCorsError: (v: boolean) => void;
   setShowConflictModal: (show: boolean, opId?: string | null) => void;
   setLastError: (error: string | null) => void;
+  setSyncingOps: (ops: SyncingOp[]) => void;
+  updateSyncingOp: (id: string, status: SyncingOp['status']) => void;
   getQueue: () => QueuedOperation[];
   getPendingCount: () => number;
   getDeadLetterCount: () => number;
@@ -67,6 +80,7 @@ export const useSyncQueueStore = create<SyncQueueState>((set, get) => ({
   conflictOpId: null,
   deadLetterCount: 0,
   lastError: null,
+  syncingOps: [],
 
   loadQueue: async () => {
     if (typeof window === 'undefined' || !window.indexedDB) return;
@@ -117,4 +131,9 @@ export const useSyncQueueStore = create<SyncQueueState>((set, get) => ({
   getQueue: () => get().queue,
   getPendingCount: () => get().queue.filter(op => op.status === 'pending' || op.status === 'syncing').length,
   getDeadLetterCount: () => get().queue.filter(op => op.status === 'dead-letter').length,
+
+  setSyncingOps: (ops) => set({ syncingOps: ops }),
+  updateSyncingOp: (id, status) => set(state => ({
+    syncingOps: state.syncingOps.map(op => op.id === id ? { ...op, status } : op),
+  })),
 }));
