@@ -4,6 +4,7 @@ import React, { useEffect, useState, createContext, useContext } from 'react';
 import { syncFromRemote } from '@/lib/unified-db';
 import { useOnlineStatus } from '@/hooks/useOnlineStatus';
 import { flushQueue } from '@/lib/sync-queue';
+import { SyncAnimationModal } from '@/components/sync/SyncAnimationModal';
 
 interface DataLoadingContextType {
   isLoading: boolean;
@@ -60,6 +61,7 @@ export function DataProvider({ children }: { children: React.ReactNode }) {
   return (
     <DataLoadingContext.Provider value={{ isLoading, isReady, error }}>
       {children}
+      <SyncAnimationModal />
     </DataLoadingContext.Provider>
   );
 }

@@ -52,6 +52,7 @@ interface SyncQueueState {
   deadLetterCount: number;
   lastError: string | null;
   syncingOps: SyncingOp[];
+  showAnimationModal: boolean;
 
   loadQueue: () => Promise<void>;
   loadSyncMeta: () => Promise<void>;
@@ -64,6 +65,7 @@ interface SyncQueueState {
   setLastError: (error: string | null) => void;
   setSyncingOps: (ops: SyncingOp[]) => void;
   updateSyncingOp: (id: string, status: SyncingOp['status']) => void;
+  setShowAnimationModal: (show: boolean) => void;
   getQueue: () => QueuedOperation[];
   getPendingCount: () => number;
   getDeadLetterCount: () => number;
@@ -82,6 +84,7 @@ export const useSyncQueueStore = create<SyncQueueState>((set, get) => ({
   deadLetterCount: 0,
   lastError: null,
   syncingOps: [],
+  showAnimationModal: false,
 
   loadQueue: async () => {
     if (typeof window === 'undefined' || !window.indexedDB) return;
@@ -137,4 +140,5 @@ export const useSyncQueueStore = create<SyncQueueState>((set, get) => ({
   updateSyncingOp: (id, status) => set(state => ({
     syncingOps: state.syncingOps.map(op => op.id === id ? { ...op, status } : op),
   })),
+  setShowAnimationModal: (show) => set({ showAnimationModal: show }),
 }));
