@@ -270,6 +270,17 @@ Smooth color transitions between themes
   to { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes inkFill {
+  0% { stroke-dashoffset: 1000; opacity: 0; }
+  50% { opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 1; }
+}
+
+@keyframes borderGlow {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-primary) 60%, transparent); }
+  50% { box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 0%, transparent); }
+}
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
@@ -305,6 +316,50 @@ Smooth color transitions between themes
   animation: shimmer 2s infinite;
 }
 .animate-pulse-glow { animation: pulse-glow 2s infinite; }
+
+/*
+=============================================================================
+NAV ANIMATION UTILITIES
+=============================================================================
+Ink fill and border glow animations for TopBar navigation
+=============================================================================
+*/
+
+.nav-ink-fill {
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-ink-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--ink-gradient, var(--color-primary));
+  transform: scale(0);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.nav-ink-fill.active::after {
+  animation: inkFill 0.3s ease-out forwards;
+}
+
+.nav-border-glow {
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.nav-border-glow:hover {
+  box-shadow: 0 0 8px 2px color-mix(in srgb, var(--color-primary) 60%, transparent);
+}
+
+.nav-border-glow.active {
+  box-shadow: 0 0 0 2px var(--color-primary), 0 0 12px 4px color-mix(in srgb, var(--color-primary) 40%, transparent);
+}
+
+.animate-slideDown {
+  animation: slideDown 0.3s ease-out;
+}
 
 /*
 =============================================================================
