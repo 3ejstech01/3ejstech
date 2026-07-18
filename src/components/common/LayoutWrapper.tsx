@@ -1,8 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Sidebar } from '@/components/common/Sidebar';
-import { MobileNav } from '@/components/common/MobileNav';
+import { TopBar } from '@/components/common/TopBar';
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
@@ -18,7 +17,6 @@ export const LayoutWrapper: React.FC<LayoutWrapperProps> = ({ children, requireA
   const router = useRouter();
 
   React.useEffect(() => {
-    // Auth removed — app is now public. All users proceed directly.
   }, [isAuthenticated, isLoading, requireAuth, router]);
 
   if (requireAuth && (isLoading || !isAuthenticated)) {
@@ -42,24 +40,17 @@ export const LayoutWrapper: React.FC<LayoutWrapperProps> = ({ children, requireA
   return (
     <div className="min-h-screen page-shell">
       <ToastStack />
-      <MobileNav />
-      <div className="flex">
-        {isAuthenticated && (
-          <div className="hidden lg:block">
-            <Sidebar />
-          </div>
-        )}
-        <motion.main
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.2 }}
-          className="flex-1 min-h-screen pb-20 pt-14 lg:pt-0 lg:pb-0"
-        >
-          <div className="p-4 lg:px-6 lg:py-6 max-w-7xl mx-auto">
-            {children}
-          </div>
-        </motion.main>
-      </div>
+      <TopBar />
+      <motion.main
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.2 }}
+        className="pt-16 min-h-screen"
+      >
+        <div className="p-4 lg:px-6 lg:py-6 max-w-7xl mx-auto">
+          {children}
+        </div>
+      </motion.main>
     </div>
   );
 };
