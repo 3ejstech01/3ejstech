@@ -317,9 +317,24 @@ Smooth color transitions between themes
 .animate-pulse-glow { animation: pulse-glow 2s infinite; }
 .animate-slideDown { animation: slideDown 0.3s ease-out; }
 
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in-right 300ms ease-out;
+}
+
 /*
-=============================================================================
-NAV ANIMATION UTILITIES
+ =============================================================================
+ NAV ANIMATION UTILITIES
 =============================================================================
 Ink fill and border glow animations for TopBar navigation
 =============================================================================
