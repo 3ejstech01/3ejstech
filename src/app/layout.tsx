@@ -7,6 +7,7 @@ import { SyncProvider } from "@/components/sync/SyncProvider";
 import { DataProvider } from "@/context/DataProvider";
 import { DataLoader } from "@/components/common/DataLoader";
 import { ClientRipple } from "@/components/common/ClientRipple";
+import RecentRecordsPanel from "@/components/recent-records/RecentRecordsPanel";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -50,6 +51,7 @@ export default function RootLayout({
                     {children}
                   </DataLoader>
                 </ClientRipple>
+                <RecentRecordsPanel />
               </SyncProvider>
             </AuthProvider>
           </DataProvider>
