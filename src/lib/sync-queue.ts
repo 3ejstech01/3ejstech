@@ -105,7 +105,7 @@ async function removeOp(opId: string): Promise<void> {
 
 export async function resolveConflict(
   opId: string,
-  resolution: 'mine' | 'theirs' | 'retry'
+  resolution: 'mine' | 'theirs' | 'retry' | 'merge'
 ): Promise<void> {
   const store = getSyncQueueStore();
   const op = store.getQueue().find(o => o.id === opId);
@@ -124,6 +124,17 @@ export async function resolveConflict(
       nextRetryAt: Date.now(),
       lastError: undefined,
     });
+  } else if (resolution === 'merge') {
+    await updateOpStatus(op, { status: 'pending', conflictData: undefined });
+    const remoteRow = op.conflictData;
+    if (remoteRow && typeof remoteRow === 'object') {
+      const merged = mergeRecords(op.data as Record<string, unknown>, remoteRow);
+      if (merged) {
+        await updateOpStatus(op, { data: merged as Record<string, unknown> });
+      }
+      await saveRecordSnapshot(op.sheet, op.keyValue, String((remoteRow as Record<string, unknown>).updatedAt ?? ''), { resolution: 'merge' });
+    }
+    store.setHasConflicts(false);
   } else {
     await removeOp(opId);
   }
@@ -133,11 +144,32 @@ export async function resolveConflict(
   store.setShowConflictModal(false);
 }
 
+function mergeRecords(
+  local: Record<string, unknown>,
+  remote: Record<string, unknown>
+): Record<string, unknown> | null {
+  const merged: Record<string, unknown> = { ...remote };
+  const localUpdated = local.updatedAt as string | undefined;
+  const remoteUpdated = remote.updatedAt as string | undefined;
+  const localTime = localUpdated ? new Date(localUpdated).getTime() : 0;
+  const remoteTime = remoteUpdated ? new Date(remoteUpdated).getTime() : 0;
+  if (localTime > remoteTime) {
+    for (const key of Object.keys(local)) {
+      if (key.startsWith('_')) continue;
+      merged[key] = local[key];
+    }
+  }
+  merged.updatedAt = new Date().toISOString();
+  return merged;
+}
+
 export interface FlushResult {
   success: number;
   failed: number;
   conflicts: number;
 }
+
+const CONCURRENCY_LIMIT = 4;
 
 export async function flushQueue(): Promise<FlushResult> {
   const store = getSyncQueueStore();
@@ -167,9 +199,9 @@ export async function flushQueue(): Promise<FlushResult> {
   let firstConflictDetected = false;
   let corsDetected = false;
 
-  for (const op of snapshot) {
-    if (op.status !== 'pending') continue;
-    if (op.nextRetryAt && op.nextRetryAt > now) continue;
+  async function processOp(op: QueuedOperation): Promise<void> {
+    if (op.status !== 'pending') return;
+    if (op.nextRetryAt && op.nextRetryAt > now) return;
 
     store.updateSyncingOp(op.id, 'syncing');
     await updateOpStatus(op, { status: 'syncing' });
@@ -251,6 +283,11 @@ export async function flushQueue(): Promise<FlushResult> {
       store.updateSyncingOp(op.id, 'failed');
       failed++;
     }
+  }
+
+  for (let i = 0; i < snapshot.length; i += CONCURRENCY_LIMIT) {
+    const batch = snapshot.slice(i, i + CONCURRENCY_LIMIT);
+    await Promise.allSettled(batch.map(processOp));
   }
 
   await store.loadQueue();

@@ -1,4 +1,4 @@
-import { computeChecksum } from './checksum';
+import { computeChecksum, verifyChecksum } from './checksum';
 import { sheets } from './sheets';
 import { localDb } from './local-db';
 import { hashPasswordIfNeeded } from './auth-utils';
@@ -6,6 +6,11 @@ import { enqueueOp, saveRecordSnapshot, getRecordSnapshot, getCurrentSyncUser } 
 import type { SheetName } from '@/stores/syncQueueStore';
 import { parseDateInput } from '@/lib/date-utils';
 import { parseNumberInput } from '@/lib/number-utils';
+
+function verifyChecksums(item: Record<string, unknown>, storedChecksum: string): boolean {
+  const { _checksum, _lastModifiedBy, ...rest } = item;
+  return verifyChecksum(rest as Record<string, unknown>, storedChecksum as string);
+}
 
 const CACHE_TTL_MS = 60_000;
 const lastFetched: Record<string, number> = {};
@@ -21,7 +26,29 @@ async function getWithCache<T>(
     const isFresh = local.length > 0 && (now - (lastFetched[store] || 0)) < CACHE_TTL_MS;
 
     if (isFresh) {
-      return local;
+      const invalid = local.filter(item => {
+        const storedChecksum = (item as Record<string, unknown>)._checksum;
+        if (!storedChecksum) return false;
+        const { _checksum, ...itemWithoutChecksum } = item as Record<string, unknown>;
+        return !verifyChecksums(itemWithoutChecksum, storedChecksum as string);
+      });
+      if (invalid.length > 0) {
+        console.warn(`[UnifiedDB] Checksum mismatch on ${store}: ${invalid.length} records`);
+        for (const item of invalid) {
+          await localDb.remove(store as any, (item as Record<string, unknown>).id as string);
+        }
+      }
+
+      const valid = local.filter(item => {
+        const storedChecksum = (item as Record<string, unknown>)._checksum;
+        if (!storedChecksum) return true;
+        const { _checksum, ...itemWithoutChecksum } = item as Record<string, unknown>;
+        return verifyChecksums(itemWithoutChecksum, storedChecksum as string);
+      });
+
+      if (valid.length > 0) {
+        return valid;
+      }
     }
 
     if (local.length > 0) {

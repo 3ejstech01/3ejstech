@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Zap, LogOut } from 'lucide-react';
 
 export const Header: React.FC<{ title?: string }> = ({ title = '3EJS Tech' }) => {
   const { user, logout } = useAuth();
@@ -23,9 +24,7 @@ export const Header: React.FC<{ title?: string }> = ({ title = '3EJS Tech' }) =>
                 whileTap={{ scale: 0.95 }}
                 className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/30"
               >
-                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
+              <Zap className="w-6 h-6 text-white" />
               </motion.div>
               <motion.span
                 initial={{ opacity: 0 }}
@@ -69,9 +68,7 @@ export const Header: React.FC<{ title?: string }> = ({ title = '3EJS Tech' }) =>
                   className="px-4 py-2 rounded-xl bg-gradient-to-r from-red-500 to-rose-600 text-white font-medium hover:from-red-600 hover:to-rose-700 transition-all shadow-md shadow-red-500/20"
                 >
                   <span className="hidden sm:inline">Logout</span>
-                  <svg className="w-5 h-5 sm:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                  </svg>
+                  <LogOut className="w-5 h-5 hidden sm:block" />
                 </motion.button>
               )}
             </AnimatePresence>

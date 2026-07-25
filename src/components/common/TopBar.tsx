@@ -8,6 +8,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { UserRole } from '@/lib/types';
 import { motion, AnimatePresence } from 'framer-motion';
 import { syncFromRemote } from '@/lib/unified-db';
+import { RefreshCw, Settings, LogOut, Menu, X } from 'lucide-react';
 
 interface NavItem {
   label: string;
@@ -111,7 +112,7 @@ export function TopBar() {
             <button
               type="button"
               className="p-2 rounded-xl text-text/60 hover:text-text hover:bg-primary/10 transition-colors"
-              aria-label="Sync"
+              aria-label="Sync data now"
               title="Sync data"
               onClick={async () => {
                 try {
@@ -122,9 +123,7 @@ export function TopBar() {
                 }
               }}
             >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m0 0H9m12 12v5h.581m0 0a8.003 8.003 0 01-15.357 2m0 0H9" />
-              </svg>
+              <RefreshCw className="w-5 h-5" />
             </button>
 
             {/* Settings Button */}
@@ -134,10 +133,7 @@ export function TopBar() {
               aria-label="Settings"
               title="Settings"
             >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
+              <Settings className="w-5 h-5" />
             </Link>
 
             {/* Logout Button */}
@@ -148,9 +144,7 @@ export function TopBar() {
               className="p-2 rounded-xl bg-gradient-to-br from-red-500 to-rose-600 text-white flex items-center justify-center hover:shadow-lg hover:shadow-red-500/40 transition-all duration-300"
               aria-label="Logout"
             >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
-              </svg>
+              <LogOut className="w-5 h-5" />
             </motion.button>
 
             {/* Mobile Hamburger */}
@@ -161,9 +155,7 @@ export function TopBar() {
               aria-label="Open menu"
               aria-expanded={mobileMenuOpen}
             >
-              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
+              <Menu className="w-6 h-6" />
             </button>
           </div>
         </div>
@@ -197,9 +189,7 @@ export function TopBar() {
                   className="p-2 rounded-xl text-text/60 hover:text-text hover:bg-primary/10 transition-colors"
                   aria-label="Close menu"
                 >
-                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
+                  <X className="w-6 h-6" />
                 </button>
               </div>
               <nav className="flex-1 p-4 overflow-y-auto" role="navigation" aria-label="Mobile navigation">

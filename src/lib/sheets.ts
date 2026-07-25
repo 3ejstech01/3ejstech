@@ -1,5 +1,26 @@
 import { getMappingForSheet, mapCamelToSnake, mapSnakeToCamel } from './sheets-mapper';
 
+// ── Request Deduplication Cache ──────────────────────────────
+// Coalesces concurrent identical GET requests so the same sheet
+// data is only fetched once until TTL expires.
+
+const fetchCache = new Map<string, { result: SheetsResponse<unknown>; expiresAt: number }>();
+const FETCH_CACHE_TTL_MS = 5_000;
+
+function getCachedSheetResponse<T>(
+  key: string,
+  fetcher: () => Promise<SheetsResponse<T>>
+): Promise<SheetsResponse<T>> {
+  const cached = fetchCache.get(key);
+  const now = Date.now();
+  if (cached && cached.expiresAt > now) {
+    return Promise.resolve(cached.result as SheetsResponse<T>);
+  }
+  const result = fetcher();
+  fetchCache.set(key, { result: result as unknown as SheetsResponse<unknown>, expiresAt: now + FETCH_CACHE_TTL_MS });
+  return result;
+}
+
 // Get Web App URL from Electron settings or environment
 async function getWebAppUrl(): Promise<string> {
   if (typeof window !== 'undefined' && window.electron?.isElectron) {
@@ -21,10 +42,12 @@ export interface SheetsResponse<T> {
 async function sheetsFetch<T>(
   sheet: string,
   options: {
-    action?: 'append' | 'update' | 'delete' | 'filter';
+    action?: 'append' | 'update' | 'delete' | 'filter' | 'page';
     row?: Record<string, unknown>;
     keyColumn?: string;
     keyValue?: string;
+    page?: number;
+    pageSize?: number;
   } = {}
 ): Promise<SheetsResponse<T>> {
   const WEBAPP_URL = await getWebAppUrl();
@@ -37,18 +60,21 @@ async function sheetsFetch<T>(
 
   try {
     if (!options.action) {
-      const url = `${WEBAPP_URL}?sheet=${encodeURIComponent(sheet)}`;
-      const res = await fetch(url);
-      if (!res.ok) {
-        return { data: null, error: `HTTP ${res.status}: ${res.statusText}` };
-      }
-      const json = await res.json();
-      if (json.error) {
-        return { data: null, error: json.error };
-      }
-      const rawRows = Array.isArray(json) ? json : [];
-      const mappedRows = rawRows.map(r => mapSnakeToCamel(r as Record<string, unknown>, mapping));
-      return { data: mappedRows as T[], error: null };
+      const cacheKey = `GET:${sheet}`;
+      return getCachedSheetResponse(cacheKey, async () => {
+        const url = `${WEBAPP_URL}?sheet=${encodeURIComponent(sheet)}`;
+        const res = await fetch(url);
+        if (!res.ok) {
+          return { data: null, error: `HTTP ${res.status}: ${res.statusText}` };
+        }
+        const json = await res.json();
+        if (json.error) {
+          return { data: null, error: json.error };
+        }
+        const rawRows = Array.isArray(json) ? json : [];
+        const mappedRows = rawRows.map(r => mapSnakeToCamel(r as Record<string, unknown>, mapping));
+        return { data: mappedRows as T[], error: null };
+      });
     }
 
     const payload: Record<string, unknown> = {
@@ -85,7 +111,7 @@ async function sheetsFetch<T>(
       return { data: null, error: json.error };
     }
 
-    if (options.action === 'filter') {
+    if (options.action === 'filter' || options.action === 'page') {
       const rawRows = Array.isArray(json) ? json : [];
       const filterMapping = getMappingForSheet(sheet);
       const mappedRows = rawRows.map(r => mapSnakeToCamel(r as Record<string, unknown>, filterMapping));
