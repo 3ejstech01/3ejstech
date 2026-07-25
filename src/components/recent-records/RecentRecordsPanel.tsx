@@ -5,23 +5,26 @@ import { X } from 'lucide-react';
 import { getAllInstallations } from '@/lib/unified-db';
 import type { InstallationRow } from '@/lib/unified-db';
 
-function formatSyncStatus(row: InstallationRow): { label: string; color: string } {
-  const synced = row._lastModifiedBy === 'sheets';
-  const localOnly = row.updatedAt && !synced;
-  if (synced) return { label: 'Synced', color: 'bg-green-500' };
-  if (localOnly) return { label: 'Local', color: 'bg-amber-500' };
+function formatSyncStatus(row: InstallationRow, syncedIds: Set<string>): { label: string; color: string } {
+  if (syncedIds.has(row.id)) return { label: 'Synced', color: 'bg-green-500' };
+  if (row.updatedAt) return { label: 'Local', color: 'bg-amber-500' };
   return { label: 'Pending', color: 'bg-gray-400' };
 }
 
 export default function RecentRecordsPanel() {
   const [records, setRecords] = useState<InstallationRow[]>([]);
   const [visible, setVisible] = useState(false);
-  const [paused, setPaused] = useState(false);
+  const [closing, setClosing] = useState(false);
+  const [syncedIds, setSyncedIds] = useState<Set<string>>(new Set());
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const dismissPanel = useCallback(() => {
-    setVisible(false);
+    setClosing(true);
     if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
+      setVisible(false);
+      setClosing(false);
+    }, 300);
   }, []);
 
   const resetTimer = useCallback(() => {
@@ -40,8 +43,9 @@ export default function RecentRecordsPanel() {
         })
         .slice(0, 5);
       setRecords(recent);
+      setSyncedIds((prev) => new Set(prev).add(recent[0]?.id ?? ''));
       setVisible(true);
-      setPaused(false);
+      setClosing(false);
       resetTimer();
     } catch {
       setVisible(false);
@@ -49,7 +53,12 @@ export default function RecentRecordsPanel() {
   }, [resetTimer]);
 
   useEffect(() => {
-    const handler = () => fetchRecords();
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      if (detail?.count > 0) {
+        fetchRecords();
+      }
+    };
     window.addEventListener('record-saved', handler);
     return () => {
       window.removeEventListener('record-saved', handler);
@@ -61,20 +70,16 @@ export default function RecentRecordsPanel() {
 
   return (
     <div
-      className="fixed right-0 top-16 z-50 w-96 max-w-[90vw] bg-white dark:bg-gray-800 shadow-xl border-l border-gray-200 dark:border-gray-700 transition-transform duration-300 ease-out animate-slide-in"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => { setPaused(false); resetTimer(); }}
-      role="dialog"
+      className={`fixed right-0 top-16 z-50 w-full md:w-96 max-w-[90vw] bg-white dark:bg-gray-800 shadow-xl border-l border-gray-200 dark:border-gray-700 transition-transform duration-300 ease-out ${closing ? 'animate-slide-out' : 'animate-slide-in'}`}
+      onMouseEnter={() => { if (timerRef.current) clearTimeout(timerRef.current); }}
+      onMouseLeave={() => resetTimer()}
+      role="complementary"
       aria-modal="false"
       aria-label="Recent records panel"
     >
       <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700">
         <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100">Recent Records</h3>
-        <button
-          onClick={() => setVisible(false)}
-          className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-          aria-label="Close recent records panel"
-        >
+        <button onClick={() => dismissPanel()} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" aria-label="Close recent records panel">
           <X className="w-4 h-4" />
         </button>
       </div>
@@ -84,7 +89,7 @@ export default function RecentRecordsPanel() {
         ) : (
           <ul className="divide-y divide-gray-100 dark:divide-gray-700">
             {records.map((row) => {
-              const sync = formatSyncStatus(row);
+              const sync = formatSyncStatus(row, syncedIds);
               return (
                 <li key={row.id} className="px-4 py-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                   <div className="flex items-center justify-between">

@@ -332,6 +332,21 @@ Smooth color transitions between themes
   animation: slide-in-right 300ms ease-out;
 }
 
+@keyframes slide-out-right {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.animate-slide-out {
+  animation: slide-out-right 300ms ease-in forwards;
+}
+
 /*
  =============================================================================
  NAV ANIMATION UTILITIES
