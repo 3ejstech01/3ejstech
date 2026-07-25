@@ -83,6 +83,7 @@ export interface InstallationRow {
   cableTieWrap?: string; status?: string; monthInstalled?: string;
   yearInstalled?: string; loadExpire?: string; createdAt?: string; updatedAt?: string;
   notifyStatus?: string; loadStatus?: string;
+  _lastModifiedBy?: string;
 }
 
 export interface HistoricalDataRow {

@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { X } from 'lucide-react';
 import { getAllInstallations } from '@/lib/unified-db';
-import type { InstallationRow } from '@/lib/types';
+import type { InstallationRow } from '@/lib/unified-db';
 
 function formatSyncStatus(row: InstallationRow): { label: string; color: string } {
   const synced = row._lastModifiedBy === 'sheets';
@@ -17,23 +17,27 @@ export default function RecentRecordsPanel() {
   const [records, setRecords] = useState<InstallationRow[]>([]);
   const [visible, setVisible] = useState(false);
   const [paused, setPaused] = useState(false);
-  let timer: ReturnType<typeof setTimeout> | null = null;
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const dismissPanel = useCallback(() => {
     setVisible(false);
-    if (timer) clearTimeout(timer);
+    if (timerRef.current) clearTimeout(timerRef.current);
   }, []);
 
   const resetTimer = useCallback(() => {
-    if (timer) clearTimeout(timer);
-    timer = setTimeout(dismissPanel, 5000);
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(dismissPanel, 5000);
   }, [dismissPanel]);
 
   const fetchRecords = useCallback(async () => {
     try {
       const data = await getAllInstallations();
       const recent = data
-        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+        .sort((a, b) => {
+          const aDate = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+          const bDate = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+          return bDate - aDate;
+        })
         .slice(0, 5);
       setRecords(recent);
       setVisible(true);
@@ -49,7 +53,7 @@ export default function RecentRecordsPanel() {
     window.addEventListener('record-saved', handler);
     return () => {
       window.removeEventListener('record-saved', handler);
-      if (timer) clearTimeout(timer);
+      if (timerRef.current) clearTimeout(timerRef.current);
     };
   }, [fetchRecords]);
 

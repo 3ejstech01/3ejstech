@@ -98,7 +98,8 @@ loadExpire: string;
 createdAt: string;
 updatedAt: string;
 notifyStatus: string;
-loadStatus: string;
+  loadStatus: string;
+  _lastModifiedBy?: string;
 }
 
 // Historical Data Row
