@@ -295,6 +295,7 @@ export async function flushQueue(): Promise<FlushResult> {
   if (success > 0) {
     await localDb.put('recordSnapshots', { id: 'lastSuccessfulSync', value: Date.now() });
     store.addNotification(`${success} change${success > 1 ? 's' : ''} saved`, 'success');
+    window.dispatchEvent(new CustomEvent('record-saved', { detail: { count: success } }));
   }
 
   if (corsDetected) {
